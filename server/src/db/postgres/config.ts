@@ -4,3 +4,4 @@ if (process.env.NODE_ENV === 'production')
 else dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 
 export const connectionString = process.env.PG_URL
+console.log(connectionString)
