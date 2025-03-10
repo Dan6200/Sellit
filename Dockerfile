@@ -6,9 +6,6 @@ WORKDIR /usr/src/app
 
 COPY package.* ./
 RUN npm install -g pnpm
-COPY patches ./patches
-RUN pnpm add patch -D
-RUN pnpm patch long@5.2.3
 RUN pnpm install
 COPY . .
 RUN pnpm build

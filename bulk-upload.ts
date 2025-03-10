@@ -1,5 +1,6 @@
 import { cloudinary } from '@/controllers/utils/media-storage.js'
 import fs from 'fs/promises'
+// import path from 'path'
 
 async function bulkUpload() {
   const dir = 'media/images/'
@@ -9,6 +10,7 @@ async function bulkUpload() {
       return cloudinary.uploader.upload(dir + file, {
         folder: 'thrift-app-media',
         public_id: file,
+        // public_id: path.parse(file).name // Cloudinary appends .jpg use this to remove .jpg from filename
       })
     })
     const results = await Promise.all(uploadPromises)

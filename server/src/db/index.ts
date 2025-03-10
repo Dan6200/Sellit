@@ -1,13 +1,13 @@
 // cspell:disable
 import nodePostgres from 'pg'
 import { retryConnection } from './utils/retry-connection.js'
-import { knexOptions, pgOptions } from './postgres/options.js'
+import { knexOptions, connectionOptions } from './postgres/options.js'
 import pgQuery from './postgres/pg-query.js'
 import pgGetClient from './postgres/pg-get-client.js'
 import Knex from 'knex'
 
 const { Pool, types } = nodePostgres
-const pool = new Pool(pgOptions)
+const pool = new Pool(connectionOptions)
 
 // handle error...
 pool.on('error', retryConnection(pool))

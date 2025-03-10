@@ -4,29 +4,19 @@ import { faker } from '@faker-js/faker'
 import * as fastcsv from 'fast-csv'
 
 let users = [
-  [
-    'user_id',
-    'first_name',
-    'last_name',
-    'email',
-    'phone',
-    'password',
-    'dob',
-    'country',
-  ],
+  ['uid', 'first_name', 'last_name', 'email', 'phone', 'dob', 'country'],
 ]
 
 let { person, internet, phone, string, date, location } = faker
 
 for (let i = 1; i <= 500; i++) {
   users.push([
-    i.toString(),
+    string.nanoid(),
     person.firstName(),
     person.lastName(),
     internet.email(),
     phone.number(),
-    string.alphanumeric(20),
-    date.birthdate(),
+    date.birthdate().toISOString().split('T')[0],
     location.country(),
   ] as any[])
 }
