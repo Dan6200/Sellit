@@ -5,11 +5,9 @@ import {
   testPostUser,
 } from '../../users/utils/index.js'
 import { isValidPostUserParams } from '../index.js'
-import { signInWithCustomToken } from 'firebase/auth'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
 import { knex } from '@/db/index.js'
-import { auth } from '@/auth/firebase/index.js'
-import { auth as _auth } from '@/auth/firebase/testing.js'
+import { supabase } from '#supabase-config'
 
 // Set server url
 const server = process.env.SERVER!
@@ -26,11 +24,25 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
       if (!isValidPostUserParams(postUserParams))
         throw new Error('Invalid parameter object')
       const response = await testPostUser(postUserParams)
-      uidToDelete = response.uid
-      const customToken = await auth.createCustomToken(response.uid)
-      token = await signInWithCustomToken(_auth, customToken).then(({ user }) =>
-        user.getIdToken()
-      )
+      // For testing, we'll create a user directly in Supabase and then sign in with email/password
+      // This replaces the Firebase custom token approach
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.admin.createUser({
+        email: userInfo.email,
+        password: userInfo.password,
+        email_confirm: true,
+      })
+      if (error) throw error
+      uidToDelete = user.id // Update uidToDelete with Supabase user ID
+      const { data: signInData, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email: userInfo.email,
+          password: userInfo.password,
+        })
+      if (signInError) throw signInError
+      token = signInData.session?.access_token as string
     })
 
     const path = '/v1/users/vendors'
@@ -44,12 +56,12 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
       // Delete users from db
       if (uidToDelete) await knex('users').where('uid', uidToDelete).del()
       // Delete all users from firebase auth
-      await auth
+      await supabase.auth.admin
         .deleteUser(uidToDelete)
         .catch((error: Error) =>
           console.error(
-            `failed to delete user with uid ${uidToDelete}: ${error}`
-          )
+            `failed to delete user with uid ${uidToDelete}: ${error}`,
+          ),
         )
     })
 

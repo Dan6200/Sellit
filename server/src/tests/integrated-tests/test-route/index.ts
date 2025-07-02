@@ -2,8 +2,8 @@ import chai from 'chai'
 import BadRequestError from '../../../errors/bad-request.js'
 import { TestCreateRequestParamsGeneral } from '../../../types-and-interfaces/test-routes.js'
 import { UserRequestData } from '../../../types-and-interfaces/users/index.js'
-import { createUserWithEmailAndPasswordWrapper } from './create-user.js'
 import { deleteUser } from './delete-user.js'
+import { supabase } from '#supabase-config'
 
 export default function ({
   verb,
@@ -30,11 +30,25 @@ export default function ({
     if (validateReqData && !validateReqData(body))
       throw new BadRequestError('Invalid Request Data')
 
+    const userData = body as UserRequestData
+
     // Create user for testing
     if (verb === 'post' && path === '/v1/users') {
-      token = await createUserWithEmailAndPasswordWrapper(
-        <UserRequestData & { email: string }>body
-      )
+      const { error } = await supabase.auth.admin.createUser({
+        ...userData,
+        email_confirm: true,
+      })
+      if (error)
+        throw new Error(
+          'Unable to create user: ' + userData?.email + '\n\t' + error.cause,
+        )
+      const { data: signInData, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email: userData?.email,
+          password: userData?.password,
+        })
+      if (signInError) throw signInError
+      token = signInData.session?.access_token as string
     }
 
     // Make request

@@ -5,7 +5,6 @@ import express, { Express, Router } from 'express'
 import 'express-async-errors'
 import helmet from 'helmet'
 import morgan from 'morgan'
-import xss from 'xss-clean'
 import rateLimiter from 'express-rate-limit'
 import cookieParser from 'cookie-parser'
 // routers
@@ -26,7 +25,7 @@ import path from 'path'
 
 const swaggerDocument = await readFile(
   path.resolve('./server/api-docs/dist.yaml'),
-  'utf8'
+  'utf8',
 ).then((doc) => yaml.load(doc))
 
 ////////////// Middlewares //////////////
@@ -40,20 +39,19 @@ if (process.env.NODE_ENV === 'production')
       max: 100,
       standardHeaders: true,
       legacyHeaders: false,
-    })
+    }),
   )
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/api', swaggerUi.serve, swaggerUi.setup(<JSON>swaggerDocument))
 app.use(
   '/.well-known/acme-challenge',
-  express.static('public/.well-known/acme-challenge')
+  express.static('public/.well-known/acme-challenge'),
 )
 app.get('/api.json', (_, res) => res.json(swaggerDocument))
 
 app.use(helmet())
 app.use(cors())
-app.use(xss())
 if (process.env.NODE_ENV !== 'production') app.use(morgan('combined'))
 else app.use(morgan('dev'))
 // application routes

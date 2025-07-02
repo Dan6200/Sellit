@@ -1,12 +1,12 @@
 import { Response, NextFunction } from 'express'
-import { auth } from '../auth/firebase/index.js'
 import UnauthorizedError from '../errors/unauthorized.js'
 import { RequestWithPayload } from '../types-and-interfaces/request.js'
+import { supabase } from '#supabase-config'
 
 export default async (
   request: RequestWithPayload,
   _response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // if route is public, skip authentication
   if (request.query.public === 'true') {
@@ -19,11 +19,19 @@ export default async (
     throw new UnauthorizedError('Unauthorized Operation')
   const token = authHeader.split(' ')[1]
   try {
-    const { uid } = await auth.verifyIdToken(token)
-    request.uid = uid
+    // Supabase JWT verification
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token)
+    if (error || !user.id) {
+      console.error('Supabase token verification error:', error?.message)
+      throw new UnauthorizedError('Unauthorized Operation')
+    }
+    request.uid = user.id // 'sub' typically contains the user ID in JWT claims
     next()
   } catch (err) {
-    console.error(err)
+    console.error('Error during Supabase authentication:', err)
     throw new UnauthorizedError('Unauthorized Operation')
   }
 }

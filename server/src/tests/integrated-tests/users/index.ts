@@ -9,11 +9,9 @@ import {
   testGetNonExistentUser,
 } from './utils/index.js'
 import { knex } from '../../../db/index.js'
-import { CreateRequestParams } from '../../../types-and-interfaces/test-routes.js'
-import { auth as _auth } from '../../../auth/firebase/testing.js'
-import { auth } from '../../../auth/firebase/index.js'
-import { signInWithCustomToken } from 'firebase/auth'
-import { UserRequestData } from '../../../types-and-interfaces/users/index.js'
+import { CreateRequestParams } from '@/types-and-interfaces/test-routes.js'
+import { supabase } from '#supabase-config'
+import { UserRequestData } from '@/types-and-interfaces/users/index.js'
 
 chai.use(chaiHttp).should()
 
@@ -28,9 +26,21 @@ export default function ({
   updatedUserInfo: UserRequestData
 }) {
   const path = '/v1/users'
-  let uidToDelete: string = ''
   let token: string = ''
   describe('User account management', () => {
+    before(async () => {
+      // Delete users from db
+        await knex('users').where('uid', uidToDelete).del()
+        // Delete all users from Supabase auth
+        await supabase.auth.admin
+          .catch((error: Error) =>
+            console.error(
+              `failed to delete user with uid ${uidToDelete}: ${error}`,
+            ),
+          )
+      } else console.log(`UID: ${uidToDelete}`)
+    })
+
     it('should create a new user', async () => {
       // Create a new user for each tests
       const postUserParams = {
@@ -41,13 +51,27 @@ export default function ({
       if (!isValidPostUserParams(postUserParams))
         throw new Error('Invalid parameter object')
       const response = await testPostUser(postUserParams).catch((error) =>
-        console.error(error)
+        console.error(error),
       )
-      uidToDelete = response.uid
-      const customToken = await auth.createCustomToken(response.uid)
-      token = await signInWithCustomToken(_auth, customToken).then(({ user }) =>
-        user.getIdToken()
-      )
+      // For testing, we'll create a user directly in Supabase and then sign in with email/password
+      // This replaces the Firebase custom token approach
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.admin.createUser({
+        email: userInfo.email,
+        password: userInfo.password,
+        email_confirm: true,
+      })
+      if (error) throw error
+      uidToDelete = user.id // Update uidToDelete with Supabase user ID
+      const { data: signInData, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email: userInfo.email,
+          password: userInfo.password,
+        })
+      if (signInError) throw signInError
+      token = signInData.session?.access_token as string
     })
 
     it("it should get the user's account", () =>
@@ -68,22 +92,25 @@ export default function ({
     it("it should fail to get user's account", () =>
       testGetNonExistentUser({ server, token, path }))
 
-    // after(async () => {
-    //   // Delete users from db
-    //   if (uidToDelete) await knex('users').where('uid', uidToDelete).del()
-    //   // Delete all users from firebase auth
-    //   await auth.deleteUser(uidToDelete).catch()
-    //   // .catch((error: Error) =>
-    //   //   console.error(
-    //   //     `failed to delete user with uid ${uidToDelete}: ${error}`
-    //   //   )
-    //   // )
-    // })
+    after(async () => {
+      // Delete users from db
+      if (uidToDelete) {
+        await knex('users').where('uid', uidToDelete).del()
+        // Delete all users from Supabase auth
+        await supabase.auth.admin
+          .deleteUser(uidToDelete)
+          .catch((error: Error) =>
+            console.error(
+              `failed to delete user with uid ${uidToDelete}: ${error}`,
+            ),
+          )
+      } else console.log(`UID: ${uidToDelete}`)
+    })
   })
 }
 
 export const isValidPostUserParams = (
-  obj: unknown
+  obj: unknown,
 ): obj is CreateRequestParams =>
   typeof obj === 'object' &&
   obj !== null &&
