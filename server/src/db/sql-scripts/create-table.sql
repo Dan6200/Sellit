@@ -1,35 +1,35 @@
 drop schema if exists public cascade;
 create schema if not exists public;
 
-create table if not exists users (
-  uid 		     varchar                    primary    key, -- Get from Firebase
-  first_name   varchar(30)               not        null,
-	check				 (first_name ~* '^[a-zA-Z]+$'),
-  last_name    varchar(30)               not        null,
-	check				 (last_name ~* '^[a-zA-Z]+([-'']*[a-zA-Z]+)+$'),
-  email        varchar(320)              unique,
-  check        (email ~* '^(([^<> ()[\]\\.,;:\s@"]+(\.[^< > ()[\]\\.,;'
-							 ':\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1'
-							 ',3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'),  
-  phone        varchar(40)               unique,
-  check        (phone ~* '^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$'),  
-	check				 (email is not null and phone is not null 
-							 or email is null and phone is not null 
-							 or email is not null and phone is null),
-  dob          date                      not        null,
-  country      varchar                   not        null 			default  		'Nigeria',
-  check        (current_date - dob > 18)
-);
-
+-- create table if not exists users (
+--   uid 		     varchar                    primary    key, -- Get from Firebase
+--   first_name   varchar(30)               not        null,
+-- 	check				 (first_name ~* '^[a-zA-Z]+$'),
+--   last_name    varchar(30)               not        null,
+-- 	check				 (last_name ~* '^[a-zA-Z]+([-'']*[a-zA-Z]+)+$'),
+--   email        varchar(320)              unique,
+--   check        (email ~* '^(([^<> ()[\]\\.,;:\s@"]+(\.[^< > ()[\]\\.,;'
+-- 							 ':\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1'
+-- 							 ',3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'),  
+--   phone        varchar(40)               unique,
+--   check        (phone ~* '^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$'),  
+-- 	check				 (email is not null and phone is not null 
+-- 							 or email is null and phone is not null 
+-- 							 or email is not null and phone is null),
+--   dob          date                      not        null,
+--   country      varchar                   not        null 			default  		'Nigeria',
+--   check        (current_date - dob > 18)
+-- );
+--
 
 create table if not exists customers (
-  customer_id   varchar   primary key   references   users   on   delete   cascade
+  customer_id   uuid   primary key   references   auth.users   on   delete   cascade
 );
 
 
 create table if not exists shipping_info (
   shipping_info_id        serial        primary   key,
-  customer_id             varchar           not       null    references   customers   on   delete   cascade,
+  customer_id             uuid           not       null    references   customers   on   delete   cascade,
   recipient_first_name    varchar(30)   not       null,
   recipient_last_name     varchar(30)   not       null,
   address                 varchar       not       null,
@@ -47,11 +47,10 @@ create table if not exists payment_info (
 
 
 create table if not exists vendors (
-  vendor_id   varchar   primary key   references   users   on   delete   cascade
+  vendor_id   uuid   primary key   references   auth.users   on   delete   cascade
 );
 
 
-/*
 create table if not exists stores (
   store_id       serial    primary   key,   
   store_name     varchar   not       null,
@@ -59,7 +58,6 @@ create table if not exists stores (
   store_page     jsonb,
   date_created   date      not       null    default      current_date
 );
-*/
 
 create table if not exists categories (
 	category_id					serial					primary 	key,
@@ -149,8 +147,8 @@ create table if not exists shopping_cart_item (
 
 create table if not exists transactions(
   transaction_id   serial           primary      key,
-  customer_id      varchar              not          null,
-  vendor_id        varchar              not          null,
+  customer_id      uuid              not          null,
+  vendor_id        uuid              not          null,
   total_amount     numeric(19,4)    not          null,
   created          timestamptz      not          null    default   now()   unique,
   check            (customer_id <>  vendor_id)
@@ -169,21 +167,21 @@ create table if not exists product_reviews (
   product_id        int            primary   key     references   products              on   delete   cascade,
   transaction_id    int            not       null    references   transactions				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
-  customer_id       varchar            not       null    references   customers             on   delete   cascade,
+  customer_id       uuid            not       null    references   customers             on   delete   cascade,
   customer_remark   varchar
 );
 
 create table if not exists vendor_reviews (
-  vendor_id         varchar            primary   key     references   vendors               on   delete   cascade,
-  customer_id       varchar            not       null    references   customers             on   delete   cascade,
+  vendor_id         uuid            primary   key     references   vendors               on   delete   cascade,
+  customer_id       uuid            not       null    references   customers             on   delete   cascade,
   transaction_id    int            not       null    references   transactions				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
   customer_remark   varchar
 );
 
 create table if not exists customer_reviews (
-  customer_id      varchar            primary   key     references   customers             on   delete   cascade,
-  vendor_id        varchar            not       null    references   vendors               on   delete   cascade,
+  customer_id      uuid            primary   key     references   customers             on   delete   cascade,
+  vendor_id        uuid            not       null    references   vendors               on   delete   cascade,
   transaction_id   int            not       null    references   transactions   on   delete   cascade,
   rating           numeric(3,2)   not       null,
   vendor_remark    varchar
