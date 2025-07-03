@@ -14,8 +14,6 @@ import { testPostVendor } from '../users/vendors/utils/index.js'
 import { UserRequestData } from '../../../types-and-interfaces/users/index.js'
 import assert from 'assert'
 import { knex } from '../../../db/index.js'
-import { isValidPostUserParams } from '../users/index.js'
-import { testPostUser } from '../users/utils/index.js'
 import { supabase } from '#supabase-config'
 
 // globals
@@ -33,37 +31,7 @@ export default function ({
   productReplaced: ProductRequestData[]
 }) {
   before(async () => {
-    // Create a new user for each tests
-    const postUserParams = {
-      server,
-      path: '/v1/users',
-      body: userInfo,
-    }
-    if (!isValidPostUserParams(postUserParams))
-      throw new Error('Invalid parameter object')
-    await testPostUser(postUserParams)
-    // For testing, we'll create a user directly in Supabase and then sign in with email/password
-    // This replaces the Firebase custom token approach
-    const { email, password, ...user_metadata } = userInfo
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.admin.createUser({
-      email: userInfo.email,
-      password: userInfo.password,
-      user_metadata,
-      email_confirm: true,
-    })
-    if (error) throw error
-    uidToDelete = user.id // Update uidToDelete with Supabase user ID
-    const { data: signInData, error: signInError } =
-      await supabase.auth.signInWithPassword({
-        email: userInfo.email,
-        password: userInfo.password,
-      })
-    if (signInError) throw signInError
-    token = signInData.session?.access_token as string
-    await testPostVendor({ server, token, path: vendorsRoute })
+    await testPostVendor({ server, path: vendorsRoute })
   })
 
   after(async function () {
@@ -90,7 +58,6 @@ export default function ({
       for (const product of products) {
         const { product_id } = await testPostProduct({
           server,
-          token,
           path: `${productsRoute}`,
           body: product,
         })
@@ -99,13 +66,12 @@ export default function ({
     })
 
     it('it should retrieve all the products', async () => {
-      await testGetAllProducts({ server, token, path: productsRoute })
+      await testGetAllProducts({ server, path: productsRoute })
     })
 
     it('it should retrieve all products from each store, sorted by net price ascending', async () => {
       await testGetAllProductsWithQParams({
         server,
-        token,
         path: productsRoute,
         query: {
           sort: '-net_price',
@@ -116,7 +82,6 @@ export default function ({
     it('it should retrieve all products from each store, results offset by 2 and limited by 10', async () => {
       await testGetAllProductsWithQParams({
         server,
-        token,
         path: productsRoute,
         query: {
           offset: 1,
@@ -129,7 +94,6 @@ export default function ({
       for (const productId of productIds) {
         await testGetProduct({
           server,
-          token,
           path: `${productsRoute}/${productId}`,
         })
       }
@@ -140,7 +104,6 @@ export default function ({
       for (const [idx, productId] of productIds.entries())
         await testUpdateProduct({
           server,
-          token,
           path: `${productsRoute}/${productId}`,
           body: productReplaced[idx],
         })
@@ -150,7 +113,6 @@ export default function ({
       for (const productId of productIds)
         await testDeleteProduct({
           server,
-          token,
           path: `${productsRoute}/${productId}`,
         })
     })
@@ -159,7 +121,7 @@ export default function ({
       for (const productId of productIds)
         await testGetNonExistentProduct({
           server,
-          token,
+
           path: `${productsRoute}/${productId}`,
         })
     })

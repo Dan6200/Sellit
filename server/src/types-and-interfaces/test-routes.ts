@@ -41,7 +41,7 @@ type TestRequestInnerWBody = <T>(
 ) => Promise<any>
 
 type TestRequestPublicInner = <T>(
-  requestParams: Omit<RequestParams, 'token'> & {
+  requestParams: RequestParams & {
     query: { [k: string]: any } | null
   },
 ) => Promise<any>
@@ -62,6 +62,5 @@ type TestRequestInner = (requestParams: RequestParams) => Promise<any>
 
 export type RequestParams = {
   server: string
-  token: string
   path: string
 }

@@ -10,8 +10,6 @@ import {
   testUploadProductMedia,
 } from '../products/utils/index.js'
 import { testPostVendor } from '../users/vendors/utils/index.js'
-import { isValidPostUserParams } from '../users/index.js'
-import { testPostUser } from '../users/utils/index.js'
 import { supabase } from '#supabase-config'
 import { bulkDeleteImages } from '../utils/bulk-delete.js'
 
@@ -37,16 +35,6 @@ export default function ({
     before(async () => {
       // Bulk delete media from cloudinary
       await bulkDeleteImages()
-      // Create a new user for each tests
-      const postUserParams = {
-        server,
-        path: '/v1/users',
-        body: userInfo,
-      }
-      if (!isValidPostUserParams(postUserParams))
-        throw new Error('Invalid parameter object')
-      const response = await testPostUser(postUserParams)
-      uidToDelete = response.uid
       // For testing, we'll create a user directly in Supabase and then sign in with email/password
       // This replaces the Firebase custom token approach
       const { email, password, ...user_metadata } = userInfo
@@ -68,11 +56,11 @@ export default function ({
         })
       if (signInError) throw signInError
       token = signInData.session?.access_token as string
-      await testPostVendor({ server, token, path: vendorsRoute })
+      await testPostVendor({ server, path: vendorsRoute })
       for (const product of products) {
         const { product_id } = await testPostProduct({
           server,
-          token,
+
           path: `${productsRoute}`,
           body: product,
         })
@@ -100,9 +88,9 @@ export default function ({
       for (const [idx, productId] of productIds.entries())
         await testUploadProductMedia(
           server,
-          token,
           mediaRoute,
           productMedia[idx],
+          userInfo,
           {
             productId,
           },

@@ -5,7 +5,7 @@ import {
   UserUpdateRequestSchema,
 } from '../../app-schema/users.js'
 
-interface UserData {
+export interface UserData {
   first_name: string
   last_name: string
   email?: string
@@ -35,7 +35,7 @@ interface UserResponse extends UserData {
 export type UserResponseData = UserResponse & UserRequestData
 
 export const isValidUserUpdateRequestData = (
-  data: unknown
+  data: unknown,
 ): data is UserRequestData => {
   const { error } = UserUpdateRequestSchema.validate(data)
   error && console.error(error)
@@ -43,7 +43,7 @@ export const isValidUserUpdateRequestData = (
 }
 
 export const isValidUserRequestData = (
-  data: unknown
+  data: unknown,
 ): data is UserRequestData => {
   const { error } = UserRequestSchema.validate(data)
   error && console.error(error)
@@ -51,7 +51,7 @@ export const isValidUserRequestData = (
 }
 
 export const isValidUserResponseData = (
-  data: unknown
+  data: unknown,
 ): data is UserResponseData => {
   const { error } = UserResponseSchema.validate(data)
   error && console.error(error)

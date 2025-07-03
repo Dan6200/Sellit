@@ -1,7 +1,7 @@
 import chai from 'chai'
 import BadRequestError from '../../../errors/bad-request.js'
 import { TestRequestParamsGeneral } from '../../../types-and-interfaces/test-routes.js'
-import { createUserAndSignInForTesting } from './create-user.js'
+import { signInForTesting } from './signin-user.js'
 
 export default function ({
   verb,
@@ -11,13 +11,11 @@ export default function ({
 }: TestRequestParamsGeneral) {
   return async function <T>({
     server,
-    token,
     path,
     query,
     body,
   }: {
     server: string
-    token: string
     path: string
     query?: { [k: string]: any }
     body?: T
@@ -28,9 +26,11 @@ export default function ({
     if (validateReqData && !validateReqData(body))
       throw new BadRequestError('Invalid Request Data')
 
+    console.log('DEBUG: ' + JSON.stringify(body))
+    let token = null
     // create a user and sign-in to retrieve token
     if (!query?.public) {
-      token = await createUserAndSignInForTesting(body as any)
+      token = await signInForTesting(body as any)
       console.log('DEBUG: token->' + token)
     }
 

@@ -49,11 +49,7 @@ create table if not exists payment_info (
 
 
 create table if not exists vendors (
-<<<<<<< HEAD:server/src/db/sql-scripts/create-table.sql
-  vendor_id   uuid   primary key   references   auth.users   on   delete   cascade
-=======
   vendor_id   uuid   primary key   references   users   on   delete   cascade
->>>>>>> recovered-commit:supabase/migrations/20250702000000_initial_schema.sql
 );
 
 

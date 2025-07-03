@@ -1,21 +1,18 @@
 import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { StatusCodes } from 'http-status-codes'
-import {
-  TestRequest,
-  TestRequestWithBody,
-} from '../../../../types-and-interfaces/test-routes.js'
+import { TestRequestWithBody } from '@/types-and-interfaces/test-routes.js'
 import {
   isValidUID,
   isValidUserRequestData,
   isValidUserResponseData,
   isValidUserUpdateRequestData,
-} from '../../../../types-and-interfaces/users/index.js'
+} from '@/types-and-interfaces/users/index.js'
 import testRequests from '../../test-route/index.js'
 
 chai.use(chaiHttp).should()
 
-const { OK, NOT_FOUND, CREATED, UNAUTHORIZED } = StatusCodes
+const { OK, NOT_FOUND, UNAUTHORIZED } = StatusCodes
 
 const hasNoCustomerAccount = (data: unknown) => {
   const isValidData = isValidUserResponseData(data)
@@ -84,13 +81,6 @@ export const testHasNoVendorAccount = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: hasNoVendorAccount,
-  validateReqData: isValidUserRequestData,
-})
-
-export const testPostUser = testRequestsWithBody({
-  verb: 'post',
-  statusCode: CREATED,
-  validateResData: isValidUID,
   validateReqData: isValidUserRequestData,
 })
 

@@ -11,12 +11,9 @@ import {
 import assert from 'assert'
 import { knex } from '../../../db/index.js'
 import { UserRequestData } from '../../../types-and-interfaces/users/index.js'
-import { isValidPostUserParams } from '../users/index.js'
-import { testPostUser } from '../users/utils/index.js'
 
 // Set server url
 const server = process.env.SERVER!
-let token: string
 
 export default function ({
   userInfo,
@@ -28,37 +25,7 @@ export default function ({
   listOfUpdatedShippingInfo: ShippingInfo[]
 }) {
   before(async () => {
-    // Create a new user for each tests
-    const postUserParams = {
-      server,
-      path: '/v1/users',
-      body: userInfo,
-    }
-    if (!isValidPostUserParams(postUserParams))
-      throw new Error('Invalid parameter object')
-    await testPostUser(postUserParams)
-    // For testing, we'll create a user directly in Supabase and then sign in with email/password
-    // This replaces the Firebase custom token approach
-    const { email, password, ...user_metadata } = userInfo
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.admin.createUser({
-      email: userInfo.email,
-      password: userInfo.password,
-      user_metadata,
-      email_confirm: true,
-    })
-    if (error) throw error
-    uidToDelete = user.id // Update uidToDelete with Supabase user ID
-    const { data: signInData, error: signInError } =
-      await supabase.auth.signInWithPassword({
-        email: userInfo.email,
-        password: userInfo.password,
-      })
-    if (signInError) throw signInError
-    token = signInData.session?.access_token as string
-    await testPostCustomer({ server, token, path: '/v1/users/customers' })
+    await testPostCustomer({ server, path: '/v1/users/customers' })
   })
 
   after(async function () {
@@ -83,7 +50,6 @@ export default function ({
     for (const shippingInfo of listOfShippingInfo) {
       const { shipping_info_id } = await testCreateShipping({
         server,
-        token,
         path: shippingPath,
         body: shippingInfo,
       })
@@ -95,7 +61,6 @@ export default function ({
     for (const shippingId of shippingIds) {
       await testGetShipping({
         server,
-        token,
         path: shippingPath + '/' + shippingId,
       })
     }
@@ -106,7 +71,6 @@ export default function ({
     for (const [idx, shippingId] of shippingIds.entries()) {
       await testUpdateShipping({
         server,
-        token,
         path: shippingPath + '/' + shippingId,
         body: listOfUpdatedShippingInfo[idx],
       })
@@ -117,7 +81,6 @@ export default function ({
     for (const shippingId of shippingIds) {
       await testDeleteShipping({
         server,
-        token,
         path: shippingPath + '/' + shippingId,
       })
     }
@@ -127,7 +90,6 @@ export default function ({
     for (const shippingId of shippingIds) {
       await testGetNonExistentShipping({
         server,
-        token,
         path: `${shippingPath}/${shippingId}`,
       })
     }

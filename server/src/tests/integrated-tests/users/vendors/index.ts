@@ -2,9 +2,7 @@ import { testPostVendor, testDeleteVendor } from './utils/index.js'
 import {
   testHasVendorAccount,
   testHasNoVendorAccount,
-  testPostUser,
 } from '../../users/utils/index.js'
-import { isValidPostUserParams } from '../index.js'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
 import { knex } from '@/db/index.js'
 import { supabase } from '#supabase-config'
@@ -16,13 +14,6 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
   describe('Vendor account management', () => {
     before(async () => {
       // Create a new user for each tests
-      const postUserParams = {
-        server,
-        path: '/v1/users',
-        body: userInfo,
-      }
-      if (!isValidPostUserParams(postUserParams))
-        throw new Error('Invalid parameter object')
       // For testing, we'll create a user directly in Supabase and then sign in with email/password
       // This replaces the Firebase custom token approach
       const { email, password, ...user_metadata } = userInfo
@@ -51,7 +42,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
     let token: string
 
     it('it should create a vendor user for the user', () =>
-      testPostVendor({ server, token, path }))
+      testPostVendor({ server, path }))
 
     after(async () => {
       // Delete users from db
@@ -69,17 +60,17 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
     it("it should show that the vendor account has been created in the user's is_vendor field", async () =>
       testHasVendorAccount({
         server,
-        token,
+
         path: '/v1/users',
       }))
 
     it("it should delete the user's vendor account", () =>
-      testDeleteVendor({ server, token, path }))
+      testDeleteVendor({ server, path }))
 
     it("it should show that the vendor account does not exist in the user's is_vendor field", async () =>
       testHasNoVendorAccount({
         server,
-        token,
+
         path: '/v1/users',
       }))
   })

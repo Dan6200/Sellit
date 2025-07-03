@@ -5,7 +5,7 @@ import NotFoundError from '../../errors/not-found.js'
 import { isTypeQueryResultRow } from '../../types-and-interfaces/response.js'
 
 /**
- * @description Checks to see if query was successful
+ * @description Checks to see if the postgresql query was successful
  * throws a BadRequestError if it is not
  * */
 export const isSuccessful =

@@ -1,12 +1,12 @@
 import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { StatusCodes } from 'http-status-codes'
-import { TestCreateRequest } from '../../../../../types-and-interfaces/test-routes.js'
+import { TestRequest } from '../../../../../types-and-interfaces/test-routes.js'
 import { isValidVendorId } from '../../../../../types-and-interfaces/users/vendors.js'
 import testRoute from '../../../test-route/index.js'
 chai.use(chaiHttp).should()
 
-const testPostVendor = (testRoute as TestCreateRequest)({
+const testPostVendor = (testRoute as TestRequest)({
   verb: 'post',
   statusCode: StatusCodes.CREATED,
   validateResData: isValidVendorId,

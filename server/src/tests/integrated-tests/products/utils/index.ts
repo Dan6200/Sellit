@@ -1,7 +1,6 @@
 import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { StatusCodes } from 'http-status-codes'
-import Joi from 'joi'
 import { readFile } from 'node:fs/promises'
 import BadRequestError from '../../../../errors/bad-request.js'
 import {
@@ -12,13 +11,18 @@ import {
   isValidProductId,
 } from '../../../../types-and-interfaces/products.js'
 import {
-  TestCreateRequest,
-  TestCreateRequestPublic,
-  TestCreateRequestWithBody,
-  TestCreateRequestWithQParams,
-  TestCreateRequestWithQParamsAndBody,
+  TestRequest,
+  TestRequestPublic,
+  TestRequestWithBody,
+  TestRequestWithQParams,
+  TestRequestWithQParamsAndBody,
 } from '../../../../types-and-interfaces/test-routes.js'
-import testRoute from '../../test-route/index.js'
+import testRoutes from '../../test-route/index.js'
+import { createUserAndSignInForTesting } from '../../test-route/create-user.js'
+import {
+  UserData,
+  UserRequestData,
+} from '@/types-and-interfaces/users/index.js'
 
 chai.use(chaiHttp).should()
 
@@ -49,73 +53,71 @@ const testCreateProduct = async function* ({
     // Check that the response contains the product id
     if (!isValidProductId(response.body))
       throw new BadRequestError(
-        'Product Id is the expected response after a product is created'
+        'Product Id is the expected response after a product is created',
       )
     yield response.body
   }
 }
 
-export const testPostProduct = (<TestCreateRequestWithBody>testRoute)({
+export const testPostProduct = (<TestRequestWithBody>testRoutes)({
   statusCode: CREATED,
   verb: 'post',
   validateReqData: isValidProductRequestData,
   validateResData: isValidProductId,
 })
 
-export const testGetAllProductsWithQParams = (<TestCreateRequestWithQParams>(
-  testRoute
+export const testGetAllProductsWithQParams = (<TestRequestWithQParams>(
+  testRoutes
 ))({
   statusCode: OK,
   verb: 'get',
   validateResData: isValidProductListResponseData,
 })
 
-const testGetAllProducts = (<TestCreateRequest>testRoute)({
+const testGetAllProducts = (<TestRequest>testRoutes)({
   statusCode: OK,
   verb: 'get',
   validateResData: isValidProductListResponseData,
 })
 
-export const testGetAllProductsPublic = (<TestCreateRequestPublic>testRoute)({
+export const testGetAllProductsPublic = (<TestRequestPublic>testRoutes)({
   statusCode: OK,
   verb: 'get',
   validateResData: isValidProductListResponseData,
 })
 
-export const testGetProductWithQParams = (<TestCreateRequestWithQParams>(
-  testRoute
-))({
+export const testGetProductWithQParams = (<TestRequestWithQParams>testRoutes)({
   statusCode: OK,
   verb: 'get',
   validateResData: isValidProductResponseData,
 })
 
-const testGetProduct = (<TestCreateRequest>testRoute)({
+const testGetProduct = (<TestRequest>testRoutes)({
   statusCode: OK,
   verb: 'get',
   validateResData: isValidProductResponseData,
 })
 
-export const testGetProductPublic = (<TestCreateRequestPublic>testRoute)({
+export const testGetProductPublic = (<TestRequestPublic>testRoutes)({
   statusCode: OK,
   verb: 'get',
   validateResData: isValidProductResponseData,
 })
 
-const testUpdateProduct = (<TestCreateRequestWithBody>testRoute)({
+const testUpdateProduct = (<TestRequestWithBody>testRoutes)({
   statusCode: OK,
   verb: 'patch',
   validateReqData: isValidProductRequestData,
   validateResData: isValidProductId,
 })
 
-const testDeleteProduct = (<TestCreateRequest>testRoute)({
+const testDeleteProduct = (<TestRequest>testRoutes)({
   statusCode: OK,
   verb: 'delete',
   validateResData: isValidProductId,
 })
 
-const testGetNonExistentProduct = (<TestCreateRequest>testRoute)({
+const testGetNonExistentProduct = (<TestRequest>testRoutes)({
   verb: 'get',
   statusCode: NOT_FOUND,
   validateResData: null,
@@ -123,11 +125,12 @@ const testGetNonExistentProduct = (<TestCreateRequest>testRoute)({
 
 const testUploadProductMedia = async function (
   server: string,
-  token: string,
   urlPath: string,
   files: ProductMedia[],
-  queryParams: { [k: string]: any }
+  userInfo: UserRequestData,
+  queryParams: { [k: string]: any },
 ): Promise<any> {
+  const token = await createUserAndSignInForTesting(userInfo)
   const fieldName = 'product-media'
   const request = chai
     .request(server)
@@ -138,7 +141,7 @@ const testUploadProductMedia = async function (
     files.map(async (file) => {
       const data = await readFile(file.path)
       request.attach(fieldName, data, file.name)
-    })
+    }),
   )
 
   const descriptions = files.reduce((acc: { [k: string]: any }, file) => {

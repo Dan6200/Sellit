@@ -11,15 +11,14 @@ import {
  * @description Validates DB result against schema
  * */
 export function validateResData<T>(
-  schema: ArraySchema<T>
+  schema: ArraySchema<T>,
 ): (result: QueryResult<QueryResultRow | QueryResultRow[]>) => boolean
 export function validateResData<T>(
-  schema: ObjectSchema<T>
+  schema: ObjectSchema<T>,
 ): (result: QueryResult<QueryResultRow | QueryResultRow[]>) => boolean
 export function validateResData<T>(schema: ArraySchema<T> | ObjectSchema<T>) {
   return (result: QueryResult<QueryResultRow | QueryResultRow[]> | any[]) => {
     if (isTypeQueryResultRow(result)) {
-      console.dir('response: ', result.rows)
       if (result.rows?.length === 0) {
         if (result.command === 'SELECT')
           throw new NotFoundError('Requested resource was not found')
