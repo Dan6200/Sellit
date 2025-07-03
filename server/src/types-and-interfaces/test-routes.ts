@@ -1,66 +1,66 @@
+/* This function is a factory for creating test request executors, allowing initial test parameters to be set up once and reused for multiple specific requests. */
+
 import { StatusCodes } from 'http-status-codes'
 
-export type TestCreateRequestParams = {
+export type TestRequestParams = {
   verb: 'get' | 'post' | 'delete' | 'put' | 'patch'
   statusCode: StatusCodes
   validateResData: (data: unknown) => boolean
 }
 
-export type TestCreateRequestParamsGeneral = {
+export type TestRequestParamsGeneral = {
   validateReqData?: (data: unknown) => boolean
-} & TestCreateRequestParams
+} & TestRequestParams
 
-export type TestCreateRequest = (
-  testCreateRequestParams: TestCreateRequestParams
-) => TestCreateRequestInner
+export type TestRequest = (
+  testRequestParams: TestRequestParams,
+) => TestRequestInner
 
-export type TestCreateRequestWithQParamsAndBody = (
-  testCreateRequestParams: TestCreateRequestParams & {
+export type TestRequestWithQParamsAndBody = (
+  testRequestParams: TestRequestParams & {
     validateReqData: (data: unknown) => boolean
-  }
-) => TestCreateRequestInnerWQueryNBody
+  },
+) => TestRequestInnerWQueryNBody
 
-export type TestCreateRequestPublic = (
-  testCreateRequestParams: TestCreateRequestParams
-) => TestCreateRequestPublicInner
+export type TestRequestPublic = (
+  testRequestParams: TestRequestParams,
+) => TestRequestPublicInner
 
-export type TestCreateRequestWithQParams = (
-  testCreateRequestParams: TestCreateRequestParams
-) => TestCreateRequestInnerWQuery
+export type TestRequestWithQParams = (
+  testRequestParams: TestRequestParams,
+) => TestRequestInnerWQuery
 
-export type TestCreateRequestWithBody = (
-  testCreateRequestParams: TestCreateRequestParams & {
+export type TestRequestWithBody = (
+  testRequestParams: TestRequestParams & {
     validateReqData: (data: unknown) => boolean
-  }
-) => TestCreateRequestInnerWBody
+  },
+) => TestRequestInnerWBody
 
-type TestCreateRequestInnerWBody = <T>(
-  createRequestParams: CreateRequestParams & { body: T }
+type TestRequestInnerWBody = <T>(
+  requestParams: RequestParams & { body: T },
 ) => Promise<any>
 
-type TestCreateRequestPublicInner = <T>(
-  createRequestParams: Omit<CreateRequestParams, 'token'> & {
+type TestRequestPublicInner = <T>(
+  requestParams: Omit<RequestParams, 'token'> & {
     query: { [k: string]: any } | null
-  }
+  },
 ) => Promise<any>
 
-type TestCreateRequestInnerWQuery = <T>(
-  createRequestParams: CreateRequestParams & {
+type TestRequestInnerWQuery = <T>(
+  requestParams: RequestParams & {
     query: { [k: string]: any } | null
-  }
+  },
 ) => Promise<any>
 
-type TestCreateRequestInnerWQueryNBody = <T>(
-  createRequestParams: CreateRequestParams & { body: T } & {
+type TestRequestInnerWQueryNBody = <T>(
+  requestParams: RequestParams & { body: T } & {
     query: { [k: string]: any } | null
-  }
+  },
 ) => Promise<any>
 
-type TestCreateRequestInner = (
-  createRequestParams: CreateRequestParams
-) => Promise<any>
+type TestRequestInner = (requestParams: RequestParams) => Promise<any>
 
-export type CreateRequestParams = {
+export type RequestParams = {
   server: string
   token: string
   path: string

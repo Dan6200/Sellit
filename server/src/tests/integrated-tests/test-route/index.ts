@@ -1,9 +1,6 @@
 import chai from 'chai'
 import BadRequestError from '../../../errors/bad-request.js'
-import { TestCreateRequestParamsGeneral } from '../../../types-and-interfaces/test-routes.js'
-import { UserRequestData } from '../../../types-and-interfaces/users/index.js'
-import { deleteUser } from './delete-user.js'
-import { supabase } from '#supabase-config'
+import { TestRequestParamsGeneral } from '../../../types-and-interfaces/test-routes.js'
 import { createUserAndSignInForTesting } from './create-user.js'
 
 export default function ({
@@ -11,7 +8,7 @@ export default function ({
   statusCode,
   validateResData,
   validateReqData,
-}: TestCreateRequestParamsGeneral) {
+}: TestRequestParamsGeneral) {
   return async function <T>({
     server,
     token,
@@ -32,7 +29,10 @@ export default function ({
       throw new BadRequestError('Invalid Request Data')
 
     // create a user and sign-in to retrieve token
-    token = await createUserAndSignInForTesting(body)
+    if (!query?.public) {
+      token = await createUserAndSignInForTesting(body as any)
+      console.log('DEBUG: token->' + token)
+    }
 
     // Make request
     const request = chai

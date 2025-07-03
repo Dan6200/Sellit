@@ -36,7 +36,7 @@ const getQuery = async <T>({
 const updateQuery = async <T>({
   body,
   uid,
-}: QueryParams<T>): Promise<QueryResult<QueryResultRow>> => {
+}: QueryParams<T>): Promise<string> => {
   const { email, password, ...user_metadata } = <UserRequestData>(<any>body)
 
   const updateData: {
@@ -57,14 +57,9 @@ const updateQuery = async <T>({
   }
   updateData.email_confirm = true
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.admin.updateUserById(uid, updateData)
+  const { error } = await supabase.auth.admin.updateUserById(uid, updateData)
   if (error) throw error
-  return (
-    await knex.select('uid').from('public.users').where('uid', user.id)
-  )?.[0]
+  return uid
 }
 
 /**
