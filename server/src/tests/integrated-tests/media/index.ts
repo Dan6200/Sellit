@@ -49,12 +49,14 @@ export default function ({
       uidToDelete = response.uid
       // For testing, we'll create a user directly in Supabase and then sign in with email/password
       // This replaces the Firebase custom token approach
+      const { email, password, ...user_metadata } = userInfo
       const {
         data: { user },
         error,
       } = await supabase.auth.admin.createUser({
         email: userInfo.email,
         password: userInfo.password,
+        user_metadata,
         email_confirm: true,
       })
       if (error) throw error

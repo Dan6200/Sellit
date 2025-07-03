@@ -12,7 +12,8 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node built/server/src/server.js",
-    "start:test": "NODE_ENV=testing node built/server/src/server.js",
+    "tests:server": "NODE_ENV=testing node built/server/src/server.js",
+    "tests:hmr-server": "NODE_ENV=testing tsx watch server/src/server.ts",
     "tests": "NODE_ENV=testing mocha server/src/tests --config server/src/tests/.mocharc.json",
     "dev": "NODE_ENV=development tsx watch server/src/server.ts",
     "build": "tsc -p tsconfig.json"

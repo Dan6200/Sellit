@@ -10,34 +10,25 @@ import { QueryResult, QueryResultRow } from 'pg'
 import { isSuccessful } from '../utils/query-validation.js'
 import { validateReqData } from '../utils/request-validation.js'
 import { validateResData } from '../utils/response-validation/index.js'
-import { getUserQueryString } from './utils.js'
+import { getUserInformationAndRole } from './utils.js'
 import {
   UIDSchema,
-  UserRequestSchema,
   UserResponseSchema,
   UserUpdateRequestSchema,
 } from '../../app-schema/users.js'
+import { supabase } from '#supabase-config'
+import { UserRequestData } from '@/types-and-interfaces/users/index.js'
 
-const { OK, CREATED } = StatusCodes
-
-/**
- * @description Add a user account to the database
- **/
-const createQuery = async <T>({
-  uid,
-  body,
-}: QueryParams<T>): Promise<typeof uid> =>
-  knex('users')
-    .insert({ uid, ...body })
-    .returning('uid')
+const { OK } = StatusCodes
 
 /**
  * @description Retrieves user information.
+ * Also returns if it's a vendor or a customer or both
  **/
 const getQuery = async <T>({
   uid,
 }: QueryParams<T>): Promise<QueryResult<QueryResultRow>> =>
-  pg.query(getUserQueryString, [uid])
+  pg.query(getUserInformationAndRole, [uid])
 
 /**
  * @description Updates user information.
@@ -45,29 +36,48 @@ const getQuery = async <T>({
 const updateQuery = async <T>({
   body,
   uid,
-}: QueryParams<T>): Promise<QueryResult<QueryResultRow>> =>
-  knex('users')
-    .update({ ...body })
-    .where('uid', uid)
-    .returning('uid')
+}: QueryParams<T>): Promise<QueryResult<QueryResultRow>> => {
+  const { email, password, ...user_metadata } = <UserRequestData>(<any>body)
+
+  const updateData: {
+    email?: string
+    password?: string
+    user_metadata?: object
+    email_confirm?: boolean
+  } = {}
+
+  if (email !== undefined) {
+    updateData.email = email
+  }
+  if (password !== undefined) {
+    updateData.password = password
+  }
+  if (user_metadata && Object.keys(user_metadata).length > 0) {
+    updateData.user_metadata = user_metadata
+  }
+  updateData.email_confirm = true
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.admin.updateUserById(uid, updateData)
+  if (error) throw error
+  return (
+    await knex.select('uid').from('public.users').where('uid', user.id)
+  )?.[0]
+}
 
 /**
  * @description Delete the user account from the database
  **/
-const deleteQuery = async <T>({ uid }: QueryParams<T>): Promise<typeof uid> =>
-  knex('users').where('uid', uid).del().returning('uid')
+const deleteQuery = async <T>({ uid }: QueryParams<T>): Promise<typeof uid> => {
+  await supabase.auth.admin.deleteUser(uid, true)
+  return uid
+}
 
-const processPostRoute = <ProcessRoute>createRouteProcessor
 const processPatchRoute = <ProcessRoute>createRouteProcessor
 const processDeleteRoute = <ProcessRouteWithoutBody>createRouteProcessor
 const processGetRoute = <ProcessRouteWithoutBody>createRouteProcessor
-
-export const postUser = processPostRoute({
-  Query: createQuery,
-  status: CREATED,
-  validateBody: validateReqData(UserRequestSchema),
-  validateResult: isSuccessful(UIDSchema),
-})
 
 export const getUser = processGetRoute({
   Query: getQuery,

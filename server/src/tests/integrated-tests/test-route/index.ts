@@ -4,6 +4,7 @@ import { TestCreateRequestParamsGeneral } from '../../../types-and-interfaces/te
 import { UserRequestData } from '../../../types-and-interfaces/users/index.js'
 import { deleteUser } from './delete-user.js'
 import { supabase } from '#supabase-config'
+import { createUserAndSignInForTesting } from './create-user.js'
 
 export default function ({
   verb,
@@ -30,26 +31,8 @@ export default function ({
     if (validateReqData && !validateReqData(body))
       throw new BadRequestError('Invalid Request Data')
 
-    const userData = body as UserRequestData
-
-    // Create user for testing
-    if (verb === 'post' && path === '/v1/users') {
-      const { error } = await supabase.auth.admin.createUser({
-        ...userData,
-        email_confirm: true,
-      })
-      if (error)
-        throw new Error(
-          'Unable to create user: ' + userData?.email + '\n\t' + error.cause,
-        )
-      const { data: signInData, error: signInError } =
-        await supabase.auth.signInWithPassword({
-          email: userData?.email,
-          password: userData?.password,
-        })
-      if (signInError) throw signInError
-      token = signInData.session?.access_token as string
-    }
+    // create a user and sign-in to retrieve token
+    token = await createUserAndSignInForTesting(body)
 
     // Make request
     const request = chai
@@ -67,11 +50,6 @@ export default function ({
     if (response.body && validateResData && !validateResData(response.body)) {
       if (response.status === 404) return null
       throw new BadRequestError('Invalid Database Result')
-    }
-
-    // Delete user for testing
-    if (verb === 'delete' && path === '/v1/users') {
-      await deleteUser(response.body)
     }
 
     return response.body

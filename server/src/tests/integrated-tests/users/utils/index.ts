@@ -81,9 +81,7 @@ export const testHasNoVendorAccount = (<TestCreateRequest>testCreateRequest)({
   validateResData: hasNoVendorAccount,
 })
 
-const testCreateRequestWithBody = <TestCreateRequestWithBody>testCreateRequest
-
-export const testPostUser = testCreateRequestWithBody({
+export const testPostUser = (<TestCreateRequestWithBody>testCreateRequest)({
   verb: 'post',
   statusCode: CREATED,
   validateResData: isValidUID,
