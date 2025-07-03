@@ -1,29 +1,31 @@
 drop schema if exists public cascade;
 create schema if not exists public;
 
--- create table if not exists users (
---   uid 		     varchar                    primary    key, -- Get from Firebase
---   first_name   varchar(30)               not        null,
--- 	check				 (first_name ~* '^[a-zA-Z]+$'),
---   last_name    varchar(30)               not        null,
--- 	check				 (last_name ~* '^[a-zA-Z]+([-'']*[a-zA-Z]+)+$'),
---   email        varchar(320)              unique,
---   check        (email ~* '^(([^<> ()[\]\\.,;:\s@"]+(\.[^< > ()[\]\\.,;'
--- 							 ':\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1'
--- 							 ',3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'),  
---   phone        varchar(40)               unique,
---   check        (phone ~* '^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$'),  
--- 	check				 (email is not null and phone is not null 
--- 							 or email is null and phone is not null 
--- 							 or email is not null and phone is null),
---   dob          date                      not        null,
---   country      varchar                   not        null 			default  		'Nigeria',
---   check        (current_date - dob > 18)
--- );
---
+create table if not exists users (
+  uid 		     uuid                    primary    key, -- Get from Firebase
+  first_name   varchar(30)               not        null,
+	check				 (first_name ~* '^[a-zA-Z]+$'),
+  last_name    varchar(30)               not        null,
+	check				 (last_name ~* '^[a-zA-Z]+([-'']*[a-zA-Z]+)+$'),
+  email        varchar(320)              unique,
+  check        (email ~* '^(([^<> ()[\]\\.,;:\s@"]+(\.[^< > ()[\]\\.,;'
+							 ':\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1'
+							 ',3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'),  
+  phone        varchar(40)               unique,
+  check        (phone ~* '^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$'),  
+	check				 (email is not null and phone is not null 
+							 or email is null and phone is not null 
+							 or email is not null and phone is null),
+  dob          date                      not        null,
+  country      varchar                   not        null 			default  		'Nigeria',
+  check        (current_date - dob > 18),
+  deleted_at   timestamptz
+);
+
+
 
 create table if not exists customers (
-  customer_id   uuid   primary key   references   auth.users   on   delete   cascade
+  customer_id   uuid   primary key   references   users   on   delete   cascade
 );
 
 
@@ -47,14 +49,18 @@ create table if not exists payment_info (
 
 
 create table if not exists vendors (
+<<<<<<< HEAD:server/src/db/sql-scripts/create-table.sql
   vendor_id   uuid   primary key   references   auth.users   on   delete   cascade
+=======
+  vendor_id   uuid   primary key   references   users   on   delete   cascade
+>>>>>>> recovered-commit:supabase/migrations/20250702000000_initial_schema.sql
 );
 
 
 create table if not exists stores (
   store_id       serial    primary   key,   
   store_name     varchar   not       null,
-  vendor_id      varchar       not       null    references   vendors        on   delete   cascade,
+  vendor_id      uuid       not       null    references   vendors        on   delete   cascade,
   store_page     jsonb,
   date_created   date      not       null    default      current_date
 );
@@ -88,7 +94,7 @@ create table if not exists products (
   description          jsonb,
   list_price           numeric(19,4),
   net_price            numeric(19,4),
-  vendor_id            varchar              not       null    references			vendors         on   delete   cascade,
+  vendor_id            uuid              not       null    references			vendors         on   delete   cascade,
   category_id          int           		not    		null    references   		categories      on   delete   cascade,
   subcategory_id       int           		not    		null    references   		subcategories   on   delete   cascade,
   created_at           timestamptz      not       null    default      		now(),
@@ -133,7 +139,7 @@ for each row execute function product_media_display_landing_trigger();
 
 create table if not exists shopping_cart (
   cart_id       serial        primary   key,
-  customer_id   varchar           not       null   references   customers   on   delete   cascade,
+  customer_id   uuid           not       null   references   customers   on   delete   cascade,
   created       timestamptz   not       null   default      now(),
   updated       timestamptz   not       null   default      now()
 );
@@ -186,3 +192,43 @@ create table if not exists customer_reviews (
   rating           numeric(3,2)   not       null,
   vendor_remark    varchar
 );
+
+-- Function to handle new user creation in auth.users
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.users (uid, first_name, last_name, email, phone, dob, country)
+  values (
+    new.id,
+    new.raw_user_meta_data->>'first_name',
+    new.raw_user_meta_data->>'last_name',
+    new.email,
+    new.phone,
+    (new.raw_user_meta_data->>'dob')::date,
+    coalesce(new.raw_user_meta_data->>'country', 'Nigeria')
+  );
+  return new;
+end;
+$$ language plpgsql security definer;
+
+-- Trigger to call handle_new_user on auth.users insert
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
+-- Function to handle user deletion from auth.users
+create or replace function public.handle_delete_user()
+returns trigger as $$
+begin
+  update public.users
+  set deleted_at = now()
+  where uid = old.id;
+  return old;
+end;
+$$ language plpgsql security definer;
+
+-- Trigger to call handle_delete_user on auth.users delete
+create trigger on_auth_user_deleted
+  after delete on auth.users
+  for each row execute procedure public.handle_delete_user();
+

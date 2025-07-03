@@ -8,7 +8,6 @@ import {
   testDeleteUser,
   testGetNonExistentUser,
 } from './utils/index.js'
-import { knex } from '../../../db/index.js'
 import { CreateRequestParams } from '@/types-and-interfaces/test-routes.js'
 import { supabase } from '#supabase-config'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
@@ -29,53 +28,36 @@ export default function ({
   let token: string = ''
   describe('User account management', () => {
     before(async () => {
-      // Delete users from db
-        await knex('users').where('uid', uidToDelete).del()
-        // Delete all users from Supabase auth
-        await supabase.auth.admin
-          .catch((error: Error) =>
-            console.error(
-              `failed to delete user with uid ${uidToDelete}: ${error}`,
-            ),
-          )
-      } else console.log(`UID: ${uidToDelete}`)
-    })
-
-    it('should create a new user', async () => {
-      // Create a new user for each tests
-      const postUserParams = {
-        server,
-        path,
-        body: userInfo,
+      // Delete all users from Supabase auth
+      const { data, error } = await supabase.auth.admin.listUsers()
+      if (error) {
+        console.error('Failed to list users:', error)
+        return
       }
-      if (!isValidPostUserParams(postUserParams))
-        throw new Error('Invalid parameter object')
-      const response = await testPostUser(postUserParams).catch((error) =>
-        console.error(error),
-      )
-      // For testing, we'll create a user directly in Supabase and then sign in with email/password
-      // This replaces the Firebase custom token approach
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.admin.createUser({
-        email: userInfo.email,
-        password: userInfo.password,
-        email_confirm: true,
-      })
-      if (error) throw error
-      uidToDelete = user.id // Update uidToDelete with Supabase user ID
-      const { data: signInData, error: signInError } =
-        await supabase.auth.signInWithPassword({
-          email: userInfo.email,
-          password: userInfo.password,
-        })
-      if (signInError) throw signInError
-      token = signInData.session?.access_token as string
+
+      if (data && data.users.length > 0) {
+        for (const user of data.users) {
+          await supabase.auth.admin
+            .deleteUser(user.id)
+            .catch((deleteError: Error) =>
+              console.error(
+                `Failed to delete user with uid ${user.id}: ${deleteError}`,
+              ),
+            )
+        }
+        console.log(`Deleted ${data.users.length} users from Supabase auth.`)
+      } else {
+        console.log('No users to delete from Supabase auth.')
+      }
     })
 
     it("it should get the user's account", () =>
-      testGetUser({ server, token, path }))
+      testGetUser({
+        server,
+        token,
+        body: { email: userInfo.email, password: userInfo.password },
+        path,
+      }))
 
     it("it should update the user's account", () =>
       testPatchUser({
@@ -91,21 +73,6 @@ export default function ({
 
     it("it should fail to get user's account", () =>
       testGetNonExistentUser({ server, token, path }))
-
-    after(async () => {
-      // Delete users from db
-      if (uidToDelete) {
-        await knex('users').where('uid', uidToDelete).del()
-        // Delete all users from Supabase auth
-        await supabase.auth.admin
-          .deleteUser(uidToDelete)
-          .catch((error: Error) =>
-            console.error(
-              `failed to delete user with uid ${uidToDelete}: ${error}`,
-            ),
-          )
-      } else console.log(`UID: ${uidToDelete}`)
-    })
   })
 }
 

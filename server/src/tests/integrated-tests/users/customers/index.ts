@@ -26,20 +26,22 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
       const response = await testPostUser(postUserParams)
       // For testing, we'll create a user directly in Supabase and then sign in with email/password
       // This replaces the Firebase custom token approach
+      const { email, password, ...user_metadata } = userInfo
       const {
         data: { user },
         error,
       } = await supabase.auth.admin.createUser({
-        email: userInfo.email,
-        password: userInfo.password,
+        email,
+        password,
+        user_metadata,
         email_confirm: true,
       })
       if (error) throw error
       uidToDelete = user.id // Update uidToDelete with Supabase user ID
       const { data: signInData, error: signInError } =
         await supabase.auth.signInWithPassword({
-          email: userInfo.email,
-          password: userInfo.password,
+          email: email,
+          password: password,
         })
       if (signInError) throw signInError
       token = signInData.session?.access_token as string

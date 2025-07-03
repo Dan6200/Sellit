@@ -2,8 +2,8 @@ import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { StatusCodes } from 'http-status-codes'
 import {
-  TestCreateRequest,
-  TestCreateRequestWithBody,
+  TestRequest,
+  TestRequestWithBody,
 } from '../../../../types-and-interfaces/test-routes.js'
 import {
   isValidUID,
@@ -11,7 +11,7 @@ import {
   isValidUserResponseData,
   isValidUserUpdateRequestData,
 } from '../../../../types-and-interfaces/users/index.js'
-import testCreateRequest from '../../test-route/index.js'
+import testRequests from '../../test-route/index.js'
 
 chai.use(chaiHttp).should()
 
@@ -45,66 +45,72 @@ const hasNoVendorAccount = (data: unknown) => {
   return true
 }
 
-export const testFailToGetUser = (<TestCreateRequest>testCreateRequest)({
+export const testFailToGetUser = testRequests({
   verb: 'get',
   statusCode: UNAUTHORIZED,
   validateResData: null,
 })
 
-export const testGetUser = (testCreateRequest as TestCreateRequest)({
+const testRequestsWithBody = <TestRequestWithBody>testRequests
+export const testGetUser = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: isValidUserResponseData,
+  validateReqData: isValidUserRequestData,
 })
 
-export const testHasCustomerAccount = (<TestCreateRequest>testCreateRequest)({
+export const testHasCustomerAccount = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: hasCustomerAccount,
+  validateReqData: isValidUserRequestData,
 })
 
-export const testHasNoCustomerAccount = (<TestCreateRequest>testCreateRequest)({
+export const testHasNoCustomerAccount = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: hasNoCustomerAccount,
+  validateReqData: isValidUserRequestData,
 })
 
-export const testHasVendorAccount = (<TestCreateRequest>testCreateRequest)({
+export const testHasVendorAccount = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: hasVendorAccount,
+  validateReqData: isValidUserRequestData,
 })
 
-export const testHasNoVendorAccount = (<TestCreateRequest>testCreateRequest)({
+export const testHasNoVendorAccount = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: hasNoVendorAccount,
+  validateReqData: isValidUserRequestData,
 })
 
-const testCreateRequestWithBody = <TestCreateRequestWithBody>testCreateRequest
-
-export const testPostUser = testCreateRequestWithBody({
+export const testPostUser = testRequestsWithBody({
   verb: 'post',
   statusCode: CREATED,
   validateResData: isValidUID,
   validateReqData: isValidUserRequestData,
 })
 
-export const testPatchUser = testCreateRequest({
+export const testPatchUser = testRequests({
   verb: 'patch',
   statusCode: OK,
   validateResData: isValidUID,
   validateReqData: isValidUserUpdateRequestData,
 })
 
-export const testDeleteUser = testCreateRequest({
+export const testDeleteUser = testRequests({
   verb: 'delete',
   statusCode: OK,
   validateResData: isValidUID,
+  validateReqData: isValidUserRequestData,
 })
 
-export const testGetNonExistentUser = testCreateRequest({
+export const testGetNonExistentUser = testRequests({
   verb: 'get',
   statusCode: NOT_FOUND,
   validateResData: null,
+  validateReqData: isValidUserRequestData,
 })
