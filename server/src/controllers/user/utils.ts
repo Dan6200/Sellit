@@ -1,4 +1,4 @@
-export const getUserQueryString = `
+export const getUserInformationAndRole = `
 SELECT first_name, last_name, email, phone, country, dob,
 			 CASE WHEN customer_id IS NOT NULL THEN TRUE ELSE FALSE END AS is_customer,
 			 CASE WHEN vendor_id IS NOT NULL THEN TRUE ELSE FALSE END AS is_vendor
