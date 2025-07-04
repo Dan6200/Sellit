@@ -13,33 +13,34 @@ export default function ({
     server,
     path,
     query,
-    body,
+    requestBody,
   }: {
     server: string
     path: string
     query?: { [k: string]: any }
-    body?: T
+    requestBody?: T
   }) {
-    // Validate the request body
-    if (body && !validateReqData)
-      throw new BadRequestError('Must validate request data')
-    if (validateReqData && !validateReqData(body))
-      throw new BadRequestError('Invalid Request Data')
-
-    console.log('DEBUG: ' + JSON.stringify(body))
     let token = null
     // create a user and sign-in to retrieve token
     if (!query?.public) {
-      token = await signInForTesting(body as any)
+      console.log('DEBUG: ' + JSON.stringify(requestBody))
+      token = await signInForTesting(requestBody as any)
       console.log('DEBUG: token->' + token)
     }
+    const { password, ...requestBodyWithoutPasswd } = requestBody as any
+
+    // Validate the request body
+    if (requestBodyWithoutPasswd && !validateReqData)
+      throw new BadRequestError('Must validate request data')
+    if (validateReqData && !validateReqData(requestBodyWithoutPasswd))
+      throw new BadRequestError('Invalid Request Data')
 
     // Make request
     const request = chai
       .request(server)
       [verb](path)
       .query(query ?? {})
-      .send(<object>body)
+      .send(<object>requestBodyWithoutPasswd)
 
     // Add request token
     if (token) request.auth(token, { type: 'bearer' })

@@ -1,6 +1,6 @@
 import { supabase } from '#supabase-config'
 
-export const deleteUserForTesting = async () => {
+export const deleteAllUsersForTesting = async () => {
   const { data, error } = await supabase.auth.admin.listUsers()
   if (error) {
     console.error('Failed to list users:', error)

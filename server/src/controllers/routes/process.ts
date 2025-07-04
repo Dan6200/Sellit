@@ -21,11 +21,14 @@ export default ({
   status: Status
   validateBody?: <T>(body: T) => boolean
   validateResult?: (
-    result: any[] | QueryResult<QueryResultRow | QueryResultRow[]>
+    result: any[] | QueryResult<QueryResultRow | QueryResultRow[]>,
   ) => boolean
 }) => {
   // return the route processor middleware
-  return async (request: RequestWithPayload, response: Response) => {
+  return async (
+    request: RequestWithPayload,
+    response: Response,
+  ): Promise<Response<any, Record<string, any>> | void> => {
     const { params, query, body } = request
     let uid: string | undefined
     if (request.uid != null) ({ uid } = request)
@@ -40,7 +43,7 @@ export default ({
       validateBody(body)
     }
 
-    let dbResponse: unknown
+    let dbResponse: any
     if (QueryForwarder) {
       // Call the correct query handler based on route is public or not
       const publicQuery = <string>query!.public
@@ -59,11 +62,6 @@ export default ({
         params,
         query,
       })
-    }
-
-    if (!isTypeQueryResultRow(dbResponse) && !Array.isArray(dbResponse)) {
-      console.log(typeof dbResponse, dbResponse)
-      throw new BadRequestError(`The Database operation could not be completed`)
     }
 
     if (validateResult) {

@@ -11,6 +11,7 @@ import { isTypeQueryResultRow } from '../../types-and-interfaces/response.js'
 export const isSuccessful =
   <T>(schema: ObjectSchema<T>) =>
   (result: any[] | QueryResult<QueryResultRow | QueryResultRow[]>): boolean => {
+    console.log('DEBUG: result -> ' + JSON.stringify(result))
     if (isTypeQueryResultRow(result)) {
       if (result.rows.length === 0)
         throw new BadRequestError(`${result.command} Operation unsuccessful`)

@@ -7,9 +7,8 @@ import {
   testDeleteUser,
   testGetNonExistentUser,
 } from './utils/index.js'
-import { supabase } from '#supabase-config'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
-import { deleteUserForTesting } from '../test-route/delete-user.js'
+import { deleteAllUsersForTesting } from '../test-route/delete-user.js'
 import { createUserForTesting } from '../test-route/create-user.js'
 
 chai.use(chaiHttp).should()
@@ -29,7 +28,7 @@ export default function ({
   describe('User account management', () => {
     before(async () => {
       // Delete all users from Supabase auth
-      await deleteUserForTesting()
+      await deleteAllUsersForTesting()
       // Create user after...
       await createUserForTesting(userInfo)
     })
@@ -37,21 +36,26 @@ export default function ({
     it("it should get the user's account", () =>
       testGetUser({
         server,
-        body: userInfo,
+        requestBody: userInfo,
         path,
       }))
 
     it("it should delete the user's account", () =>
-      testDeleteUser({ server, path, body: userInfo }))
+      testDeleteUser({ server, path, requestBody: userInfo }))
 
     it("it should fail to get user's account", () =>
-      testGetNonExistentUser({ server, body: userInfo, path }))
-  })
+      testGetNonExistentUser({ server, requestBody: userInfo, path }))
 
-  it("it should update the user's account", () =>
-    testPatchUser({
-      server,
-      path,
-      body: updatedUserInfo,
-    }))
+    it("it should update the user's account", () => {
+      const { password, ...requestBody } = {
+        ...userInfo,
+        ...updatedUserInfo,
+      } /* Send both to be able to sign in.. In a real client environment only updated payload would be sent... */
+      return testPatchUser({
+        server,
+        path,
+        requestBody,
+      })
+    })
+  })
 }

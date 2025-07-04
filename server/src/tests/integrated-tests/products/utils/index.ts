@@ -15,14 +15,10 @@ import {
   TestRequestPublic,
   TestRequestWithBody,
   TestRequestWithQParams,
-  TestRequestWithQParamsAndBody,
 } from '../../../../types-and-interfaces/test-routes.js'
 import testRoutes from '../../test-route/index.js'
-import { createUserAndSignInForTesting } from '../../test-route/create-user.js'
-import {
-  UserData,
-  UserRequestData,
-} from '@/types-and-interfaces/users/index.js'
+import { UserRequestData } from '@/types-and-interfaces/users/index.js'
+import { signInForTesting } from '../../test-route/signin-user.js'
 
 chai.use(chaiHttp).should()
 
@@ -130,7 +126,7 @@ const testUploadProductMedia = async function (
   userInfo: UserRequestData,
   queryParams: { [k: string]: any },
 ): Promise<any> {
-  const token = await createUserAndSignInForTesting(userInfo)
+  const token = await signInForTesting(userInfo)
   const fieldName = 'product-media'
   const request = chai
     .request(server)

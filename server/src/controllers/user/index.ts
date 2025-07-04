@@ -2,10 +2,11 @@ import { StatusCodes } from 'http-status-codes'
 import {
   ProcessRoute,
   ProcessRouteWithoutBody,
+  ProcessRouteWithoutBodyAndDBResult,
   QueryParams,
 } from '../../types-and-interfaces/process-routes.js'
 import createRouteProcessor from '../routes/process.js'
-import { knex, pg } from '../../db/index.js'
+import { pg } from '../../db/index.js'
 import { QueryResult, QueryResultRow } from 'pg'
 import { isSuccessful } from '../utils/query-validation.js'
 import { validateReqData } from '../utils/request-validation.js'
@@ -19,7 +20,7 @@ import {
 import { supabase } from '#supabase-config'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
 
-const { OK } = StatusCodes
+const { OK, NO_CONTENT } = StatusCodes
 
 /**
  * @description Retrieves user information.
@@ -36,7 +37,7 @@ const getQuery = async <T>({
 const updateQuery = async <T>({
   body,
   uid,
-}: QueryParams<T>): Promise<string> => {
+}: QueryParams<T>): Promise<QueryResult<QueryResultRow>> => {
   const { email, password, ...user_metadata } = <UserRequestData>(<any>body)
 
   const updateData: {
@@ -59,19 +60,21 @@ const updateQuery = async <T>({
 
   const { error } = await supabase.auth.admin.updateUserById(uid, updateData)
   if (error) throw error
-  return uid
+  return pg.query(getUserInformationAndRole, [uid])
 }
 
 /**
  * @description Delete the user account from the database
  **/
-const deleteQuery = async <T>({ uid }: QueryParams<T>): Promise<typeof uid> => {
-  await supabase.auth.admin.deleteUser(uid, true)
-  return uid
+/* TODO: Add soft delete option */
+const deleteQuery = async <T>({ uid }: QueryParams<T>): Promise<void> => {
+  await supabase.auth.admin.deleteUser(uid)
 }
 
 const processPatchRoute = <ProcessRoute>createRouteProcessor
-const processDeleteRoute = <ProcessRouteWithoutBody>createRouteProcessor
+const processDeleteRoute = <ProcessRouteWithoutBodyAndDBResult>(
+  createRouteProcessor
+)
 const processGetRoute = <ProcessRouteWithoutBody>createRouteProcessor
 
 export const getUser = processGetRoute({
@@ -89,6 +92,5 @@ export const patchUser = processPatchRoute({
 
 export const deleteUser = processDeleteRoute({
   Query: deleteQuery,
-  status: OK,
-  validateResult: isSuccessful(UIDSchema),
+  status: NO_CONTENT,
 })

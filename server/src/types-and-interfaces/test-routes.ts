@@ -37,7 +37,7 @@ export type TestRequestWithBody = (
 ) => TestRequestInnerWBody
 
 type TestRequestInnerWBody = <T>(
-  requestParams: RequestParams & { body: T },
+  requestParams: RequestParams & { requestBody: T },
 ) => Promise<any>
 
 type TestRequestPublicInner = <T>(
@@ -53,7 +53,7 @@ type TestRequestInnerWQuery = <T>(
 ) => Promise<any>
 
 type TestRequestInnerWQueryNBody = <T>(
-  requestParams: RequestParams & { body: T } & {
+  requestParams: RequestParams & { requestBody: T } & {
     query: { [k: string]: any } | null
   },
 ) => Promise<any>

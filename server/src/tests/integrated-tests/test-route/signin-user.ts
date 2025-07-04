@@ -1,10 +1,6 @@
 import { supabase } from '#supabase-config'
 
-export const signInForTesting = async ({
-  email,
-  password,
-  ...user_metadata
-}: any) => {
+export const signInForTesting = async ({ email, password }: any) => {
   const { data: signInData, error: signInError } =
     await supabase.auth.signInWithPassword({
       email: email,

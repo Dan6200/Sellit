@@ -216,8 +216,9 @@ create trigger on_auth_user_created
 create or replace function public.handle_delete_user()
 returns trigger as $$
 begin
-  update public.users
-  set deleted_at = now()
+  -- update public.users
+  -- set deleted_at = now() <- Soft Delete Later
+  delete from public.users
   where uid = old.id;
   return old;
 end;
