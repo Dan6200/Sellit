@@ -1,4 +1,4 @@
-import { testPostCustomer, testDeleteCustomer } from './utils/index.js'
+import { testPostCustomer, testDeleteCustomer } from './definitions/index.js'
 import { UserRequestData } from '../../../../types-and-interfaces/users/index.js'
 import {
   testHasCustomerAccount,

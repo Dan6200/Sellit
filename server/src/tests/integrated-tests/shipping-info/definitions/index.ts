@@ -10,6 +10,7 @@ import {
   TestRequestWithBody,
 } from '../../../../types-and-interfaces/test-routes.js'
 import testRoute from '../../test-route/index.js'
+import { isValidSignInInfo } from '@/types-and-interfaces/users/test.js'
 
 const { CREATED, OK, NOT_FOUND } = StatusCodes
 
@@ -39,15 +40,17 @@ const testUpdateShipping = (testRoute as TestRequestWithBody)({
   validateResData: isValidShippingInfoId,
 })
 
-const testDeleteShipping = (testRoute as TestRequest)({
+const testDeleteShipping = (testRoute as TestRequestWithBody)({
   statusCode: OK,
   verb: 'delete',
+  validateReqData: isValidSignInInfo,
   validateResData: isValidShippingInfoId,
 })
 
-const testGetNonExistentShipping = (testRoute as TestRequest)({
+const testGetNonExistentShipping = (testRoute as TestRequestWithBody)({
   verb: 'get',
   statusCode: NOT_FOUND,
+  validateReqData: isValidSignInInfo,
   validateResData: null,
 })
 

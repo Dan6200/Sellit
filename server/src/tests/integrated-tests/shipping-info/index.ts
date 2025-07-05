@@ -1,6 +1,5 @@
 import ShippingInfo from '@/types-and-interfaces/shipping-info.js'
-import { supabase } from '#supabase-config'
-import { testPostCustomer } from '../users/customers/utils/index.js'
+import { testPostCustomer } from '../users/customers/definitions/index.js'
 import {
   testCreateShipping,
   testGetShipping,
@@ -9,8 +8,9 @@ import {
   testGetNonExistentShipping,
 } from '../shipping-info/utils/index.js'
 import assert from 'assert'
-import { knex } from '../../../db/index.js'
 import { UserRequestData } from '../../../types-and-interfaces/users/index.js'
+import { deleteAllUsersForTesting } from '../test-route/delete-user.js'
+import { createUserForTesting } from '../test-route/create-user.js'
 
 // Set server url
 const server = process.env.SERVER!
@@ -24,26 +24,20 @@ export default function ({
   listOfShippingInfo: ShippingInfo[]
   listOfUpdatedShippingInfo: ShippingInfo[]
 }) {
+  const { email, password } = userInfo
   before(async () => {
-    await testPostCustomer({ server, path: '/v1/users/customers' })
-  })
-
-  after(async function () {
-    // Delete users from db
-    if (userIdToDelete)
-      await knex('users').where('userId', userIdToDelete).del()
-    // Delete all users from firebase auth
-    await supabase.auth.admin
-      .deleteUser(userIdToDelete)
-      .catch((error: Error) =>
-        console.error(
-          `failed to delete user with userId ${userIdToDelete}: ${error}`,
-        ),
-      )
+    // Delete all users from Supabase auth
+    await deleteAllUsersForTesting()
+    // Create user after...
+    await createUserForTesting(userInfo)
+    await testPostCustomer({
+      server,
+      requestBody: { email, password },
+      path: '/v1/users/customers',
+    })
   })
 
   const shippingPath = '/v1/shipping-info'
-  let userIdToDelete = ''
 
   const shippingIds: number[] = []
 
@@ -52,7 +46,7 @@ export default function ({
       const { shipping_info_id } = await testCreateShipping({
         server,
         path: shippingPath,
-        body: shippingInfo,
+        requestBody: { ...shippingInfo, email, password },
       })
       shippingIds.push(shipping_info_id)
     }
@@ -63,6 +57,7 @@ export default function ({
       await testGetShipping({
         server,
         path: shippingPath + '/' + shippingId,
+        requestBody: { email, password },
       })
     }
   })
@@ -73,7 +68,7 @@ export default function ({
       await testUpdateShipping({
         server,
         path: shippingPath + '/' + shippingId,
-        body: listOfUpdatedShippingInfo[idx],
+        requestBody: { ...listOfUpdatedShippingInfo[idx], email, password },
       })
     }
   })
@@ -83,6 +78,7 @@ export default function ({
       await testDeleteShipping({
         server,
         path: shippingPath + '/' + shippingId,
+        requestBody: { email, password },
       })
     }
   })
@@ -92,6 +88,7 @@ export default function ({
       await testGetNonExistentShipping({
         server,
         path: `${shippingPath}/${shippingId}`,
+        requestBody: { email, password },
       })
     }
   })

@@ -1,11 +1,9 @@
-import { testPostVendor, testDeleteVendor } from './utils/index.js'
+import { testPostVendor, testDeleteVendor } from './definitions/index.js'
 import {
   testHasVendorAccount,
   testHasNoVendorAccount,
 } from '../../users/definitions.js'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
-import { knex } from '@/db/index.js'
-import { supabase } from '#supabase-config'
 import { deleteAllUsersForTesting } from '../../test-route/delete-user.js'
 import { createUserForTesting } from '../../test-route/create-user.js'
 
