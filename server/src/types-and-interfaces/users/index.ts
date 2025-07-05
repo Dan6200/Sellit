@@ -47,7 +47,7 @@ export const isValidUserRequestData = (
 ): data is UserRequestData => {
   // console.log('DEBUG: data ->' + JSON.stringify(data))
   const { error } = UserRequestSchema.validate(data)
-  error && console.error('here' + error)
+  error && console.error(error)
   return !error
 }
 

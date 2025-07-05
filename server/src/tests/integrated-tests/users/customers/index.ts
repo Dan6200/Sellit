@@ -19,7 +19,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
     const path = '/v1/users/customers'
     let uidToDelete: string = ''
 
-    it('it should create a customer user for the user', () =>
+    it('it should create a customer account for the user', () =>
       testPostCustomer({ server, path }))
 
     after(async () => {

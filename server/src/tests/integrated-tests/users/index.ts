@@ -36,12 +36,16 @@ export default function ({
     it("it should get the user's account", () =>
       testGetUser({
         server,
-        requestBody: userInfo,
+        requestBody: { email: userInfo.email, password: userInfo.password },
         path,
       }))
 
     it("it should delete the user's account", () =>
-      testDeleteUser({ server, path, requestBody: userInfo }))
+      testDeleteUser({
+        server,
+        path,
+        requestBody: { email: userInfo.email, password: userInfo.password },
+      }))
 
     it("it should update the user's account", async () => {
       const { ...requestBody } = {

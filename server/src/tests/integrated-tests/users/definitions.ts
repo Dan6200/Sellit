@@ -9,6 +9,7 @@ import {
   isValidUserUpdateRequestData,
 } from '@/types-and-interfaces/users/index.js'
 import testRequests from '../test-route/index.js'
+import { isValidSignInInfo } from '@/types-and-interfaces/users/test.js'
 
 chai.use(chaiHttp).should()
 
@@ -46,8 +47,8 @@ const testRequestsWithBody = <TestRequestWithBody>testRequests
 export const testGetUser = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
+  validateReqData: isValidSignInInfo,
   validateResData: isValidUserResponseData,
-  validateReqData: isValidUserRequestData,
 })
 
 export const testHasCustomerAccount = testRequestsWithBody({
@@ -88,8 +89,7 @@ export const testPatchUser = testRequests({
 export const testDeleteUser = testRequests({
   verb: 'delete',
   statusCode: NO_CONTENT,
-  validateResData: isValidUID,
-  validateReqData: isValidUserRequestData,
+  validateReqData: isValidSignInInfo,
 })
 
 export const testGetNonExistentUser = testRequests({

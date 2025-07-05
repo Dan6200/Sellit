@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes'
 export type TestRequestParams = {
   verb: 'get' | 'post' | 'delete' | 'put' | 'patch'
   statusCode: StatusCodes
-  validateResData: (data: unknown) => boolean
+  validateResData?: (data: unknown) => boolean
 }
 
 export type TestRequestParamsGeneral = {
