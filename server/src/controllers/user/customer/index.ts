@@ -15,7 +15,7 @@ const { CREATED, OK } = StatusCodes
  * @description Add a customer account to the database
  **/
 const createQuery = async ({
-  uid: customerId,
+  userId: customerId,
 }: QueryParams): Promise<Knex.QueryBuilder> =>
   knex('customers').insert({ customer_id: customerId }).returning('customer_id')
 
@@ -23,7 +23,7 @@ const createQuery = async ({
  * @description Delete the customer account from the database
  **/
 const deleteQuery = async ({
-  uid: customerId,
+  userId: customerId,
 }: QueryParams): Promise<Knex.QueryBuilder> =>
   knex('customers')
     .where('customer_id', customerId)

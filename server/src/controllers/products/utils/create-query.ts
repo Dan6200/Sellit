@@ -11,14 +11,14 @@ import { isValidProductRequestData } from '../../../types-and-interfaces/product
  */
 export default async <T>({
   body,
-  uid: vendorId,
+  userId: vendorId,
 }: QueryParams<T>): Promise<number> => {
   const response = await knex('vendors')
     .where('vendor_id', vendorId)
     .first('vendor_id')
   if (response.length === 0) {
     throw new BadRequestError(
-      'Must have a Vendor account to be able to list products'
+      'Must have a Vendor account to be able to list products',
     )
   }
 

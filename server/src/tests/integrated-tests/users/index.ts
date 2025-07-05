@@ -1,4 +1,4 @@
-//cspell:ignore uids
+//cspell:ignore userIds
 import chai from 'chai'
 import chaiHttp from 'chai-http'
 import {

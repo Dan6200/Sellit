@@ -13,7 +13,7 @@ export const deleteAllUsersForTesting = async () => {
         .deleteUser(user.id)
         .catch((deleteError: Error) =>
           console.error(
-            `Failed to delete user with uid ${user.id}: ${deleteError}`,
+            `Failed to delete user with userId ${user.id}: ${deleteError}`,
           ),
         )
     }

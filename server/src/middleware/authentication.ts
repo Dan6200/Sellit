@@ -28,7 +28,7 @@ export default async (
       console.error('Supabase token verification error:', error?.message)
       throw new UnauthorizedError('Unauthorized Operation')
     }
-    request.uid = user.id // 'sub' typically contains the user ID in JWT claims
+    request.userId = user.id // 'sub' typically contains the user ID in JWT claims
     next()
   } catch (err) {
     console.error('Error during Supabase authentication:', err)

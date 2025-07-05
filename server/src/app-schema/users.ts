@@ -78,8 +78,8 @@ export const UserUpdateRequestSchema = joi
   })
   .required()
 
-export const UIDSchema = joi
+export const UserIDSchema = joi
   .object({
-    uid: joi.string().alphanum().min(1).max(128),
+    userId: joi.string().guid({ version: 'uuidv4' }),
   })
   .required()

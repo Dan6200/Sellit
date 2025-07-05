@@ -14,7 +14,7 @@ export type Status =
   | typeof NOT_FOUND
 
 export type QueryParams = {
-  uid?: string
+  userId?: string
   body?: { [key: string]: any }
   params?: { [key: string]: string }
   query?: ParsedQs

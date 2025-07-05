@@ -1,5 +1,5 @@
 import {
-  UIDSchema,
+  UserIDSchema,
   UserRequestSchema,
   UserResponseSchema,
   UserUpdateRequestSchema,
@@ -17,12 +17,12 @@ export interface UserData {
 
 export type UserRequestData = UserData & ({ email: string } | { phone: string })
 
-export interface UID {
-  uid: string
+export interface UserID {
+  userId: string
 }
 
-export const isValidUID = (data: unknown): data is UID => {
-  const { error } = UIDSchema.validate(data)
+export const isValidUserID = (data: unknown): data is UserID => {
+  const { error } = UserIDSchema.validate(data)
   error && console.error(error)
   return !error
 }

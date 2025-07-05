@@ -2,7 +2,7 @@ drop schema if exists public cascade;
 create schema if not exists public;
 
 create table if not exists users (
-  uid 		     uuid                    primary    key, -- Get from Firebase
+  userId 		     userId                    primary    key, -- Get from Firebase
   first_name   varchar(30)               not        null,
 	check				 (first_name ~* '^[a-zA-Z]+$'),
   last_name    varchar(30)               not        null,
@@ -195,7 +195,7 @@ create table if not exists customer_reviews (
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.users (uid, first_name, last_name, email, phone, dob, country)
+  insert into public.users (userId, first_name, last_name, email, phone, dob, country)
   values (
     new.id,
     new.raw_user_meta_data->>'first_name',
@@ -221,7 +221,7 @@ begin
   -- update public.users
   -- set deleted_at = now() <- Soft Delete Later
   delete from public.users
-  where uid = old.id;
+  where userId = old.id;
   return old;
 end;
 $$ language plpgsql security definer;

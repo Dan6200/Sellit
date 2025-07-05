@@ -30,8 +30,8 @@ export default ({
     response: Response,
   ): Promise<Response<any, Record<string, any>> | void> => {
     const { params, query, body } = request
-    let uid: string | undefined
-    if (request.uid != null) ({ uid } = request)
+    let userId: string | undefined
+    if (request.userId != null) ({ userId } = request)
 
     // Validate request data
     if (
@@ -48,7 +48,7 @@ export default ({
       // Call the correct query handler based on route is public or not
       const publicQuery = <string>query!.public
       dbResponse = await QueryForwarder(publicQuery)({
-        uid,
+        userId,
         body,
         params,
         query,
@@ -57,7 +57,7 @@ export default ({
       // remove password
       const { password, ...bodyWithoutPassword } = body
       dbResponse = await Query({
-        uid,
+        userId,
         body: bodyWithoutPassword,
         params,
         query,

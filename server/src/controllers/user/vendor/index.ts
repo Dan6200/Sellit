@@ -14,7 +14,7 @@ const { CREATED, OK } = StatusCodes
  * @description Add a vendor account to the database
  **/
 const createQuery = async <T>({
-  uid: vendorId,
+  userId: vendorId,
 }: QueryParams<T>): Promise<typeof vendorId> =>
   supabase.from('vendors').insert({ vendor_id: vendorId }).select('vendor_id')
 
@@ -22,7 +22,7 @@ const createQuery = async <T>({
  * @description Delete the vendor account from the database
  **/
 const deleteQuery = async <T>({
-  uid: vendorId,
+  userId: vendorId,
 }: QueryParams<T>): Promise<typeof vendorId> =>
   supabase.from('vendors').delete().eq('vendor_id', vendorId)
 

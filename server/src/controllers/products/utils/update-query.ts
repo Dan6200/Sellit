@@ -16,7 +16,7 @@ import {
 export default async <T>({
   params,
   body,
-  uid: vendorId,
+  userId: vendorId,
 }: QueryParams<T>): Promise<number> => {
   if (params == null) throw new BadRequestError('Must provide a product id')
 
@@ -27,7 +27,7 @@ export default async <T>({
     .first('vendor_id')
   if (response.length)
     throw new BadRequestError(
-      'Must have a vendor account to be able to update product list'
+      'Must have a vendor account to be able to update product list',
     )
 
   if (!isValidProductRequestData(body))

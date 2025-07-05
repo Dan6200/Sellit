@@ -1,7 +1,7 @@
 import { Request } from 'express'
 
 interface RequestWithPayload extends Request {
-  uid?: string
+  userId?: string
 }
 
 export { RequestWithPayload }

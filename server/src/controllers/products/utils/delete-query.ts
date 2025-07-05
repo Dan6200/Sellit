@@ -11,7 +11,7 @@ import { QueryParams } from '../../../types-and-interfaces/process-routes.js'
 
 export default async <T>({
   params,
-  uid: vendorId,
+  userId: vendorId,
 }: QueryParams<T>): Promise<number> => {
   if (params == null) throw new BadRequestError('Must provide product id')
   const { productId } = params
@@ -20,7 +20,7 @@ export default async <T>({
     .first('vendor_id')
   if (response.length)
     throw new BadRequestError(
-      'Must have a vendor account to be able to delete product'
+      'Must have a vendor account to be able to delete product',
     )
   return knex('products')
     .where('product_id', productId)

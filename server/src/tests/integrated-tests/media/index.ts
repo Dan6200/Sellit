@@ -19,7 +19,7 @@ const vendorsRoute = '/v1/users/vendors/'
 const productsRoute = '/v1/products'
 let token: string
 const server: string = process.env.SERVER!
-let uidToDelete: string
+let userIdToDelete: string
 const productIds: number[] = []
 
 export default function ({
@@ -48,7 +48,7 @@ export default function ({
         email_confirm: true,
       })
       if (error) throw error
-      uidToDelete = user.id // Update uidToDelete with Supabase user ID
+      userIdToDelete = user.id // Update userIdToDelete with Supabase user ID
       const { data: signInData, error: signInError } =
         await supabase.auth.signInWithPassword({
           email: userInfo.email,
@@ -70,13 +70,14 @@ export default function ({
 
     after(async function () {
       // Delete users from db
-      if (uidToDelete) await knex('users').where('uid', uidToDelete).del()
+      if (userIdToDelete)
+        await knex('users').where('userId', userIdToDelete).del()
       // Delete all users from firebase auth
       await supabase.auth.admin
-        .deleteUser(uidToDelete)
+        .deleteUser(userIdToDelete)
         .catch((error: Error) =>
           console.error(
-            `failed to delete user with uid ${uidToDelete}: ${error}`,
+            `failed to delete user with userId ${userIdToDelete}: ${error}`,
           ),
         )
       // Bulk delete media from cloudinary

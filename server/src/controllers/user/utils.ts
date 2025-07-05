@@ -4,7 +4,7 @@ SELECT first_name, last_name, email, phone, country, dob,
 			 CASE WHEN vendor_id IS NOT NULL THEN TRUE ELSE FALSE END AS is_vendor
 FROM users
 LEFT JOIN customers
-ON uid = customer_id
+ON userId = customer_id
 LEFT JOIN vendors
-ON uid = vendor_id
-WHERE uid = $1`
+ON userId = vendor_id
+WHERE userId = $1`

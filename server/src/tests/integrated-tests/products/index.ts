@@ -36,19 +36,20 @@ export default function ({
 
   after(async function () {
     // Delete users from db
-    if (uidToDelete) await knex('users').where('uid', uidToDelete).del()
+    if (userIdToDelete)
+      await knex('users').where('userId', userIdToDelete).del()
     // Delete all users from firebase auth
     await supabase.auth.admin
-      .deleteUser(uidToDelete)
+      .deleteUser(userIdToDelete)
       .catch((error: Error) =>
         console.error(
-          `failed to delete user with uid ${uidToDelete}: ${error}`,
+          `failed to delete user with userId ${userIdToDelete}: ${error}`,
         ),
       )
   })
 
   let token: string
-  let uidToDelete: string
+  let userIdToDelete: string
   const vendorsRoute = '/v1/users/vendors/'
   const productsRoute = '/v1/products'
   const productIds: number[] = []

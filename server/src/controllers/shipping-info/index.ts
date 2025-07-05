@@ -31,7 +31,7 @@ import { validateResData } from '../utils/response-validation.js'
 
 const createQuery = async <T>({
   body,
-  uid: customerId,
+  userId: customerId,
 }: QueryParams<T>): Promise<number> => {
   if (!customerId) throw new UnauthorizedError('Cannot access resource')
   // check if customer account exists
@@ -75,7 +75,7 @@ const createQuery = async <T>({
  */
 
 const getAllQuery = async <T>({
-  uid: customerId,
+  userId: customerId,
 }: QueryParams<T>): Promise<ShippingInfo[]> => {
   if (!customerId) throw new UnauthorizedError('Cannot access resource')
   const result = await knex('customers')
@@ -99,7 +99,7 @@ const getAllQuery = async <T>({
 
 const getQuery = async <T>({
   params,
-  uid: customerId,
+  userId: customerId,
 }: QueryParams<T>): Promise<ShippingInfo[]> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
@@ -128,7 +128,7 @@ const getQuery = async <T>({
 const updateQuery = async <T>({
   params,
   body,
-  uid: customerId,
+  userId: customerId,
 }: QueryParams<T>): Promise<number> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
@@ -163,10 +163,10 @@ const updateQuery = async <T>({
  * 3. If Customer owns the shipping info
  */
 
-const deleteQuery = async <T>({
+const deleteQuery = async ({
   params,
-  uid: customerId,
-}: QueryParams<T>): Promise<QueryResult<QueryResultRow>> => {
+  userId: customerId,
+}: QueryParams): Promise<QueryResult<QueryResultRow>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   if (!shippingInfoId)

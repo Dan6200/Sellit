@@ -24,18 +24,18 @@ const { OK, NO_CONTENT } = StatusCodes
  * @description Retrieves user information.
  * Also returns if it's a vendor or a customer or both
  **/
-const getQuery = async <T>({
-  uid,
-}: QueryParams<T>): Promise<QueryResult<QueryResultRow>> =>
-  pg.query(getUserInformationAndRole, [uid])
+const getQuery = async ({
+  userId,
+}: QueryParams): Promise<QueryResult<QueryResultRow>> =>
+  pg.query(getUserInformationAndRole, [userId])
 
 /**
  * @description Updates user information.
  **/
-const updateQuery = async <T>({
+const updateQuery = async ({
   body,
-  uid,
-}: QueryParams<T>): Promise<QueryResult<QueryResultRow>> => {
+  userId,
+}: QueryParams): Promise<QueryResult<QueryResultRow>> => {
   const { email, password, ...user_metadata } = <UserRequestData>(<any>body)
 
   const updateData: {
@@ -56,17 +56,17 @@ const updateQuery = async <T>({
   }
   updateData.email_confirm = true
 
-  const { error } = await supabase.auth.admin.updateUserById(uid, updateData)
+  const { error } = await supabase.auth.admin.updateUserById(userId, updateData)
   if (error) throw error
-  return pg.query(getUserInformationAndRole, [uid])
+  return pg.query(getUserInformationAndRole, [userId])
 }
 
 /**
  * @description Delete the user account from the database
  **/
 /* TODO: Add soft delete option */
-const deleteQuery = async <T>({ uid }: QueryParams<T>): Promise<void> => {
-  await supabase.auth.admin.deleteUser(uid)
+const deleteQuery = async ({ userId }: QueryParams): Promise<void> => {
+  await supabase.auth.admin.deleteUser(userId)
 }
 
 const processPatchRoute = <ProcessRoute>createRouteProcessor

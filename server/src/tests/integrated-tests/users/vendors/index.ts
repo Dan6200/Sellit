@@ -27,7 +27,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
         email_confirm: true,
       })
       if (error) throw error
-      uidToDelete = user.id // Update uidToDelete with Supabase user ID
+      userIdToDelete = user.id // Update userIdToDelete with Supabase user ID
       const { data: signInData, error: signInError } =
         await supabase.auth.signInWithPassword({
           email: userInfo.email,
@@ -38,7 +38,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
     })
 
     const path = '/v1/users/vendors'
-    let uidToDelete: string = ''
+    let userIdToDelete: string = ''
     let token: string
 
     it('it should create a vendor user for the user', () =>
@@ -46,13 +46,14 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
 
     after(async () => {
       // Delete users from db
-      if (uidToDelete) await knex('users').where('uid', uidToDelete).del()
+      if (userIdToDelete)
+        await knex('users').where('userId', userIdToDelete).del()
       // Delete all users from firebase auth
       await supabase.auth.admin
-        .deleteUser(uidToDelete)
+        .deleteUser(userIdToDelete)
         .catch((error: Error) =>
           console.error(
-            `failed to delete user with uid ${uidToDelete}: ${error}`,
+            `failed to delete user with userId ${userIdToDelete}: ${error}`,
           ),
         )
     })

@@ -11,7 +11,7 @@ import { handleSortQuery } from './utility.js'
  */
 export default async <T>({
   query,
-  uid: vendorId,
+  userId: vendorId,
 }: QueryParams<T>): Promise<QueryResult<QueryResultRow>> => {
   const { sort, limit, offset } = query
   const response = await knex('vendors')
@@ -19,7 +19,7 @@ export default async <T>({
     .first('vendor_id')
   if (response.length)
     throw new BadRequestError(
-      'Must have a Vendor account to be able to view products'
+      'Must have a Vendor account to be able to view products',
     )
   let dbQueryString = `
 	WITH product_data AS (
