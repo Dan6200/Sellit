@@ -55,28 +55,28 @@ export const testHasCustomerAccount = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: hasCustomerAccount,
-  validateReqData: isValidUserRequestData,
+  validateReqData: isValidSignInInfo,
 })
 
 export const testHasNoCustomerAccount = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: hasNoCustomerAccount,
-  validateReqData: isValidUserRequestData,
+  validateReqData: isValidSignInInfo,
 })
 
 export const testHasVendorAccount = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: hasVendorAccount,
-  validateReqData: isValidUserRequestData,
+  validateReqData: isValidSignInInfo,
 })
 
 export const testHasNoVendorAccount = testRequestsWithBody({
   verb: 'get',
   statusCode: OK,
   validateResData: hasNoVendorAccount,
-  validateReqData: isValidUserRequestData,
+  validateReqData: isValidSignInInfo,
 })
 
 export const testPatchUser = testRequests({

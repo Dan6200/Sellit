@@ -6,6 +6,8 @@ import {
   testPatchUser,
   testDeleteUser,
   testGetNonExistentUser,
+  testHasNoVendorAccount,
+  testHasNoCustomerAccount,
 } from './definitions.js'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
 import { deleteAllUsersForTesting } from '../test-route/delete-user.js'
@@ -38,6 +40,20 @@ export default function ({
         server,
         requestBody: { email: userInfo.email, password: userInfo.password },
         path,
+      }))
+
+    it("it should not have a customer's account", () =>
+      testHasNoCustomerAccount({
+        server,
+        path,
+        requestBody: { email: userInfo.email, password: userInfo.password },
+      }))
+
+    it("it should not have a vendor's account", () =>
+      testHasNoVendorAccount({
+        server,
+        path,
+        requestBody: { email: userInfo.email, password: userInfo.password },
       }))
 
     it("it should delete the user's account", () =>
