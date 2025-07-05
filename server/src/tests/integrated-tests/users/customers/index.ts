@@ -33,7 +33,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
       }))
 
     it("it should delete the user's customer account", () =>
-      testDeleteCustomer({ server, path }))
+      testDeleteCustomer({ server, path, requestBody: { email, password } }))
 
     it("it should show that the customer account does not exist in the user's is_customer field", async () =>
       testHasNoCustomerAccount({

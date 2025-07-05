@@ -5,7 +5,6 @@ import {
   testGetUser,
   testPatchUser,
   testDeleteUser,
-  testGetNonExistentUser,
   testHasNoVendorAccount,
   testHasNoCustomerAccount,
 } from './definitions.js'

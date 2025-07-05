@@ -1,10 +1,7 @@
 import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { StatusCodes } from 'http-status-codes'
-import {
-  TestRequest,
-  TestRequestWithBody,
-} from '../../../../../types-and-interfaces/test-routes.js'
+import { TestRequestWithBody } from '../../../../../types-and-interfaces/test-routes.js'
 import { isValidCustomerId } from '../../../../../types-and-interfaces/users/customers.js'
 import testRoutes from '../../../test-route/index.js'
 import { isValidSignInInfo } from '@/types-and-interfaces/users/test.js'
