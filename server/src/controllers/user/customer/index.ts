@@ -6,23 +6,25 @@ import {
 import createRouteProcessor from '../../routes/process.js'
 import { CustomerSchemaID } from '../../../app-schema/customers.js'
 import { validateResData } from '@/controllers/utils/response-validation.js'
+import { knex } from '@/db/index.js'
+import { Knex } from 'knex'
 
 const { CREATED, OK } = StatusCodes
 
 /**
  * @description Add a customer account to the database
  **/
-const createQuery = async <T>({
+const createQuery = async ({
   uid: customerId,
-}: QueryParams<T>): Promise<typeof customerId> =>
+}: QueryParams): Promise<Knex.QueryBuilder> =>
   knex('customers').insert({ customer_id: customerId }).returning('customer_id')
 
 /**
  * @description Delete the customer account from the database
  **/
-const deleteQuery = async <T>({
+const deleteQuery = async ({
   uid: customerId,
-}: QueryParams<T>): Promise<typeof customerId> =>
+}: QueryParams): Promise<Knex.QueryBuilder> =>
   knex('customers')
     .where('customer_id', customerId)
     .del()

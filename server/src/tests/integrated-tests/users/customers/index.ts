@@ -4,8 +4,8 @@ import {
   testHasCustomerAccount,
   testHasNoCustomerAccount,
 } from '../../users/definitions.js'
-import { supabase } from '#supabase-config'
-import { knex } from '../../../../db/index.js'
+import { deleteAllUsersForTesting } from '../../test-route/delete-user.js'
+import { createUserForTesting } from '../../test-route/create-user.js'
 
 // Set server url
 const server = process.env.SERVER!
@@ -13,32 +13,23 @@ const server = process.env.SERVER!
 export default function ({ userInfo }: { userInfo: UserRequestData }) {
   describe('Customer account management', () => {
     before(async () => {
-      /* Create a new user for each tests */
+      // Delete all users from Supabase auth
+      await deleteAllUsersForTesting()
+      // Create user after...
+      await createUserForTesting(userInfo)
     })
 
     const path = '/v1/users/customers'
-    let uidToDelete: string = ''
+    const { email, password } = userInfo
 
     it('it should create a customer account for the user', () =>
-      testPostCustomer({ server, path }))
-
-    after(async () => {
-      // Delete users from db
-      if (uidToDelete) await knex('users').where('uid', uidToDelete).del()
-      // Delete all users from firebase auth
-      await supabase.auth.admin
-        .deleteUser(uidToDelete)
-        .catch((error: Error) =>
-          console.error(
-            `failed to delete user with uid ${uidToDelete}: ${error}`,
-          ),
-        )
-    })
+      testPostCustomer({ server, path, requestBody: { email, password } }))
 
     it("it should show that the customer account has been created in the user's is_customer field", async () =>
       testHasCustomerAccount({
         server,
         path: '/v1/users',
+        requestBody: { email, password },
       }))
 
     it("it should delete the user's customer account", () =>
@@ -48,6 +39,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
       testHasNoCustomerAccount({
         server,
         path: '/v1/users',
+        requestBody: { email, password },
       }))
   })
 }

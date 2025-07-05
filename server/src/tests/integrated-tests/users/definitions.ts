@@ -3,7 +3,6 @@ import chaiHttp from 'chai-http'
 import { StatusCodes } from 'http-status-codes'
 import { TestRequestWithBody } from '@/types-and-interfaces/test-routes.js'
 import {
-  isValidUID,
   isValidUserRequestData,
   isValidUserResponseData,
   isValidUserUpdateRequestData,
