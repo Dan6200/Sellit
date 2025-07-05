@@ -4,9 +4,8 @@ import {
   QueryParams,
 } from '../../../types-and-interfaces/process-routes.js'
 import createRouteProcessor from '../../routes/process.js'
-import { knex } from '../../../db/index.js'
-import { isSuccessful } from '../../utils/query-validation.js'
 import { CustomerSchemaID } from '../../../app-schema/customers.js'
+import { validateResData } from '@/controllers/utils/response-validation.js'
 
 const { CREATED, OK } = StatusCodes
 
@@ -35,11 +34,11 @@ const processDeleteRoute = <ProcessRouteWithoutBody>createRouteProcessor
 export const postCustomer = processPostRoute({
   Query: createQuery,
   status: CREATED,
-  validateResult: isSuccessful(CustomerSchemaID),
+  validateResult: validateResData(CustomerSchemaID),
 })
 
 export const deleteCustomer = processDeleteRoute({
   Query: deleteQuery,
   status: OK,
-  validateResult: isSuccessful(CustomerSchemaID),
+  validateResult: validateResData(CustomerSchemaID),
 })

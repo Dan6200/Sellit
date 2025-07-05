@@ -2,7 +2,7 @@ import { testPostVendor, testDeleteVendor } from './utils/index.js'
 import {
   testHasVendorAccount,
   testHasNoVendorAccount,
-} from '../../users/utils/index.js'
+} from '../../users/definitions.js'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
 import { knex } from '@/db/index.js'
 import { supabase } from '#supabase-config'

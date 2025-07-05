@@ -12,7 +12,6 @@ import {
   ProcessRouteWithoutBody,
 } from '../../types-and-interfaces/process-routes.js'
 import { validateReqData } from '../utils/request-validation.js'
-import { validateResData } from '../utils/response-validation/index.js'
 import {
   getAllQueryForwarder,
   getQueryForwarder,
@@ -20,6 +19,7 @@ import {
 import createQuery from './utils/create-query.js'
 import updateQuery from './utils/update-query.js'
 import deleteQuery from './utils/delete-query.js'
+import { validateResData } from '../utils/response-validation.js'
 
 const { CREATED, OK } = StatusCodes
 

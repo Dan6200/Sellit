@@ -23,9 +23,9 @@ export default function ({
     let token = null
     // create a user and sign-in to retrieve token
     if (!query?.public) {
-      console.log('DEBUG: ' + JSON.stringify(requestBody))
+      // console.log('DEBUG: ' + JSON.stringify(requestBody))
       token = await signInForTesting(requestBody as any)
-      console.log('DEBUG: token->' + token)
+      // console.log('DEBUG: token->' + token)
     }
     const { password, ...requestBodyWithoutPasswd } = requestBody as any
 

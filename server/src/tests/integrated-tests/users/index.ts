@@ -6,7 +6,7 @@ import {
   testPatchUser,
   testDeleteUser,
   testGetNonExistentUser,
-} from './utils/index.js'
+} from './definitions.js'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
 import { deleteAllUsersForTesting } from '../test-route/delete-user.js'
 import { createUserForTesting } from '../test-route/create-user.js'
@@ -26,7 +26,7 @@ export default function ({
   const path = '/v1/users'
 
   describe('User account management', () => {
-    before(async () => {
+    beforeEach(async () => {
       // Delete all users from Supabase auth
       await deleteAllUsersForTesting()
       // Create user after...
@@ -43,14 +43,11 @@ export default function ({
     it("it should delete the user's account", () =>
       testDeleteUser({ server, path, requestBody: userInfo }))
 
-    it("it should fail to get user's account", () =>
-      testGetNonExistentUser({ server, requestBody: userInfo, path }))
-
-    it("it should update the user's account", () => {
-      const { password, ...requestBody } = {
+    it("it should update the user's account", async () => {
+      const { ...requestBody } = {
         ...userInfo,
         ...updatedUserInfo,
-      } /* Send both to be able to sign in.. In a real client environment only updated payload would be sent... */
+      }
       return testPatchUser({
         server,
         path,

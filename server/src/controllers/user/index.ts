@@ -6,18 +6,16 @@ import {
   QueryParams,
 } from '../../types-and-interfaces/process-routes.js'
 import createRouteProcessor from '../routes/process.js'
-import { pg } from '../../db/index.js'
 import { QueryResult, QueryResultRow } from 'pg'
-import { isSuccessful } from '../utils/query-validation.js'
 import { validateReqData } from '../utils/request-validation.js'
-import { validateResData } from '../utils/response-validation/index.js'
+import { validateResData } from '../utils/response-validation.js'
 import { getUserInformationAndRole } from './utils.js'
 import {
-  UIDSchema,
   UserResponseSchema,
   UserUpdateRequestSchema,
 } from '../../app-schema/users.js'
 import { supabase } from '#supabase-config'
+import { pg } from '@/db/index.js'
 import { UserRequestData } from '@/types-and-interfaces/users/index.js'
 
 const { OK, NO_CONTENT } = StatusCodes
@@ -87,7 +85,7 @@ export const patchUser = processPatchRoute({
   Query: updateQuery,
   status: OK,
   validateBody: validateReqData(UserUpdateRequestSchema),
-  validateResult: isSuccessful(UIDSchema),
+  validateResult: validateResData(UserResponseSchema),
 })
 
 export const deleteUser = processDeleteRoute({

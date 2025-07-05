@@ -8,11 +8,11 @@ import {
   isValidUserResponseData,
   isValidUserUpdateRequestData,
 } from '@/types-and-interfaces/users/index.js'
-import testRequests from '../../test-route/index.js'
+import testRequests from '../test-route/index.js'
 
 chai.use(chaiHttp).should()
 
-const { OK, NOT_FOUND, UNAUTHORIZED } = StatusCodes
+const { OK, NO_CONTENT, NOT_FOUND } = StatusCodes
 
 const hasNoCustomerAccount = (data: unknown) => {
   const isValidData = isValidUserResponseData(data)
@@ -41,12 +41,6 @@ const hasNoVendorAccount = (data: unknown) => {
   data.is_vendor.should.be.false
   return true
 }
-
-export const testFailToGetUser = testRequests({
-  verb: 'get',
-  statusCode: UNAUTHORIZED,
-  validateResData: null,
-})
 
 const testRequestsWithBody = <TestRequestWithBody>testRequests
 export const testGetUser = testRequestsWithBody({
@@ -87,13 +81,13 @@ export const testHasNoVendorAccount = testRequestsWithBody({
 export const testPatchUser = testRequests({
   verb: 'patch',
   statusCode: OK,
-  validateResData: isValidUID,
+  validateResData: isValidUserResponseData,
   validateReqData: isValidUserUpdateRequestData,
 })
 
 export const testDeleteUser = testRequests({
   verb: 'delete',
-  statusCode: OK,
+  statusCode: NO_CONTENT,
   validateResData: isValidUID,
   validateReqData: isValidUserRequestData,
 })

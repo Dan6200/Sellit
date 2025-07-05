@@ -4,9 +4,9 @@ import {
   QueryParams,
 } from '../../../types-and-interfaces/process-routes.js'
 import createRouteProcessor from '../../routes/process.js'
-import { knex } from '../../../db/index.js'
-import { isSuccessful } from '../../utils/query-validation.js'
 import { VendorSchemaID } from '../../../app-schema/vendors.js'
+import { supabase } from '#supabase-config'
+import { validateResData } from '@/controllers/utils/response-validation.js'
 
 const { CREATED, OK } = StatusCodes
 
@@ -16,7 +16,7 @@ const { CREATED, OK } = StatusCodes
 const createQuery = async <T>({
   uid: vendorId,
 }: QueryParams<T>): Promise<typeof vendorId> =>
-  knex('vendors').insert({ vendor_id: vendorId }).returning('vendor_id')
+  supabase.from('vendors').insert({ vendor_id: vendorId }).select('vendor_id')
 
 /**
  * @description Delete the vendor account from the database
@@ -24,7 +24,7 @@ const createQuery = async <T>({
 const deleteQuery = async <T>({
   uid: vendorId,
 }: QueryParams<T>): Promise<typeof vendorId> =>
-  knex('vendors').where('vendor_id', vendorId).del().returning('vendor_id')
+  supabase.from('vendors').delete().eq('vendor_id', vendorId)
 
 const processPostRoute = <ProcessRouteWithoutBody>createRouteProcessor
 const processDeleteRoute = <ProcessRouteWithoutBody>createRouteProcessor
@@ -32,11 +32,11 @@ const processDeleteRoute = <ProcessRouteWithoutBody>createRouteProcessor
 export const postVendor = processPostRoute({
   Query: createQuery,
   status: CREATED,
-  validateResult: isSuccessful(VendorSchemaID),
+  validateResult: validateResData(VendorSchemaID),
 })
 
 export const deleteVendor = processDeleteRoute({
   Query: deleteQuery,
   status: OK,
-  validateResult: isSuccessful(VendorSchemaID),
+  validateResult: validateResData(VendorSchemaID),
 })

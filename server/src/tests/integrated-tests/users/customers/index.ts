@@ -3,7 +3,7 @@ import { UserRequestData } from '../../../../types-and-interfaces/users/index.js
 import {
   testHasCustomerAccount,
   testHasNoCustomerAccount,
-} from '../../users/utils/index.js'
+} from '../../users/definitions.js'
 import { supabase } from '#supabase-config'
 import { knex } from '../../../../db/index.js'
 

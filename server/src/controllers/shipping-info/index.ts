@@ -6,7 +6,6 @@ import {
   ShippingInfoSchemaID,
   ShippingInfoResponseSchema,
 } from '../../app-schema/shipping.js'
-import { knex } from '../../db/index.js'
 import BadRequestError from '../../errors/bad-request.js'
 import UnauthorizedError from '../../errors/unauthorized.js'
 import {
@@ -19,7 +18,7 @@ import ShippingInfo, {
 } from '../../types-and-interfaces/shipping-info.js'
 import processRoute from '../routes/process.js'
 import { validateReqData } from '../utils/request-validation.js'
-import { validateResData } from '../utils/response-validation/index.js'
+import { validateResData } from '../utils/response-validation.js'
 
 /**
  * @param {QueryParams} qp
@@ -41,7 +40,7 @@ const createQuery = async <T>({
     .select('customer_id')
   if (result.length === 0)
     throw new BadRequestError(
-      'No Customer account found. Please create a Customer account'
+      'No Customer account found. Please create a Customer account',
     )
   // Limit the amount of shipping addresses a user can have:
   const LIMIT = 5
@@ -84,7 +83,7 @@ const getAllQuery = async <T>({
     .select('customer_id')
   if (result.length === 0)
     throw new BadRequestError(
-      'No Customer account found. Please create a Customer account'
+      'No Customer account found. Please create a Customer account',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('customer_id', customerId)
@@ -110,7 +109,7 @@ const getQuery = async <T>({
     .select('customer_id')
   if (result.length === 0)
     throw new BadRequestError(
-      'No Customer account found. Please create a Customer account'
+      'No Customer account found. Please create a Customer account',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('shipping_info_id', shippingInfoId)
@@ -143,7 +142,7 @@ const updateQuery = async <T>({
     .select('customer_id')
   if (result.length === 0)
     throw new BadRequestError(
-      'No Customer account found. Please create a Customer account'
+      'No Customer account found. Please create a Customer account',
     )
   const DBFriendlyData = {
     ...shippingData,
@@ -178,7 +177,7 @@ const deleteQuery = async <T>({
     .select('customer_id')
   if (result.length === 0)
     throw new BadRequestError(
-      'No Customer account found. Please create a Customer account'
+      'No Customer account found. Please create a Customer account',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('shipping_info_id', shippingInfoId)
