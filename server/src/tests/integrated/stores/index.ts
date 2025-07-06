@@ -37,6 +37,7 @@ export default function ({
   let storeIds: string[] = []
   it('should create a store for the vendor', async () => {
     // Create stores using store information
+    assert(!!stores.length)
     for (const store of stores) {
       const { store_id } = await testCreateStore({
         server,

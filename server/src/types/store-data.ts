@@ -7,6 +7,7 @@ import {
 
 export default interface StoreData {
   store_name: string
+  vendor_id: string
   store_page?: {
     heading: string
     theme: 'light' | 'dark'

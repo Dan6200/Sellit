@@ -1,13 +1,10 @@
-/*
 import { StatusCodes } from 'http-status-codes'
 import {
-  StoreSchemaReqData,
-  StoreSchemaReqDataPartial,
-  StoreSchemaDBResult,
-  StoreSchemaDBResultID,
-  StoreSchemaDBResultList,
-} from '../../app-schema/stores.js'
-import db from '../../db/index.js'
+  StoreDataRequestSchema,
+  StoreDataResponseListSchema,
+  StoreIDSchema,
+  StoreDataResponseSchema,
+} from '@/app-schema/stores.js'
 import BadRequestError from '../../errors/bad-request.js'
 import UnauthorizedError from '../../errors/unauthorized.js'
 import {
@@ -15,184 +12,206 @@ import {
   ProcessRouteWithoutBody,
   QueryParams,
 } from '../../types/process-routes.js'
-import {
-  isValidStoresData,
-  StoresData,
-} from '../../types/stores-data.js'
-import {
-  SelectRecord,
-  InsertRecord,
-  UpdateRecord,
-  DeleteRecord,
-} from '../helpers/generate-sql-commands/index.js'
-import processRoute from '../helpers/process-route.js'
-import {
-  validateReqData,
-  validateResData,
-} from '../helpers/query-validation.js'
+import StoreData, { isValidStoreDataRequest } from '../../types/store-data.js'
+import processRoute from '../routes/process.js'
+import { validateReqData } from '../utils/request-validation.js'
+import { validateResData } from '../utils/response-validation.js'
+import { Knex } from 'knex'
+import { knex } from '@/db/index.js'
 
-const createQuery = async <T>({ body, userId: vendorId }: QueryParams<T>) => {
+/**
+ * @param {QueryParams} qp
+ * @returns {Promise<number>}
+ * @description Create a new store data for a vendor
+ * Checks:
+ * 1. If the vendor exists
+ * 2. If the vendor already has 5 store addresses
+ */
+
+const createQuery = async ({
+  body,
+  userId: vendorId,
+}: QueryParams): Promise<Knex.QueryBuilder<string>> => {
   if (!vendorId) throw new UnauthorizedError('Cannot access resource')
   // check if vendor account exists
-  const dbRes = await db.query({
-    text: SelectRecord('vendors', ['1'], 'vendor_id=$1'), //'select 1 from vendors where vendor_id=$1',
-    values: [vendorId],
-  })
-  if (dbRes.rows.length === 0)
+  const result = await knex('vendors')
+    .where('vendor_id', vendorId)
+    .select('vendor_id')
+  if (result.length === 0)
     throw new BadRequestError(
-      'No Vendor account found. Please create a Vendor account'
+      'No vendor account found. Please create a vendor account',
     )
-  let recordsCount = <number>(
-    await db.query({
-      text: SelectRecord('stores', ['1'], 'vendor_id=$1'),
-      values: [vendorId],
-    })
-  ).rows.length
-  // limit amount of stores
+  // Limit the amount of store addresses a user can have:
   const LIMIT = 5
-  // if Over limit throw error
-  if (LIMIT <= recordsCount)
-    throw new BadRequestError(`Each vendor is limited to only ${LIMIT} stores`)
+  let { count } = (
+    await knex('stores').where('vendor_id', vendorId).count('store_id')
+  )[0]
+  if (typeof count === 'string') count = parseInt(count)
+  if (count > LIMIT)
+    throw new BadRequestError(`Cannot have more than ${LIMIT} stores`)
 
-  if (!isValidStoresData(body)) throw new BadRequestError('Invalid store data')
-
-  const storeData: StoresData = body
-
-  return db.query({
-    text: InsertRecord(
-      'stores',
-      ['vendor_id', ...Object.keys(storeData)],
-      'store_id'
-    ),
-    values: [vendorId, ...Object.values(storeData)],
-  })
+  if (!isValidStoreDataRequest(body))
+    throw new BadRequestError('Invalid store data')
+  const storeData: StoreData = body
+  if (!storeData) throw new BadRequestError('No data sent in request body')
+  // const DBFriendlyData = {
+  //   ...storeData,
+  //   delivery_instructions: JSON.stringify(storeData.delivery_instructions),
+  // }
+  return knex<StoreData>('stores')
+    .insert({ vendor_id: vendorId, ...storeData })
+    .returning('store_id')
 }
 
-const readAllQuery = async <T>({ userId: vendorId }: QueryParams<T>) => {
+/*
+ * @param {QueryParams} qp
+ * @returns {Promise<QueryResult<QueryResultRow>>}
+ * @description Retrieves all the store data for a vendor
+ * Checks:
+ * 1. If the vendor account exists
+ */
+
+const getAllQuery = async ({
+  userId: vendorId,
+}: QueryParams): Promise<Knex.QueryBuilder<StoreData[]>> => {
   if (!vendorId) throw new UnauthorizedError('Cannot access resource')
-  const res = await db.query({
-    text: SelectRecord('vendors', ['1'], 'vendor_id=$1'), // 'select 1 from vendors where vendor_id=$1',
-    values: [vendorId],
-  })
-  if (res.rows.length === 0)
+  const result = await knex('vendors')
+    .where('vendor_id', vendorId)
+    .select('vendor_id')
+  if (result.length === 0)
     throw new BadRequestError(
-      'No Vendor account found. Please create a Vendor account'
+      'No vendor account found. Please create a vendor account',
     )
-  return db.query({
-    text: SelectRecord('stores', ['*'], 'vendor_id=$1'),
-    values: [vendorId],
-  })
+  return knex<StoreData>('stores').where('vendor_id', vendorId).select('*')
 }
 
-const readQuery = async <T>({ params, userId: vendorId }: QueryParams<T>) => {
-  if (params == null)
-    throw new BadRequestError('Must provide route parameters to read resource')
-  const { storeId } = params
+/* @param {QueryParams} qp
+ * @returns {Promise<QueryResult<QueryResultRow>>}
+ * @description Retrieves a single store data for a vendor
+ * Checks:
+ * 1. If the vendor account exists
+ */
+
+const getQuery = async ({
+  params,
+  userId: vendorId,
+}: QueryParams): Promise<Knex.QueryBuilder<StoreData[]>> => {
+  if (params == null) throw new BadRequestError('No route parameters provided')
+  const { storeInfoId } = params
   if (!vendorId) throw new UnauthorizedError('Cannot access resource')
-  const res = await db.query({
-    text: SelectRecord('vendors', ['1'], 'vendor_id=$1'), //'select 1 from vendors where vendor_id=$1',
-    values: [vendorId],
-  })
-  if (res.rows.length === 0)
+  const result = await knex('vendors')
+    .where('vendor_id', vendorId)
+    .select('vendor_id')
+  if (result.length === 0)
     throw new BadRequestError(
-      'No Vendor account found. Please create a Vendor account'
+      'No vendor account found. Please create a vendor account',
     )
-  return db.query({
-    text: SelectRecord('stores', ['*'], `store_id=$1`), //`select * from stores where store_id=$1`,
-    values: [storeId],
-  })
+  return knex<StoreData>('stores').where('store_id', storeInfoId).select('*')
 }
 
-const updateQuery = async <T>({
+/* @param {QueryParams} qp
+ * @returns {Promise<number>}
+ * @description Updates store data for the vendor
+ * Checks:
+ * 1. If the vendor owns the store data
+ * 2. If the store data ID is provided
+ * 3. If the vendor exists
+ */
+
+const updateQuery = async ({
   params,
   body,
   userId: vendorId,
-}: QueryParams<T>) => {
-  if (params == null)
+}: QueryParams): Promise<Knex.QueryBuilder<number>> => {
+  if (params == null) throw new BadRequestError('No route parameters provided')
+  const { storeInfoId } = params
+  if (!isValidStoreDataRequest(body)) throw new BadRequestError('Invalid data')
+  const storeData = body
+  if (!storeInfoId) throw new BadRequestError('Need ID to update resource')
+  if (!vendorId) throw new UnauthorizedError('Cannot access resource')
+  const result = await knex('vendors')
+    .where('vendor_id', vendorId)
+    .select('vendor_id')
+  if (result.length === 0)
     throw new BadRequestError(
-      'Must provide route parameters to update resource'
+      'No vendor account found. Please create a vendor account',
     )
-  const { storeId } = params
-  if (!storeId) throw new BadRequestError('Need Id param to update resource')
-  const res = await db.query({
-    text: SelectRecord('vendors', ['1'], 'vendor_id=$1'),
-    values: [vendorId],
-  })
-  if (res.rows.length === 0)
-    throw new BadRequestError(
-      'No Vendor account found. Please create a Vendor account'
-    )
-
-  if (!isValidStoresData(body)) throw new BadRequestError('Invalid store data')
-  const storeData: StoresData = body
-
-  let fields = Object.keys(storeData),
-    data = Object.values(storeData)
-  const paramList = [storeId, ...data]
-  const condition = `store_id=$1`
-  const query = {
-    text: UpdateRecord('stores', fields, 2, condition, ['store_id']),
-    values: paramList,
-  }
-  return db.query(query)
+  // const DBFriendlyData = {
+  //   ...storeData,
+  //   delivery_instructions: JSON.stringify(storeData.delivery_instructions),
+  // }
+  return knex<StoreData>('stores')
+    .where('store_id', storeInfoId)
+    .update(storeData)
+    .returning('store_id')
 }
 
-const deleteQuery = async <T>({ params, userId: vendorId }: QueryParams<T>) => {
-  if (params == null)
+/* @param {QueryParams} qp
+ * @returns {Promise<QueryResult<QueryResultRow>>}
+ * @description Deletes a store data for the vendor
+ * Checks:
+ * 1. If Id is provided
+ * 2. If vendor account exists
+ * 3. If vendor owns the store data
+ */
+
+const deleteQuery = async ({
+  params,
+  userId: vendorId,
+}: QueryParams): Promise<Knex.QueryBuilder<string>> => {
+  if (params == null) throw new BadRequestError('No route parameters provided')
+  const { storeInfoId } = params
+  if (!storeInfoId)
+    throw new BadRequestError('Need Id param to delete resource')
+  if (!vendorId) throw new UnauthorizedError('Cannot access resource')
+  const result = await knex('vendors')
+    .where('vendor_id', vendorId)
+    .select('vendor_id')
+  if (result.length === 0)
     throw new BadRequestError(
-      'Must provide route parameters to delete resource'
+      'No vendor account found. Please create a vendor account',
     )
-  const { storeId } = params
-  const res = await db.query({
-    text: 'select vendor_id from vendors where vendor_id=$1',
-    values: [vendorId],
-  })
-  if (res.rows.length === 0)
-    throw new BadRequestError(
-      'No Vendor account found. Please create a Vendor account'
-    )
-  return db.query({
-    text: DeleteRecord('stores', ['store_id'], 'store_id=$1'),
-    values: [storeId],
-  })
+  return knex<StoreData>('stores')
+    .where('store_id', storeInfoId)
+    .del()
+    .returning('store_id')
 }
+
+const { CREATED, OK } = StatusCodes
 
 const processPostRoute = <ProcessRoute>processRoute
-const createStore = processPostRoute({
+export const createStore = processPostRoute({
   Query: createQuery,
-  status: StatusCodes.CREATED,
-  validateBody: validateReqData(StoreSchemaReqData),
-  validateResult: validateResData(StoreSchemaDBResultID),
+  status: CREATED,
+  validateBody: validateReqData(StoreDataRequestSchema),
+  validateResult: validateResData(StoreIDSchema),
 })
 
 const processGetAllRoute = <ProcessRouteWithoutBody>processRoute
-const getAllStores = processGetAllRoute({
-  Query: readAllQuery,
-  status: StatusCodes.OK,
-  validateResult: validateResData(StoreSchemaDBResultList),
+export const getAllStores = processGetAllRoute({
+  Query: getAllQuery,
+  status: OK,
+  validateResult: validateResData(StoreDataResponseListSchema),
 })
 
 const processGetRoute = <ProcessRouteWithoutBody>processRoute
-const getStore = processGetRoute({
-  Query: readQuery,
-  status: StatusCodes.OK,
-  validateResult: validateResData(StoreSchemaDBResult),
+export const getStore = processGetRoute({
+  Query: getQuery,
+  status: OK,
+  validateResult: validateResData(StoreDataResponseSchema),
 })
 
 const processPutRoute = <ProcessRoute>processRoute
-const updateStore = processPutRoute({
+export const updateStore = processPutRoute({
   Query: updateQuery,
-  status: StatusCodes.OK,
-  validateBody: validateReqData(StoreSchemaReqDataPartial),
-  validateResult: validateResData(StoreSchemaDBResultID),
+  status: OK,
+  validateBody: validateReqData(StoreDataRequestSchema),
+  validateResult: validateResData(StoreIDSchema),
 })
 
 const processDeleteRoute = <ProcessRouteWithoutBody>processRoute
-const deleteStore = processDeleteRoute({
+export const deleteStore = processDeleteRoute({
   Query: deleteQuery,
-  status: StatusCodes.OK,
-  validateResult: validateResData(StoreSchemaDBResultID),
+  status: OK,
+  validateResult: validateResData(StoreIDSchema),
 })
-
-export { createStore, getStore, getAllStores, updateStore, deleteStore }
-*/
