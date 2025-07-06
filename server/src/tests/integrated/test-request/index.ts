@@ -33,6 +33,8 @@ export default function ({
       .query(query ?? {})
       .send(<object>requestBody)
 
+    console.log('DEBUG: request ->' + JSON.stringify(request))
+
     // Add request token
     if (token) request.auth(token, { type: 'bearer' })
     const response = await request
@@ -44,7 +46,7 @@ export default function ({
       validateTestResData &&
       !validateTestResData(response.body)
     ) {
-      if (response.status === 404) return null
+      // if (response.status === 404) return null
       throw new Error('Invalid Database Result')
     }
 

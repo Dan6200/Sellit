@@ -38,6 +38,7 @@ export default function ({
   const shippingIds: number[] = []
 
   it(`it should add multiple shipping addresses for the customer`, async () => {
+    assert(!!listOfShippingInfo.length)
     for (const shippingInfo of listOfShippingInfo) {
       const { shipping_info_id } = await testCreateShipping({
         server,
@@ -50,6 +51,7 @@ export default function ({
   })
 
   it('it should retrieve all shipping information through a loop', async () => {
+    assert(!!shippingIds.length)
     for (const shippingId of shippingIds) {
       await testGetShipping({
         server,
@@ -60,7 +62,10 @@ export default function ({
   })
 
   it(`it should update all shipping addresses for the customer`, async () => {
-    assert(shippingIds.length === listOfUpdatedShippingInfo.length)
+    assert(
+      !!shippingIds.length &&
+        shippingIds.length === listOfUpdatedShippingInfo.length,
+    )
     for (const [idx, shippingId] of shippingIds.entries()) {
       await testUpdateShipping({
         server,
@@ -72,6 +77,7 @@ export default function ({
   })
 
   it(`it should delete all shipping addresses for the customer`, async () => {
+    assert(!!shippingIds.length)
     for (const shippingId of shippingIds) {
       await testDeleteShipping({
         server,
@@ -82,6 +88,7 @@ export default function ({
   })
 
   it(`it should fail to retrieve any of the deleted shipping information`, async () => {
+    assert(!!shippingIds.length)
     for (const shippingId of shippingIds) {
       await testGetNonExistentShipping({
         server,

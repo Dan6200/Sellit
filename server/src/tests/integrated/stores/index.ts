@@ -49,13 +49,15 @@ export default function ({
   })
 
   it('it should fetch all the stores with a loop', async () => {
+    assert(!!storeIds.length)
     for (const storeId of storeIds) {
+      console.log(`${path}/${storeId}`)
       await testGetStore({ server, token, path: `${path}/${storeId}` })
     }
   })
 
   it('should update all the stores with a loop', async () => {
-    assert(storeIds.length === updatedStores.length)
+    assert(!!storeIds.length && storeIds.length === updatedStores.length)
     for (const [idx, storeId] of storeIds.entries()) {
       await testUpdateStore({
         server,
@@ -67,12 +69,14 @@ export default function ({
   })
 
   it('should delete all the stores with a loop', async () => {
+    assert(!!storeIds.length)
     for (const storeId of storeIds) {
       await testDeleteStore({ server, token, path: path + '/' + storeId })
     }
   })
 
   it('should fail to retrieve any store', async () => {
+    assert(!!storeIds.length)
     for (const storeId of storeIds) {
       await testGetNonExistentStore({
         server,
