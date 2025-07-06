@@ -1,4 +1,11 @@
-export interface StoreData {
+import {
+  StoreDataRequestSchema,
+  StoreDataResponseListSchema,
+  StoreDataResponseSchema,
+  StoreIDSchema,
+} from '../app-schema/stores.js'
+
+export default interface StoreData {
   store_name: string
   store_page?: {
     heading: string
@@ -23,4 +30,34 @@ export const isValidStoreData = (
     // && 'store_page' in storeData &&
     //   storeData.store_page != null
   )
+}
+
+interface StoreDataId {
+  store_info_id: number
+}
+
+export const isValidStoreDataId = (data: unknown): data is StoreDataId => {
+  const { error } = StoreIDSchema.validate(data)
+  error && console.error(error)
+  return !error
+}
+
+export const isValidStoreDataRequest = (data: unknown): data is StoreData => {
+  const { error } = StoreDataRequestSchema.validate(data)
+  error && console.error(error)
+  return !error
+}
+
+export const isValidStoreDataResponseList = (
+  data: unknown,
+): data is StoreData => {
+  const { error } = StoreDataResponseListSchema.validate(data)
+  error && console.error(error)
+  return !error
+}
+
+export const isValidStoreDataResponse = (data: unknown): data is StoreData => {
+  const { error } = StoreDataResponseSchema.validate(data)
+  error && console.error(error)
+  return !error
 }

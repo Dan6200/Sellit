@@ -64,7 +64,7 @@ export default ({
 
     try {
       if (validateResult) {
-        // console.log('DEBUG: DB Response -> ' + JSON.stringify(dbResponse))
+        console.log('DEBUG: DB Response -> ' + JSON.stringify(dbResponse))
         // validateBody throws error if data is invalid
         // check for errors returns true if response is valid
         if (!validateResult(dbResponse)) {
@@ -90,7 +90,7 @@ export default ({
     } catch (error) {
       if (error instanceof NotFoundError)
         return response.status(StatusCodes.NOT_FOUND).send(error.message)
-      else throw error
+      throw error
     }
     response.status(status).end()
   }

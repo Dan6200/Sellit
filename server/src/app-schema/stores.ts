@@ -1,6 +1,6 @@
 import joi from 'joi'
 
-export const StoreSchemaReqData = joi
+export const StoreDataRequestSchema = joi
   .object({
     store_name: joi.string().min(3).max(50).required(),
     store_page: joi.object({
@@ -19,7 +19,7 @@ export const StoreSchemaReqData = joi
   })
   .required()
 
-export const StoreSchemaReqDataPartial = joi.object({
+export const StoreDataRequestPartialSchema = joi.object({
   store_name: joi.string().min(3).max(50),
   store_page: joi.object({
     heading: joi.string().required(),
@@ -36,11 +36,11 @@ export const StoreSchemaReqDataPartial = joi.object({
   }),
 })
 
-export const StoreSchemaDBResultID = joi.object({
+export const StoreIDSchema = joi.object({
   store_id: joi.number().required(),
 })
 
-export const StoreSchemaDBResultList = joi
+export const StoreDataResponseListSchema = joi
   .array()
   .items(
     joi
@@ -65,11 +65,11 @@ export const StoreSchemaDBResultList = joi
           .alternatives()
           .try(joi.string().required(), joi.date().required()),
       })
-      .required()
+      .required(),
   )
   .required()
 
-export const StoreSchemaDBResult = joi
+export const StoreDataResponseSchema = joi
   .object({
     store_id: joi.number().required(),
     store_name: joi.string().min(3).max(50).required(),

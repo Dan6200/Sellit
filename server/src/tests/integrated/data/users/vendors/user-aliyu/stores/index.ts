@@ -1,7 +1,7 @@
 // cspell:disable
-import { StoresData } from '../../../../../../../types/stores-data.js'
+import StoreData from '@/types/store-data.js'
 
-export const stores: StoresData[] = [
+export const stores: StoreData[] = [
   {
     store_name: 'Inspire Denims',
     store_page: {
@@ -40,7 +40,7 @@ export const stores: StoresData[] = [
     },
   },
 ]
-export const updatedStores: StoresData[] = [
+export const updatedStores: StoreData[] = [
   {
     store_name: 'Inspire Denims',
     store_page: {

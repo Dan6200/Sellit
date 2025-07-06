@@ -2,7 +2,7 @@
 import testUserAccount from './users/index.js'
 import testCustomerAccount from './users/customers/index.js'
 import testVendorAccount from './users/vendors/index.js'
-// import testStores from './stores/index.js'
+import testStores from './stores/index.js'
 import testShipping from './shipping-info/index.js'
 import testProducts from './products/index.js'
 import testPublicProducts from './public/products/index.js'
@@ -12,10 +12,8 @@ import * as Aisha from './data/users/customers/user-aisha/index.js'
 import * as Mustapha from './data/users/customers/user-mustapha/index.js'
 import * as Aliyu from './data/users/vendors/user-aliyu/index.js'
 
-// const users = [Ebuka, Aliyu, Aisha, Mustapha]
-const users = [Ebuka]
+const users = [Ebuka, Aliyu, Aisha, Mustapha]
 const customers = [Ebuka, Aisha, Mustapha]
-// const users = [Aliyu]
 const vendors = [Aliyu]
 
 export default function (): void {
@@ -68,11 +66,12 @@ export default function (): void {
 
   /** Stores related tests **/
 
-  // for (let vendor of vendors) {
-  //   const name = vendor.accountInfo.first_name
-  //   describe(`Testing Stores owned by ${name}`, () => testStores(vendor))
-  // }
-  //
+  for (let vendor of vendors) {
+    const { userInfo } = vendor
+    const { first_name: name } = userInfo
+    describe(`Testing Stores owned by ${name}`, () => testStores(vendor))
+  }
+
   /** Product related tests **/
 
   for (let vendor of vendors) {

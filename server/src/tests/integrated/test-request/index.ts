@@ -26,21 +26,6 @@ export default function ({
     if (validateTestReqData && !validateTestReqData(requestBody))
       throw new Error('Invalid Test Request Data')
 
-    // let token = null
-    // let requestBodyClean = null,
-    //   password,
-    //   email
-    // // create a user and sign-in to retrieve token
-    // if (!query?.public) {
-    //   // console.log('DEBUG: ' + JSON.stringify(requestBody))
-    //   token = await signInForTesting(requestBody as any)
-    //   // console.log('DEBUG: token->' + token)
-    //   /* Remove sign-in info after signing-in... */
-    //   if (path == '/v1/users')
-    //     ({ password, ...requestBodyClean } = requestBody as any)
-    //   else ({ email, password, ...requestBodyClean } = requestBody as any)
-    // }
-
     // Make request
     const request = chai
       .request(server)
