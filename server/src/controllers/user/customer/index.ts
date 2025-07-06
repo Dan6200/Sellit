@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 import {
   ProcessRouteWithoutBody,
   QueryParams,
-} from '../../../types-and-interfaces/process-routes.js'
+} from '../../../types/process-routes.js'
 import createRouteProcessor from '../../routes/process.js'
 import { CustomerSchemaID } from '../../../app-schema/customers.js'
 import { validateResData } from '@/controllers/utils/response-validation.js'

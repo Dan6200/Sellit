@@ -1,5 +1,5 @@
 import { faker } from '../faker.js'
-import { ProductRequestData } from '../../../types-and-interfaces/products.js'
+import { ProductRequestData } from '../../../types/products.js'
 
 const randomProduct = faker.commerce
 export default function (this: ProductRequestData): ProductRequestData {

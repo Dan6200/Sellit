@@ -10,7 +10,7 @@ import {
   ProcessRoute,
   ProcessRouteWithForwarder,
   ProcessRouteWithoutBody,
-} from '../../types-and-interfaces/process-routes.js'
+} from '../../types/process-routes.js'
 import { validateReqData } from '../utils/request-validation.js'
 import {
   getAllQueryForwarder,

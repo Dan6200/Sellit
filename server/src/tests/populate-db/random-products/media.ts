@@ -1,4 +1,4 @@
-import { ProductMedia } from '../../../types-and-interfaces/products.js'
+import { ProductMedia } from '../../../types/products.js'
 import { faker } from '../faker.js'
 
 const randomMedia = faker.image

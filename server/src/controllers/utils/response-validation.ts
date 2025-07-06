@@ -2,7 +2,7 @@ import { ArraySchema, ObjectSchema } from 'joi'
 import { QueryResult, QueryResultRow } from 'pg'
 import BadRequestError from '../../errors/bad-request.js'
 import NotFoundError from '../../errors/not-found.js'
-import { isTypeQueryResultRow } from '../../types-and-interfaces/response.js'
+import { isTypeQueryResultRow } from '../../types/response.js'
 
 // Define a type for Supabase response for clarity
 interface SupabaseResponse<T> {

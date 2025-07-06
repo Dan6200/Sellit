@@ -1,7 +1,7 @@
 //cspell:ignore jsonb
 import { knex } from '../../../db/index.js'
 import BadRequestError from '../../../errors/bad-request.js'
-import { QueryParams } from '../../../types-and-interfaces/process-routes.js'
+import { QueryParams } from '../../../types/process-routes.js'
 
 /**
  * @param {QueryParams} { params, query, userId }

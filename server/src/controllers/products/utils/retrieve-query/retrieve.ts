@@ -1,7 +1,7 @@
 import { QueryResult, QueryResultRow } from 'pg'
 import { pg } from '../../../../db/index.js'
 import BadRequestError from '../../../../errors/bad-request.js'
-import { QueryParams } from '../../../../types-and-interfaces/process-routes.js'
+import { QueryParams } from '../../../../types/process-routes.js'
 import getQueryProtected from './retrieve-protected.js'
 
 /**
@@ -10,7 +10,7 @@ import getQueryProtected from './retrieve-protected.js'
  * @description Retrieve a product
  **/
 export default async <T>(
-  qp: QueryParams<T>
+  qp: QueryParams<T>,
 ): Promise<QueryResult<QueryResultRow>> => {
   // if route is protected, use getQueryProtected
   if (!qp.query?.public) {
@@ -31,6 +31,6 @@ export default async <T>(
 				JOIN categories c USING (category_id)
 				JOIN subcategories s USING (subcategory_id)
 			WHERE p.product_id=$1;`,
-    [productId]
+    [productId],
   )
 }

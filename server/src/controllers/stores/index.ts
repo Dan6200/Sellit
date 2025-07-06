@@ -14,11 +14,11 @@ import {
   ProcessRoute,
   ProcessRouteWithoutBody,
   QueryParams,
-} from '../../types-and-interfaces/process-routes.js'
+} from '../../types/process-routes.js'
 import {
   isValidStoresData,
   StoresData,
-} from '../../types-and-interfaces/stores-data.js'
+} from '../../types/stores-data.js'
 import {
   SelectRecord,
   InsertRecord,

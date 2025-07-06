@@ -1,7 +1,7 @@
 import { QueryResult, QueryResultRow } from 'pg'
 import { pg, knex } from '../../../../db/index.js'
 import BadRequestError from '../../../../errors/bad-request.js'
-import { QueryParams } from '../../../../types-and-interfaces/process-routes.js'
+import { QueryParams } from '../../../../types/process-routes.js'
 import { handleSortQuery } from './utility.js'
 import getAllQueryProtected from './retrieve-all-protected.js'
 
@@ -10,7 +10,7 @@ import getAllQueryProtected from './retrieve-all-protected.js'
  *
  **/
 export const getAllQuery = async <T>(
-  qp: QueryParams<T>
+  qp: QueryParams<T>,
 ): Promise<QueryResult<QueryResultRow>> => {
   // if route is protected, use getAllQueryProtected
   if (!qp.query?.public) {

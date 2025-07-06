@@ -3,7 +3,7 @@ import { QueryResultRow } from 'pg'
 import db from '../../db/index.js'
 import BadRequestError from '../../errors/bad-request.js'
 import { validatePassword } from '../../security/password.js'
-import { isValidDBResponse } from '../../types-and-interfaces/response.js'
+import { isValidDBResponse } from '../../types/response.js'
 import { SelectRecord } from './generate-sql-commands/index.js'
 
 

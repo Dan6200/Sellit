@@ -1,13 +1,11 @@
 import { Response } from 'express'
-import { RequestWithPayload } from '../../types-and-interfaces/request.js'
-import {
-  isTypeQueryResultRow,
-  Status,
-} from '../../types-and-interfaces/response.js'
-import { QueryDB } from '../../types-and-interfaces/process-routes.js'
+import { RequestWithPayload } from '../../types/request.js'
+import { isTypeQueryResultRow, Status } from '../../types/response.js'
+import { QueryDB } from '../../types/process-routes.js'
 import BadRequestError from '../../errors/bad-request.js'
 import { QueryResult, QueryResultRow } from 'pg'
 import NotFoundError from '../../errors/not-found.js'
+import { StatusCodes } from 'http-status-codes'
 
 export default ({
   Query,
@@ -64,27 +62,36 @@ export default ({
       })
     }
 
-    if (validateResult) {
-      console.log('DEBUG: DB Response -> ' + JSON.stringify(dbResponse))
-      // validateBody throws error if data is invalid
-      // check for errors returns true if response is valid
-      if (!validateResult(dbResponse)) {
-        if (Query?.name.match(/get/) || QueryForwarder?.name.match(/get/)) {
-          if (Array.isArray(dbResponse) && dbResponse.length === 0)
-            throw new NotFoundError('The Requested Resource Could not be found')
+    try {
+      if (validateResult) {
+        console.log('DEBUG: DB Response -> ' + JSON.stringify(dbResponse))
+        // validateBody throws error if data is invalid
+        // check for errors returns true if response is valid
+        if (!validateResult(dbResponse)) {
+          if (Query?.name.match(/get/) || QueryForwarder?.name.match(/get/)) {
+            if (Array.isArray(dbResponse) && dbResponse.length === 0)
+              throw new NotFoundError(
+                'The Requested Resource Could not be found',
+              )
+          }
+          throw new BadRequestError('Invalid Database Response')
         }
-        throw new BadRequestError('Invalid Database Response')
+        let responseData: any = null
+        if (isTypeQueryResultRow(dbResponse)) {
+          if (dbResponse.rowCount === 1) responseData = dbResponse.rows[0]
+          else responseData = dbResponse.rows
+        }
+        if (Array.isArray(dbResponse)) {
+          if (dbResponse.length === 1) responseData = dbResponse[0]
+          else responseData = dbResponse
+        }
+        return response.status(status).json(responseData)
       }
-      let responseData: any = null
-      if (isTypeQueryResultRow(dbResponse)) {
-        if (dbResponse.rowCount === 1) responseData = dbResponse.rows[0]
-        else responseData = dbResponse.rows
-      }
-      if (Array.isArray(dbResponse)) {
-        if (dbResponse.length === 1) responseData = dbResponse[0]
-        else responseData = dbResponse
-      }
-      return response.status(status).json(responseData)
+    } catch (error) {
+      console.error(error)
+      if (error instanceof NotFoundError)
+        response.status(StatusCodes.NOT_FOUND).send(error.message)
+      else throw error
     }
     response.status(status).end()
   }

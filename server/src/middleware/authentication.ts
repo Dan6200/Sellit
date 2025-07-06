@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express'
 import UnauthorizedError from '../errors/unauthorized.js'
-import { RequestWithPayload } from '../types-and-interfaces/request.js'
+import { RequestWithPayload } from '../types/request.js'
 import { supabase } from '#supabase-config'
 
 export default async (

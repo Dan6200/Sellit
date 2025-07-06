@@ -1,5 +1,4 @@
 import { StatusCodes } from 'http-status-codes'
-import { QueryResult, QueryResultRow } from 'pg'
 import {
   ShippingInfoRequestSchema,
   ShippingInfoResponseListSchema,
@@ -12,13 +11,15 @@ import {
   ProcessRoute,
   ProcessRouteWithoutBody,
   QueryParams,
-} from '../../types-and-interfaces/process-routes.js'
+} from '../../types/process-routes.js'
 import ShippingInfo, {
   isValidShippingInfoRequest,
-} from '../../types-and-interfaces/shipping-info.js'
+} from '../../types/shipping-info.js'
 import processRoute from '../routes/process.js'
 import { validateReqData } from '../utils/request-validation.js'
 import { validateResData } from '../utils/response-validation.js'
+import { Knex } from 'knex'
+import { knex } from '@/db/index.js'
 
 /**
  * @param {QueryParams} qp
@@ -29,10 +30,10 @@ import { validateResData } from '../utils/response-validation.js'
  * 2. If the customer already has 5 shipping addresses
  */
 
-const createQuery = async <T>({
+const createQuery = async ({
   body,
   userId: customerId,
-}: QueryParams<T>): Promise<number> => {
+}: QueryParams): Promise<Knex.QueryBuilder<string>> => {
   if (!customerId) throw new UnauthorizedError('Cannot access resource')
   // check if customer account exists
   const result = await knex('customers')
@@ -74,9 +75,9 @@ const createQuery = async <T>({
  * 1. If the customer account exists
  */
 
-const getAllQuery = async <T>({
+const getAllQuery = async ({
   userId: customerId,
-}: QueryParams<T>): Promise<ShippingInfo[]> => {
+}: QueryParams): Promise<Knex.QueryBuilder<ShippingInfo[]>> => {
   if (!customerId) throw new UnauthorizedError('Cannot access resource')
   const result = await knex('customers')
     .where('customer_id', customerId)
@@ -97,10 +98,10 @@ const getAllQuery = async <T>({
  * 1. If the customer account exists
  */
 
-const getQuery = async <T>({
+const getQuery = async ({
   params,
   userId: customerId,
-}: QueryParams<T>): Promise<ShippingInfo[]> => {
+}: QueryParams): Promise<Knex.QueryBuilder<ShippingInfo[]>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   if (!customerId) throw new UnauthorizedError('Cannot access resource')
@@ -125,11 +126,11 @@ const getQuery = async <T>({
  * 3. If the customer exists
  */
 
-const updateQuery = async <T>({
+const updateQuery = async ({
   params,
   body,
   userId: customerId,
-}: QueryParams<T>): Promise<number> => {
+}: QueryParams): Promise<Knex.QueryBuilder<number>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   if (!isValidShippingInfoRequest(body))
@@ -166,7 +167,7 @@ const updateQuery = async <T>({
 const deleteQuery = async ({
   params,
   userId: customerId,
-}: QueryParams): Promise<QueryResult<QueryResultRow>> => {
+}: QueryParams): Promise<Knex.QueryBuilder<string>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   if (!shippingInfoId)

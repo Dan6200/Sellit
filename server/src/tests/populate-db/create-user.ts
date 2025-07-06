@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { UserRequestData } from '../../types-and-interfaces/users/index.js'
+import { UserRequestData } from '../../types/users/index.js'
 
 export default async function (server: string, accountInfo: UserRequestData) {
   try {
