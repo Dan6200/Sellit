@@ -19,6 +19,7 @@ const userInfo: UserRequestData = {
   password: 'Aliyo99!',
   dob: new Date('1999-07-01'),
   country: 'Nigeria',
+  is_customer: true,
 }
 
 const updatedUserInfo = {

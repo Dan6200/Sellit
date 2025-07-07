@@ -22,6 +22,8 @@ export const UserRequestSchema = joi
     // password: joi.string(),
     dob: joi.date().required(),
     country: joi.string(),
+    is_customer: joi.boolean().required(),
+    is_vendor: joi.boolean().required(),
   })
   .or('email', 'phone')
   .required()
@@ -35,6 +37,7 @@ export const UserRequestSchema = joi
 export const UserResponseSchema = joi
   .object()
   .keys({
+    user_id: joi.string().guid({ version: 'uuidv4' }),
     first_name: joi.string().alphanum().min(3).max(30).required(),
     last_name: joi.string().alphanum().min(3).max(30).required(),
     email: joi
@@ -50,9 +53,10 @@ export const UserResponseSchema = joi
       )
       .allow(null),
     dob: joi.alternatives().try(joi.date().required(), joi.string().required()),
-    country: joi.string(),
+    country: joi.string().required(),
     is_customer: joi.boolean().required(),
     is_vendor: joi.boolean().required(),
+    deleted_at: joi.date().allow(null),
   })
   .or('email', 'phone')
   .required()
@@ -75,11 +79,13 @@ export const UserUpdateRequestSchema = joi
       .allow(null),
     dob: joi.alternatives().try(joi.date(), joi.string()),
     country: joi.string(),
+    is_customer: joi.boolean().optional(),
+    is_vendor: joi.boolean().optional(),
   })
   .required()
 
 export const UserIDSchema = joi
   .object({
-    userId: joi.string().guid({ version: 'uuidv4' }),
+    user_id: joi.string().guid({ version: 'uuidv4' }),
   })
   .required()

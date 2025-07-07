@@ -5,9 +5,11 @@ export interface UserData {
   last_name: string
   email?: string
   phone?: string
-  password: string
+  password?: string
   dob: Date
   country: string
+  is_customer: boolean
+  deleted_at?: Date
 }
 
 export type UserRequestData = UserData & ({ email: string } | { phone: string })

@@ -18,8 +18,8 @@ create table if not exists users (
 							 or email is not null and phone is null),
   dob          date                      not        null,
   country      varchar                   not        null 			default  		'Nigeria',
-	is_customer  boolean 									 not 				null 			false,
-	is_vendor    boolean 									 not 				null 			false,
+	is_customer  boolean 									 not 				null 			default 		false,
+	is_vendor    boolean 									 not 				null 			default 		false,
   check        (current_date - dob > 18),
   deleted_at   timestamptz
 );
