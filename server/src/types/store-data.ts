@@ -115,8 +115,12 @@ export default interface StoreData {
   store_pages?: Page[]
 }
 
-export type DBFriendlyStoreData = Omit<StoreData, 'store_pages'> & {
+export type DBFriendlyStoreData = Omit<
+  StoreData,
+  'store_pages' | 'default_page_styling'
+> & {
   store_pages?: string
+  default_page_styling?: string
 }
 
 // export const isValidStoreData = (

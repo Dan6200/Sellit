@@ -57,8 +57,18 @@ const createQuery = async ({
     throw new BadRequestError('Invalid store data')
   const storeData: StoreData = body
   if (!storeData) throw new BadRequestError('No data sent in request body')
-  return knex<StoreData>('stores')
-    .insert({ vendor_id: vendorId, ...storeData })
+
+  const dBFriendlyStoreData: DBFriendlyStoreData = {
+    ...storeData,
+    store_pages: storeData.store_pages
+      ? JSON.stringify(storeData.store_pages)
+      : undefined,
+    default_page_styling: storeData.default_page_styling
+      ? JSON.stringify(storeData.default_page_styling)
+      : undefined,
+  }
+  return knex<DBFriendlyStoreData>('stores')
+    .insert({ vendor_id: vendorId, ...dBFriendlyStoreData })
     .returning('store_id')
 }
 
@@ -81,7 +91,19 @@ const getAllQuery = async ({
     throw new BadRequestError(
       'No vendor account found. Please create a vendor account',
     )
-  return knex<StoreData>('stores').where('vendor_id', vendorId).select('*')
+  const stores = await knex<StoreData>('stores')
+    .where('vendor_id', vendorId)
+    .select('*')
+
+  return stores.map((store) => ({
+    ...store,
+    store_pages: store.store_pages
+      ? JSON.parse(store.store_pages as unknown as string)
+      : undefined,
+    default_page_styling: store.default_page_styling
+      ? JSON.parse(store.default_page_styling as unknown as string)
+      : undefined,
+  }))
 }
 
 /* @param {QueryParams} qp
@@ -105,7 +127,22 @@ const getQuery = async ({
     throw new BadRequestError(
       'No vendor account found. Please create a vendor account',
     )
-  return knex<StoreData>('stores').where('store_id', storeId).select('*')
+  const store = await knex<StoreData>('stores')
+    .where('store_id', storeId)
+    .select('*')
+    .first()
+
+  if (!store) return undefined
+
+  return {
+    ...store,
+    store_pages: store.store_pages
+      ? JSON.parse(store.store_pages as unknown as string)
+      : undefined,
+    default_page_styling: store.default_page_styling
+      ? JSON.parse(store.default_page_styling as unknown as string)
+      : undefined,
+  }
 }
 
 /* @param {QueryParams} qp
@@ -137,8 +174,11 @@ const updateQuery = async ({
     )
   const dBFriendlyStoreData: DBFriendlyStoreData = {
     ...storeData,
-    store_page: storeData.store_page
-      ? JSON.stringify(storeData.store_page)
+    store_pages: storeData.store_pages
+      ? JSON.stringify(storeData.store_pages)
+      : undefined,
+    default_page_styling: storeData.default_page_styling
+      ? JSON.stringify(storeData.default_page_styling)
       : undefined,
   }
 

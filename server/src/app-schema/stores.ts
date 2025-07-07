@@ -169,6 +169,7 @@ export const StoreDataResponseSchema = joi
   .object({
     store_id: joi.number().required(),
     store_name: joi.string().min(3).max(50).required(),
+    custom_domain: joi.string().uri().allow(null).required(),
     vendor_id: joi.string().guid({ version: 'uuidv4' }).required(),
     favicon: joi.string().uri().required(),
     default_page_styling: PageStylingSchema.optional(),
