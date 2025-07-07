@@ -9,7 +9,6 @@ import cookieParser from 'cookie-parser'
 // routers
 import userRouter from './routes/user/index.js'
 import shippingRouter from './routes/shipping/index.js'
-import productsRouter from './routes/products/index.js'
 import storesRouter from './routes/stores/index.js'
 import mediaRouter from './routes/media/index.js'
 
@@ -58,7 +57,7 @@ const v1Router = Router()
 v1Router.use('/users', authenticateUser, userRouter)
 v1Router.use('/shipping-info', authenticateUser, shippingRouter)
 v1Router.use('/stores', authenticateUser, storesRouter)
-v1Router.use('/products', authenticateUser, productsRouter)
+// v1Router.use('/products', productsRouterPublic)
 v1Router.use('/media', authenticateUser, mediaRouter)
 
 app.use('/v1', v1Router)

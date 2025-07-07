@@ -5,7 +5,8 @@ import { QueryDB } from '../../types/process-routes.js'
 import BadRequestError from '../../errors/bad-request.js'
 import { QueryResult, QueryResultRow } from 'pg'
 import NotFoundError from '../../errors/not-found.js'
-import { StatusCodes } from 'http-status-codes'
+import GeneralAPIError from '@/errors/general-api.js'
+import UnauthorizedError from '@/errors/unauthorized.js'
 
 export default ({
   Query,
@@ -31,40 +32,41 @@ export default ({
     let userId: string | undefined
     if (request.userId != null) ({ userId } = request)
 
-    // Validate request data
-    if (
-      typeof body != 'undefined' &&
-      Object.values(body).length !== 0 &&
-      validateBody
-    ) {
-      // validateBody throws error if body is invalid
-      validateBody(body)
-    }
-
-    let dbResponse: any
-    if (QueryForwarder) {
-      // Call the correct query handler based on route is public or not
-      const publicQuery = <string>query!.public
-      dbResponse = await QueryForwarder(publicQuery)({
-        userId,
-        body,
-        params,
-        query,
-      })
-    } else {
-      // remove password
-      const { password, ...bodyWithoutPassword } = body
-      dbResponse = await Query({
-        userId,
-        body: bodyWithoutPassword,
-        params,
-        query,
-      })
-    }
-
     try {
+      // Validate request data
+      if (
+        typeof body != 'undefined' &&
+        Object.values(body).length !== 0 &&
+        validateBody
+      ) {
+        // validateBody throws error if body is invalid
+        validateBody(body)
+      }
+
+      let dbResponse: any
+      if (QueryForwarder) {
+        // Call the correct query handler based on route is public or not
+        const publicQuery = <string>query!.public
+        dbResponse = await QueryForwarder(publicQuery)({
+          userId,
+          body,
+          params,
+          query,
+        })
+      } else {
+        // remove password
+        const { password, ...bodyWithoutPassword } = body
+        dbResponse = await Query({
+          userId,
+          body: bodyWithoutPassword,
+          params,
+          query,
+        })
+      }
+
       if (validateResult) {
-        console.log('DEBUG: DB Response -> ' + JSON.stringify(dbResponse))
+        process.env.DEBUG &&
+          console.log('DEBUG: DB Response -> ' + JSON.stringify(dbResponse))
         // validateBody throws error if data is invalid
         // check for errors returns true if response is valid
         if (!validateResult(dbResponse)) {
@@ -87,11 +89,11 @@ export default ({
         }
         return response.status(status).json(responseData)
       }
+      response.status(status).end()
     } catch (error) {
-      if (error instanceof NotFoundError)
-        return response.status(StatusCodes.NOT_FOUND).send(error.message)
+      if (error instanceof GeneralAPIError)
+        return response.status(error.statusCode).send(error.message)
       throw error
     }
-    response.status(status).end()
   }
 }

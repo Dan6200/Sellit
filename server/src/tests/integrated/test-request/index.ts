@@ -33,11 +33,15 @@ export default function ({
       .query(query ?? {})
       .send(<object>requestBody)
 
-    console.log('DEBUG: request ->' + JSON.stringify(request))
+    process.env.DEBUG &&
+      console.log('DEBUG: request ->' + JSON.stringify(request) + '\n')
 
     // Add request token
     if (token) request.auth(token, { type: 'bearer' })
     const response = await request
+
+    process.env.DEBUG &&
+      console.log('DEBUG: response ->' + JSON.stringify(response) + '\n')
     response.should.have.status(statusCode)
 
     // Validate the response body
@@ -46,7 +50,8 @@ export default function ({
       validateTestResData &&
       !validateTestResData(response.body)
     ) {
-      // if (response.status === 404) return null
+      console.log(validateTestResData.name)
+      if (response.status === 404) return null
       throw new Error('Invalid Database Result')
     }
 

@@ -30,7 +30,8 @@ export const ProductResponseSchema = joi
     list_price: joi.number().required(),
     net_price: joi.number().required(),
     quantity_available: joi.number().required(),
-    vendor_id: joi.string().required(),
+    vendor_id: joi.string().guid({ version: 'uuidv4' }).required(),
+    store_id: joi.number().required(),
     media: joi.array().allow(null),
     created_at: joi
       .alternatives()
@@ -54,12 +55,13 @@ export const ProductListResponseSchema = joi
           list_price: joi.number().required(),
           net_price: joi.number().required(),
           quantity_available: joi.number().required(),
-          vendor_id: joi.string().required(),
+          vendor_id: joi.string().guid({ version: 'uuidv4' }).required(),
+          store_id: joi.number().required(),
           media: joi.array().allow(null),
           created_at: joi
             .alternatives()
             .try(joi.date().required(), joi.string().required()),
-        })
+        }),
       )
       .allow(null),
     total_products: joi.number().required(),

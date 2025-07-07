@@ -2,6 +2,7 @@ import { supabase } from '#supabase-config'
 
 export const deleteAllUsersForTesting = async () => {
   const { data, error } = await supabase.auth.admin.listUsers()
+  process.env.DEBUG && console.log('DEBUG: users -> ' + JSON.stringify(data))
   if (error) {
     console.error('Failed to list users:', error)
     return
@@ -13,7 +14,7 @@ export const deleteAllUsersForTesting = async () => {
         .deleteUser(user.id)
         .catch((deleteError: Error) =>
           console.error(
-            `Failed to delete user with userId ${user.id}: ${deleteError}`,
+            `Failed to delete luser with userId ${user.id}: ${deleteError}`,
           ),
         )
     }

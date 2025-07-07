@@ -15,10 +15,10 @@ import { validateReqData } from '../utils/request-validation.js'
 import {
   getAllQueryForwarder,
   getQueryForwarder,
-} from './utils/retrieve-query.js'
-import createQuery from './utils/create-query.js'
-import updateQuery from './utils/update-query.js'
-import deleteQuery from './utils/delete-query.js'
+} from './definitions/retrieve-query.js'
+import createQuery from './definitions/create-query.js'
+import updateQuery from './definitions/update-query.js'
+import deleteQuery from './definitions/delete-query.js'
 import { validateResData } from '../utils/response-validation.js'
 
 const { CREATED, OK } = StatusCodes

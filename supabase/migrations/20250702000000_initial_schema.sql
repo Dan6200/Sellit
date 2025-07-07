@@ -57,7 +57,7 @@ create table if not exists stores (
   store_id       serial    primary   key,   
   store_name     varchar   not       null,
   vendor_id      uuid       not       null    references   vendors        on   delete   cascade,
-  store_page     jsonb,
+  store_pages    jsonb,
   date_created   date      not       null    default      current_date
 );
 
@@ -92,7 +92,8 @@ create table if not exists products (
   description          jsonb,
   list_price           numeric(19,4),
   net_price            numeric(19,4),
-  vendor_id            uuid              not       null    references			vendors         on   delete   cascade,
+  vendor_id            uuid             not       null    references			vendors         on   delete   cascade,
+	store_id 						 int 							not 			null 		references 			stores 					on 	 delete 	cascade,
   category_id          int           		not    		null    references   		categories      on   delete   cascade,
   subcategory_id       int           		not    		null    references   		subcategories   on   delete   cascade,
   created_at           timestamptz      not       null    default      		now(),

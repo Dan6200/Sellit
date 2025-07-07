@@ -15,7 +15,7 @@ import {
   TestRequestPublic,
   TestRequestWithBody,
   TestRequestWithQParams,
-} from '../../types/test-routes.js'
+} from '../../test-request/types.js'
 import testRoutes from '../../test-request/index.js'
 import { UserRequestData } from '@/types/users/index.js'
 import { signInForTesting } from '../../helpers/signin-user.js'
@@ -58,8 +58,8 @@ const testCreateProduct = async function* ({
 export const testPostProduct = (<TestRequestWithBody>testRoutes)({
   statusCode: CREATED,
   verb: 'post',
-  validateReqData: isValidProductRequestData,
-  validateResData: isValidProductId,
+  validateTestReqData: isValidProductRequestData,
+  validateTestResData: isValidProductId,
 })
 
 export const testGetAllProductsWithQParams = (<TestRequestWithQParams>(
@@ -67,56 +67,56 @@ export const testGetAllProductsWithQParams = (<TestRequestWithQParams>(
 ))({
   statusCode: OK,
   verb: 'get',
-  validateResData: isValidProductListResponseData,
+  validateTestResData: isValidProductListResponseData,
 })
 
 const testGetAllProducts = (<TestRequest>testRoutes)({
   statusCode: OK,
   verb: 'get',
-  validateResData: isValidProductListResponseData,
+  validateTestResData: isValidProductListResponseData,
 })
 
 export const testGetAllProductsPublic = (<TestRequestPublic>testRoutes)({
   statusCode: OK,
   verb: 'get',
-  validateResData: isValidProductListResponseData,
+  validateTestResData: isValidProductListResponseData,
 })
 
 export const testGetProductWithQParams = (<TestRequestWithQParams>testRoutes)({
   statusCode: OK,
   verb: 'get',
-  validateResData: isValidProductResponseData,
+  validateTestResData: isValidProductResponseData,
 })
 
 const testGetProduct = (<TestRequest>testRoutes)({
   statusCode: OK,
   verb: 'get',
-  validateResData: isValidProductResponseData,
+  validateTestResData: isValidProductResponseData,
 })
 
 export const testGetProductPublic = (<TestRequestPublic>testRoutes)({
   statusCode: OK,
   verb: 'get',
-  validateResData: isValidProductResponseData,
+  validateTestResData: isValidProductResponseData,
 })
 
 const testUpdateProduct = (<TestRequestWithBody>testRoutes)({
   statusCode: OK,
   verb: 'patch',
-  validateReqData: isValidProductRequestData,
-  validateResData: isValidProductId,
+  validateTestReqData: isValidProductRequestData,
+  validateTestResData: isValidProductId,
 })
 
 const testDeleteProduct = (<TestRequest>testRoutes)({
   statusCode: OK,
   verb: 'delete',
-  validateResData: isValidProductId,
+  validateTestResData: isValidProductId,
 })
 
 const testGetNonExistentProduct = (<TestRequest>testRoutes)({
   verb: 'get',
   statusCode: NOT_FOUND,
-  validateResData: null,
+  validateTestResData: null,
 })
 
 const testUploadProductMedia = async function (

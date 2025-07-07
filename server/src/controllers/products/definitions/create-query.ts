@@ -9,17 +9,26 @@ import { isValidProductRequestData } from '../../../types/products.js'
  * @returns {Promise<number>} - The database response
  * @description Create a new product
  */
-export default async <T>({
+export default async ({
   body,
   userId: vendorId,
-}: QueryParams<T>): Promise<number> => {
-  const response = await knex('vendors')
+  params: { storeId },
+  // query: {
+}: QueryParams): Promise<number> => {
+  let response = await knex('vendors')
     .where('vendor_id', vendorId)
     .first('vendor_id')
   if (response.length === 0) {
     throw new BadRequestError(
       'Must have a Vendor account to be able to list products',
     )
+  }
+  response = await knex('stores')
+    .where('vendor_id', vendorId)
+    .where('store_id', storeId)
+    .first('vendor_id')
+  if (response.length === 0) {
+    throw new BadRequestError('Must create a store to be able to list products')
   }
 
   if (!isValidProductRequestData(body))
@@ -33,6 +42,10 @@ export default async <T>({
   }
 
   return knex('products')
-    .insert({ ...DBFriendlyProductData, vendor_id: vendorId })
+    .insert({
+      ...DBFriendlyProductData,
+      vendor_id: vendorId,
+      store_id: storeId,
+    })
     .returning('product_id')
 }

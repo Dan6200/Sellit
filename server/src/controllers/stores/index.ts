@@ -12,7 +12,10 @@ import {
   ProcessRouteWithoutBody,
   QueryParams,
 } from '../../types/process-routes.js'
-import StoreData, { isValidStoreDataRequest } from '../../types/store-data.js'
+import StoreData, {
+  DBFriendlyStoreData,
+  isValidStoreDataRequest,
+} from '../../types/store-data.js'
 import processRoute from '../routes/process.js'
 import { validateReqData } from '../utils/request-validation.js'
 import { validateResData } from '../utils/response-validation.js'
@@ -49,15 +52,11 @@ const createQuery = async ({
   if (typeof count === 'string') count = parseInt(count)
   if (count > LIMIT)
     throw new BadRequestError(`Cannot have more than ${LIMIT} stores`)
-
+  //
   if (!isValidStoreDataRequest(body))
     throw new BadRequestError('Invalid store data')
   const storeData: StoreData = body
   if (!storeData) throw new BadRequestError('No data sent in request body')
-  // const DBFriendlyData = {
-  //   ...storeData,
-  //   delivery_instructions: JSON.stringify(storeData.delivery_instructions),
-  // }
   return knex<StoreData>('stores')
     .insert({ vendor_id: vendorId, ...storeData })
     .returning('store_id')
@@ -97,7 +96,7 @@ const getQuery = async ({
   userId: vendorId,
 }: QueryParams): Promise<Knex.QueryBuilder<StoreData[]>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
-  const { storeInfoId } = params
+  const { storeId } = params
   if (!vendorId) throw new UnauthorizedError('Cannot access resource')
   const result = await knex('vendors')
     .where('vendor_id', vendorId)
@@ -106,7 +105,7 @@ const getQuery = async ({
     throw new BadRequestError(
       'No vendor account found. Please create a vendor account',
     )
-  return knex<StoreData>('stores').where('store_id', storeInfoId).select('*')
+  return knex<StoreData>('stores').where('store_id', storeId).select('*')
 }
 
 /* @param {QueryParams} qp
@@ -124,10 +123,10 @@ const updateQuery = async ({
   userId: vendorId,
 }: QueryParams): Promise<Knex.QueryBuilder<number>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
-  const { storeInfoId } = params
+  const { storeId } = params
   if (!isValidStoreDataRequest(body)) throw new BadRequestError('Invalid data')
   const storeData = body
-  if (!storeInfoId) throw new BadRequestError('Need ID to update resource')
+  if (!storeId) throw new BadRequestError('Need ID to update resource')
   if (!vendorId) throw new UnauthorizedError('Cannot access resource')
   const result = await knex('vendors')
     .where('vendor_id', vendorId)
@@ -136,13 +135,16 @@ const updateQuery = async ({
     throw new BadRequestError(
       'No vendor account found. Please create a vendor account',
     )
-  // const DBFriendlyData = {
-  //   ...storeData,
-  //   delivery_instructions: JSON.stringify(storeData.delivery_instructions),
-  // }
-  return knex<StoreData>('stores')
-    .where('store_id', storeInfoId)
-    .update(storeData)
+  const dBFriendlyStoreData: DBFriendlyStoreData = {
+    ...storeData,
+    store_page: storeData.store_page
+      ? JSON.stringify(storeData.store_page)
+      : undefined,
+  }
+
+  return knex<DBFriendlyStoreData>('stores')
+    .where('store_id', storeId)
+    .update(dBFriendlyStoreData)
     .returning('store_id')
 }
 
@@ -160,9 +162,8 @@ const deleteQuery = async ({
   userId: vendorId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
-  const { storeInfoId } = params
-  if (!storeInfoId)
-    throw new BadRequestError('Need Id param to delete resource')
+  const { storeId } = params
+  if (!storeId) throw new BadRequestError('Need Id param to delete resource')
   if (!vendorId) throw new UnauthorizedError('Cannot access resource')
   const result = await knex('vendors')
     .where('vendor_id', vendorId)
@@ -172,7 +173,7 @@ const deleteQuery = async ({
       'No vendor account found. Please create a vendor account',
     )
   return knex<StoreData>('stores')
-    .where('store_id', storeInfoId)
+    .where('store_id', storeId)
     .del()
     .returning('store_id')
 }

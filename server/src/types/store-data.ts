@@ -5,33 +5,141 @@ import {
   StoreIDSchema,
 } from '../app-schema/stores.js'
 
+// Interface for common page styling properties
+interface PageStyling {
+  layout_template?: 'default' | 'minimal' | 'grid'
+  font_family?: string // e.g., 'Arial', 'Roboto', 'Open Sans'
+  primary_color?: string // e.g., '#FF0000'
+  secondary_color?: string // e.g., '#00FF00'
+}
+
+interface Page extends PageStyling {
+  pageType: 'storePage'
+  pageTitle: string
+  metaDescription: string
+  canonicalUrl: string
+  breadcrumbs: Array<{
+    name: string
+    url: string
+  }>
+  heroSection?: {
+    title: string
+    subtitle: string
+    imageUrl: string
+    altText: string
+    callToAction: {
+      text: string
+      url: string
+    }
+  }
+  categories: Array<{
+    id: string
+    name: string
+    url: string
+    thumbnailUrl: string
+    description: string
+  }>
+  featuredProducts: Array<{
+    id: string
+    name: string
+    sku: string
+    imageUrl: string
+    altText: string
+    price: {
+      amount: number
+      currency: string
+    }
+    originalPrice?: {
+      amount: number
+      currency: string
+    }
+    rating: number
+    numReviews: number
+    productUrl: string
+    shortDescription: string
+    isInStock: boolean
+  }>
+  promotions: Array<
+    | {
+        id: string
+        title: string
+        description: string
+        imageUrl: string
+        altText: string
+        targetUrl: string
+      }
+    | {
+        id: string
+        title: string
+        description: string
+        icon: string
+      }
+  >
+  customerTestimonials: Array<{
+    name: string
+    location: string
+    quote: string
+    rating: number
+  }>
+  seoInfo: {
+    keywords: string[]
+    schemaMarkup: {
+      '@context': string
+      '@type': string
+      name: string
+      description: string
+      url: string
+    }
+    // Open Graph for social media sharing
+    ogTitle?: string
+    ogDescription?: string
+    ogImage?: string
+    ogUrl?: string
+    ogType?: string // e.g., 'website', 'article', 'product'
+    // Twitter Cards for social media sharing
+    twitterCard?: 'summary' | 'summary_large_image' | 'app' | 'player'
+    twitterSite?: string
+    twitterCreator?: string
+    twitterTitle?: string
+    twitterDescription?: string
+    twitterImage?: string
+  }
+}
+
 export default interface StoreData {
   store_name: string
-  vendor_id: string
-  store_page?: {
-    heading: string
-    theme: 'light' | 'dark'
-    pages: string[]
+  vendor_id?: string
+  custom_domain: string | null
+  favicon: string
+  default_page_styling?: PageStyling // Store-wide default styling for pages
+  store_pages?: {
+    pages: Page[]
     hero: {
       media: { [idx: number]: string }
+      slideshow: boolean
     }
     body: {
       product_listings: { product_ids: { [idx: number]: string } }
     }
+    // New customization fields
   }
 }
 
-export const isValidStoreData = (
-  storeData: unknown,
-): storeData is StoreData => {
-  return (
-    typeof storeData === 'object' &&
-    storeData != null &&
-    'store_name' in storeData
-    // && 'store_page' in storeData &&
-    //   storeData.store_page != null
-  )
+export type DBFriendlyStoreData = Omit<StoreData, 'store_pages'> & {
+  store_pages?: string
 }
+
+// export const isValidStoreData = (
+//   storeData: unknown,
+// ): storeData is StoreData => {
+//   return (
+//     typeof storeData === 'object' &&
+//     storeData != null &&
+//     'store_name' in storeData
+//     && 'store_pages' in storeData &&
+//       storeData.store_pages != null
+//   )
+// }
 
 interface StoreDataId {
   store_info_id: number

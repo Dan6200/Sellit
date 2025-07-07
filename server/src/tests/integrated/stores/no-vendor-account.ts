@@ -1,17 +1,15 @@
 import StoreData from '@/types/store-data.js'
 import {
-  testCreateStore,
-  testGetStore,
-  testUpdateStore,
-  testGetAllStores,
-  testDeleteStore,
-  testGetNonExistentStore,
+  testCreateStoreWithoutVendorAccount,
+  testGetStoreWithoutVendorAccount,
+  testUpdateStoreWithoutVendorAccount,
+  testGetAllStoresWithoutVendorAccount,
+  testDeleteStoreWithoutVendorAccount,
 } from '../stores/definitions/index.js'
 import assert from 'assert'
 import { UserRequestData } from '../../../types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
-import { createVendorForTesting } from '../helpers/create-vendor.js'
 import { signInForTesting } from '../helpers/signin-user.js'
 
 export default function ({
@@ -31,16 +29,14 @@ export default function ({
     // Create user after...
     await createUserForTesting(userInfo)
     token = await signInForTesting(userInfo)
-    await createVendorForTesting(token)
   })
   const path = '/v1/stores'
 
   let storeIds: string[] = []
-  it('should create a store for the vendor', async () => {
-    // Create stores using store information
+  it('should fail to create a store when no vendor account exists', async () => {
     assert(!!stores.length)
     for (const store of stores) {
-      const { store_id } = await testCreateStore({
+      const { store_id } = await testCreateStoreWithoutVendorAccount({
         server,
         token,
         path,
@@ -50,26 +46,25 @@ export default function ({
     }
   })
 
-  // describe('Operations after Creation...', () => {
-  //   before(async () => {
-  //     await createStoresForTesting(token)
-  //   })
-
-  it('it should fetch all the stores with one request', async () => {
-    await testGetAllStores({ server, token, path })
+  it('should fail to fetch all stores when no vendor account exists', async () => {
+    await testGetAllStoresWithoutVendorAccount({ server, token, path })
   })
 
-  it('it should fetch all the stores with a loop', async () => {
+  it('should fail to fetch individual stores when no vendor account exists', async () => {
     assert(!!storeIds.length)
     for (const storeId of storeIds) {
-      await testGetStore({ server, token, path: `${path}/${storeId}` })
+      await testGetStoreWithoutVendorAccount({
+        server,
+        token,
+        path: `${path}/${storeId}`,
+      })
     }
   })
 
-  it('should update all the stores with a loop', async () => {
+  it('should fail to update stores when no vendor account exists', async () => {
     assert(!!storeIds.length && storeIds.length === updatedStores.length)
     for (const [idx, storeId] of storeIds.entries()) {
-      await testUpdateStore({
+      await testUpdateStoreWithoutVendorAccount({
         server,
         token,
         path: path + '/' + storeId,
@@ -78,17 +73,10 @@ export default function ({
     }
   })
 
-  it('should delete all the stores with a loop', async () => {
+  it('should fail to delete stores when no vendor account exists', async () => {
     assert(!!storeIds.length)
     for (const storeId of storeIds) {
-      await testDeleteStore({ server, token, path: path + '/' + storeId })
-    }
-  })
-
-  it('should fail to retrieve any store', async () => {
-    assert(!!storeIds.length)
-    for (const storeId of storeIds) {
-      await testGetNonExistentStore({
+      await testDeleteStoreWithoutVendorAccount({
         server,
         token,
         path: path + '/' + storeId,

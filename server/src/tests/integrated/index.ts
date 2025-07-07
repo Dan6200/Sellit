@@ -1,7 +1,9 @@
 //cspell:disable
 import testUserAccount from './users/index.js'
+import testUserAccountWithoutSignIn from './users/no-signin.js'
 import testCustomerAccount from './users/customers/index.js'
 import testVendorAccount from './users/vendors/index.js'
+import testStoresWithNoVendor from './stores/no-vendor-account.js'
 import testStores from './stores/index.js'
 import testShipping from './shipping-info/index.js'
 import testProducts from './products/index.js'
@@ -35,6 +37,8 @@ export default function (): void {
     const { userInfo } = user
     const { first_name: name } = userInfo
     describe(`Testing User Account for ${name}`, () => testUserAccount(user))
+    describe(`Testing User Account without Signing In`, () =>
+      testUserAccountWithoutSignIn(user))
   }
 
   /** Customer Account actions **/
@@ -65,6 +69,13 @@ export default function (): void {
   }
 
   /** Stores related tests **/
+
+  for (let vendor of vendors) {
+    const { userInfo } = vendor
+    const { first_name: name } = userInfo
+    describe(`Testing Stores owned by ${name}`, () =>
+      testStoresWithNoVendor(vendor))
+  }
 
   for (let vendor of vendors) {
     const { userInfo } = vendor

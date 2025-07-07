@@ -1,8 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
-import CustomAPIError from './custom-api.js'
+import GeneralAPIError from './general-api.js'
 
-class UnauthorizedError extends CustomAPIError {
-  statusCode: number
+class UnauthorizedError extends GeneralAPIError {
   constructor(message: string) {
     super(message)
     this.statusCode = StatusCodes.UNAUTHORIZED

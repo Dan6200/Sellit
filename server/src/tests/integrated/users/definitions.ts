@@ -1,13 +1,13 @@
 import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { StatusCodes } from 'http-status-codes'
-import { TestRequest } from '../test-request/types.js'
+import { TestRequest, TestRequestWithQParams } from '../test-request/types.js'
 import { isValidUserResponseData } from './types.js'
 import testRequest from '../test-request/index.js'
 
 chai.use(chaiHttp).should()
 
-const { OK } = StatusCodes
+const { OK, UNAUTHORIZED } = StatusCodes
 
 const hasNoCustomerAccount = (data: unknown) => {
   const isValidData = isValidUserResponseData(data)
@@ -66,6 +66,18 @@ export const testHasNoVendorAccount = testRequestBase({
   verb: 'get',
   statusCode: OK,
   validateTestResData: hasNoVendorAccount,
+})
+
+const testRequestWithoutSignIn = <TestRequestWithQParams>testRequest
+export const testGetUserWithoutSignIn = testRequestWithoutSignIn({
+  verb: 'get',
+  statusCode: UNAUTHORIZED,
+})
+
+export const testHasCustomerAccountWithoutSignIn = testRequestWithoutSignIn({
+  verb: 'get',
+  statusCode: OK,
+  validateTestResData: hasCustomerAccount,
 })
 
 /* Can only work for Admin accounts */

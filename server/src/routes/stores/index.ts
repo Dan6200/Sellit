@@ -6,11 +6,14 @@ import {
   updateStore,
   deleteStore,
 } from '../../controllers/stores/index.js'
+import productsRouter from '../products/index.js'
 
 const router = express.Router()
 
 router.route('/').post(createStore).get(getAllStores)
 
-router.route('/:storeId').get(getStore).patch(updateStore).delete(deleteStore)
+router.route('/:storeId').get(getStore).put(updateStore).delete(deleteStore)
+
+router.use('/:storeId/products', productsRouter)
 
 export default router

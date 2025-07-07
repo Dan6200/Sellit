@@ -10,11 +10,13 @@ import {
   testDeleteProduct,
   testGetNonExistentProduct,
 } from './utils/index.js'
-import { testPostVendor } from '../users/vendors/definitions/index.js'
 import { UserRequestData } from '../../../types/users/index.js'
 import assert from 'assert'
-import { knex } from '../../../db/index.js'
-import { supabase } from '#supabase-config'
+import { createUserForTesting } from '../helpers/create-user.js'
+import { createVendorForTesting } from '../helpers/create-vendor.js'
+import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
+import { signInForTesting } from '../helpers/signin-user.js'
+import { createStoreForTesting } from '../helpers/create-store.js'
 
 // globals
 chai.use(chaiHttp).should()
@@ -30,57 +32,57 @@ export default function ({
   products: ProductRequestData[]
   productReplaced: ProductRequestData[]
 }) {
-  before(async () => {
-    await testPostVendor({ server, path: vendorsRoute })
-  })
-
-  after(async function () {
-    // Delete users from db
-    if (userIdToDelete)
-      await knex('users').where('userId', userIdToDelete).del()
-    // Delete all users from firebase auth
-    await supabase.auth.admin
-      .deleteUser(userIdToDelete)
-      .catch((error: Error) =>
-        console.error(
-          `failed to delete user with userId ${userIdToDelete}: ${error}`,
-        ),
-      )
-  })
-
-  let token: string
-  let userIdToDelete: string
-  const vendorsRoute = '/v1/users/vendors/'
-  const productsRoute = '/v1/products'
-  const productIds: number[] = []
-
   describe('Testing Products In Each Store', async function () {
+    let token: string
+    let storeId: string
+    before(async () => {
+      // Delete all users from Supabase auth
+      await deleteAllUsersForTesting()
+      // Create user after...
+      await createUserForTesting(userInfo)
+      token = await signInForTesting(userInfo)
+      await createVendorForTesting(token)
+      const response = await createStoreForTesting(token)
+      ;({ store_id: storeId } = response.body)
+    })
+
+    const productIds: number[] = []
+
+    const getProductsRoute = () => `/v1/stores/${storeId}/products`
+
     it('it should Add a couple products to each store', async () => {
+      const productsRoute = getProductsRoute()
+
       for (const product of products) {
         const { product_id } = await testPostProduct({
           server,
           path: `${productsRoute}`,
-          body: product,
+          requestBody: product,
+          token,
         })
         productIds.push(product_id)
       }
     })
 
     it('it should retrieve all the products', async () => {
-      await testGetAllProducts({ server, path: productsRoute })
+      const productsRoute = getProductsRoute()
+      await testGetAllProducts({ server, path: productsRoute, token })
     })
 
     it('it should retrieve all products from each store, sorted by net price ascending', async () => {
+      const productsRoute = getProductsRoute()
       await testGetAllProductsWithQParams({
         server,
         path: productsRoute,
         query: {
           sort: '-net_price',
         },
+        token,
       })
     })
 
     it('it should retrieve all products from each store, results offset by 2 and limited by 10', async () => {
+      const productsRoute = getProductsRoute()
       await testGetAllProductsWithQParams({
         server,
         path: productsRoute,
@@ -88,12 +90,15 @@ export default function ({
           offset: 1,
           limit: 2,
         },
+        token,
       })
     })
 
     it('it should retrieve a specific product a vendor has for sale', async () => {
+      const productsRoute = getProductsRoute()
       for (const productId of productIds) {
         await testGetProduct({
+          token,
           server,
           path: `${productsRoute}/${productId}`,
         })
@@ -101,32 +106,36 @@ export default function ({
     })
 
     it('it should update all the products a vendor has for sale', async () => {
+      const productsRoute = getProductsRoute()
       assert(productIds?.length === productReplaced.length)
       for (const [idx, productId] of productIds.entries())
         await testUpdateProduct({
           server,
           path: `${productsRoute}/${productId}`,
-          body: productReplaced[idx],
+          token,
+          requestBody: productReplaced[idx],
         })
     })
 
     it('it should delete all the product a vendor has for sale', async () => {
+      const productsRoute = getProductsRoute()
       for (const productId of productIds)
         await testDeleteProduct({
+          token,
           server,
           path: `${productsRoute}/${productId}`,
         })
     })
 
     it('it should fail to retrieve any of the deleted products', async () => {
+      const productsRoute = getProductsRoute()
       for (const productId of productIds)
         await testGetNonExistentProduct({
+          token,
           server,
 
           path: `${productsRoute}/${productId}`,
         })
     })
-
-    //end
   })
 }

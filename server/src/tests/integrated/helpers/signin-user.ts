@@ -1,10 +1,12 @@
 import { supabase } from '#supabase-config'
 
 export const signInForTesting = async ({ email, phone, password }: any) => {
-  // console.log('DEBUG: Signup -> ')
-  // console.log('\tEmail: ' + email)
-  // console.log('\tPhone: ' + phone)
-  // console.log('\tPassword: ' + password)
+  if (process.env.DEBUG) {
+    console.log('DEBUG: Signup -> ')
+    console.log('\tEmail: ' + email)
+    console.log('\tPhone: ' + phone)
+    console.log('\tPassword: ' + password)
+  }
 
   const credentials: any = { password }
   if (email) {

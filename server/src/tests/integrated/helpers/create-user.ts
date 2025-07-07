@@ -6,10 +6,11 @@ export const createUserForTesting = async ({
   phone, // Extract phone explicitly
   ...user_metadata // Collect remaining into user_metadata
 }: any) => {
-  // console.log(
-  //   `DEBUG: Create User -> ` +
-  //   JSON.stringify({ email, password, phone, user_metadata }), // Log phone as well
-  // )
+  if (process.env.DEBUG)
+    console.log(
+      `DEBUG: Create User -> ` +
+        JSON.stringify({ email, password, phone, user_metadata }), // Log phone as well
+    )
   const { error } = await supabase.auth.admin.createUser({
     email,
     password,

@@ -45,9 +45,10 @@ export function validateResData<T>(schema: ArraySchema<T> | ObjectSchema<T>) {
   return (
     result: QueryResult<QueryResultRow> | SupabaseResponse<T> | any[],
   ) => {
-    console.log(
-      'DEBUG: DB response (validate step) -> ' + JSON.stringify(result),
-    )
+    process.env.DEBUG &&
+      console.log(
+        'DEBUG: DB response (validate step) -> ' + JSON.stringify(result),
+      )
     if (isTypeQueryResultRow(result)) {
       if (result.rows?.length === 0) {
         if (result.command === 'SELECT')

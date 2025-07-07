@@ -8,51 +8,77 @@ import {
 import testRequest from '../../test-request/index.js'
 import { TestRequestWithBody, TestRequest } from '../../test-request/types.js'
 
-const { CREATED, OK, NOT_FOUND } = StatusCodes
+const { CREATED, OK, NOT_FOUND, BAD_REQUEST } = StatusCodes
 
-const testCreateStore = (testRequest as TestRequestWithBody)({
+export const testCreateStore = (testRequest as TestRequestWithBody)({
   verb: 'post',
   statusCode: CREATED,
   validateTestReqData: isValidStoreDataRequest,
   validateTestResData: isValidStoreDataId,
 })
 
-const testGetAllStore = (testRequest as TestRequest)({
+export const testGetAllStores = (testRequest as TestRequest)({
   statusCode: OK,
   verb: 'get',
   validateTestResData: isValidStoreDataResponseList,
 })
 
-const testGetStore = (testRequest as TestRequest)({
+export const testGetStore = (testRequest as TestRequest)({
   statusCode: OK,
   verb: 'get',
   validateTestResData: isValidStoreDataResponse,
 })
 
-const testUpdateStore = (testRequest as TestRequestWithBody)({
+export const testUpdateStore = (testRequest as TestRequestWithBody)({
   statusCode: OK,
   verb: 'put',
   validateTestReqData: isValidStoreDataRequest,
   validateTestResData: isValidStoreDataId,
 })
 
-const testDeleteStore = (testRequest as TestRequest)({
+export const testDeleteStore = (testRequest as TestRequest)({
   statusCode: OK,
   verb: 'delete',
   validateTestResData: isValidStoreDataId,
 })
 
-const testGetNonExistentStore = (testRequest as TestRequest)({
+export const testGetNonExistentStore = (testRequest as TestRequest)({
   verb: 'get',
   statusCode: NOT_FOUND,
   validateTestResData: null,
 })
 
-export {
-  testCreateStore,
-  testGetAllStore,
-  testGetStore,
-  testUpdateStore,
-  testDeleteStore,
-  testGetNonExistentStore,
-}
+export const testCreateStoreWithoutVendorAccount = (
+  testRequest as TestRequestWithBody
+)({
+  verb: 'post',
+  statusCode: BAD_REQUEST,
+  validateTestReqData: isValidStoreDataRequest,
+})
+
+export const testGetAllStoresWithoutVendorAccount = (
+  testRequest as TestRequest
+)({
+  statusCode: BAD_REQUEST,
+  verb: 'get',
+})
+
+export const testGetStoreWithoutVendorAccount = (testRequest as TestRequest)({
+  statusCode: BAD_REQUEST,
+  verb: 'get',
+})
+
+export const testUpdateStoreWithoutVendorAccount = (
+  testRequest as TestRequestWithBody
+)({
+  statusCode: BAD_REQUEST,
+  verb: 'put',
+  validateTestReqData: isValidStoreDataRequest,
+})
+
+export const testDeleteStoreWithoutVendorAccount = (testRequest as TestRequest)(
+  {
+    statusCode: BAD_REQUEST,
+    verb: 'delete',
+  },
+)
