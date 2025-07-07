@@ -23,11 +23,7 @@ export default function (): void {
 
   /** Products **/
 
-  for (let vendor of vendors) {
-    const { userInfo } = vendor
-    const { first_name: name } = userInfo
-    describe(`Testing Public Routes for ${name}`, () => testPublicProducts())
-  }
+  describe(`Testing Public Product Route`, () => testPublicProducts())
 
   /** Private Routes **/
 
@@ -71,9 +67,7 @@ export default function (): void {
   /** Stores related tests **/
 
   for (let vendor of vendors) {
-    const { userInfo } = vendor
-    const { first_name: name } = userInfo
-    describe(`Testing Stores owned by ${name}`, () =>
+    describe(`Testing Stores owned by No One`, () =>
       testStoresWithNoVendor(vendor))
   }
 

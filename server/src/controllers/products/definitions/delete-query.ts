@@ -9,10 +9,11 @@ import { QueryParams } from '../../../types/process-routes.js'
  * @description Delete a product
  */
 
-export default async <T>({
+export default async ({
   params,
   userId: vendorId,
-}: QueryParams<T>): Promise<number> => {
+  params: { storeId },
+}: QueryParams): Promise<number> => {
   if (params == null) throw new BadRequestError('Must provide product id')
   const { productId } = params
   const response = await knex('vendors')

@@ -132,7 +132,7 @@ const getQuery = async ({
     .select('*')
     .first()
 
-  if (!store) return undefined
+  if (!store) return [] // return an empty list
 
   return [
     {
