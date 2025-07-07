@@ -127,60 +127,18 @@ export const StoreDataRequestSchema = joi
   .object({
     store_name: joi.string().min(3).max(50).required(),
     favicon: joi.string().uri().required(),
+    custom_domain: joi.string().uri().allow(null).required(),
     default_page_styling: PageStylingSchema.optional(),
-    store_pages: joi
-      .object({
-        pages: joi.array().items(PageSchema).required(),
-        hero: joi
-          .object({
-            media: joi.object().pattern(joi.number(), joi.string()).required(),
-            slideshow: joi.boolean().required(),
-          })
-          .required(),
-        body: joi
-          .object({
-            product_listings: joi
-              .object({
-                product_ids: joi
-                  .object()
-                  .pattern(joi.number(), joi.string())
-                  .required(),
-              })
-              .required(),
-          })
-          .required(),
-      })
-      .optional(),
+    store_pages: joi.array().items(PageSchema).optional(),
   })
   .required()
 
 export const StoreDataRequestPartialSchema = joi.object({
   store_name: joi.string().min(3).max(50).optional(),
   favicon: joi.string().uri().optional(),
+  custom_domain: joi.string().uri().allow(null).optional(),
   default_page_styling: PageStylingSchema.optional(),
-  store_pages: joi
-    .object({
-      pages: joi.array().items(PageSchema).optional(),
-      hero: joi
-        .object({
-          media: joi.object().pattern(joi.number(), joi.string()).optional(),
-          slideshow: joi.boolean().optional(),
-        })
-        .optional(),
-      body: joi
-        .object({
-          product_listings: joi
-            .object({
-              product_ids: joi
-                .object()
-                .pattern(joi.number(), joi.string())
-                .optional(),
-            })
-            .optional(),
-        })
-        .optional(),
-    })
-    .optional(),
+  store_pages: joi.array().items(PageSchema).optional(),
 })
 
 export const StoreIDSchema = joi.object({
@@ -194,35 +152,11 @@ export const StoreDataResponseListSchema = joi
       .object({
         store_id: joi.number().required(),
         store_name: joi.string().min(3).max(50).required(),
+        custom_domain: joi.string().uri().allow(null).required(),
         vendor_id: joi.string().guid({ version: 'uuidv4' }).required(),
         favicon: joi.string().uri().required(),
         default_page_styling: PageStylingSchema.optional(),
-        store_pages: joi
-          .object({
-            pages: joi.array().items(PageSchema).required(),
-            hero: joi
-              .object({
-                media: joi
-                  .object()
-                  .pattern(joi.number(), joi.string())
-                  .required(),
-                slideshow: joi.boolean().required(),
-              })
-              .required(),
-            body: joi
-              .object({
-                product_listings: joi
-                  .object({
-                    product_ids: joi
-                      .object()
-                      .pattern(joi.number(), joi.string())
-                      .required(),
-                  })
-                  .required(),
-              })
-              .required(),
-          })
-          .optional(),
+        store_pages: joi.array().items(PageSchema).optional(),
         date_created: joi
           .alternatives()
           .try(joi.string().required(), joi.date().required()),
@@ -238,29 +172,7 @@ export const StoreDataResponseSchema = joi
     vendor_id: joi.string().guid({ version: 'uuidv4' }).required(),
     favicon: joi.string().uri().required(),
     default_page_styling: PageStylingSchema.optional(),
-    store_pages: joi
-      .object({
-        pages: joi.array().items(PageSchema).required(),
-        hero: joi
-          .object({
-            media: joi.object().pattern(joi.number(), joi.string()).required(),
-            slideshow: joi.boolean().required(),
-          })
-          .required(),
-        body: joi
-          .object({
-            product_listings: joi
-              .object({
-                product_ids: joi
-                  .object()
-                  .pattern(joi.number(), joi.string())
-                  .required(),
-              })
-              .required(),
-          })
-          .required(),
-      })
-      .optional(),
+    store_pages: joi.array().items(PageSchema).optional(),
     date_created: joi
       .alternatives()
       .try(joi.string().required(), joi.date().required()),

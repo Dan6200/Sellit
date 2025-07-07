@@ -112,17 +112,7 @@ export default interface StoreData {
   custom_domain: string | null
   favicon: string
   default_page_styling?: PageStyling // Store-wide default styling for pages
-  store_pages?: {
-    pages: Page[]
-    hero: {
-      media: { [idx: number]: string }
-      slideshow: boolean
-    }
-    body: {
-      product_listings: { product_ids: { [idx: number]: string } }
-    }
-    // New customization fields
-  }
+  store_pages?: Page[]
 }
 
 export type DBFriendlyStoreData = Omit<StoreData, 'store_pages'> & {

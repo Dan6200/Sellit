@@ -54,11 +54,14 @@ create table if not exists vendors (
 
 
 create table if not exists stores (
-  store_id       serial    primary   key,   
-  store_name     varchar   not       null,
-  vendor_id      uuid       not       null    references   vendors        on   delete   cascade,
-  store_pages    jsonb,
-  date_created   date      not       null    default      current_date
+  store_id                 serial      primary   key,   
+  store_name               varchar     not       null,
+	custom_domain            varchar     null,
+  vendor_id                uuid        not       null    references   vendors        on   delete   cascade,
+  favicon                  varchar     not       null,
+  default_page_styling     jsonb,
+  store_pages              jsonb,
+  date_created             date        not       null    default      current_date
 );
 
 create table if not exists categories (
