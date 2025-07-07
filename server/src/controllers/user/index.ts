@@ -20,6 +20,39 @@ const getQuery = async ({
 }: QueryParams): Promise<QueryResult<QueryResultRow>> =>
   pg.query('select * from users where user_id=$1', [userId])
 
+/**
+ * @description Add a customer account to the database
+ **/
+const createQuery = async ({
+  userId: customerId,
+}: QueryParams): Promise<Knex.QueryBuilder> =>
+  knex('customers').insert({ customer_id: customerId }).returning('customer_id')
+
+/**
+ * @description Delete the customer account from the database
+ **/
+const deleteQuery = async ({
+  userId: customerId,
+}: QueryParams): Promise<Knex.QueryBuilder> =>
+  knex('customers')
+    .where('customer_id', customerId)
+    .del()
+    .returning('customer_id')
+
+const processPostRoute = <ProcessRouteWithoutBody>createRouteProcessor
+const processDeleteRoute = <ProcessRouteWithoutBody>createRouteProcessor
+
+export const createCustomerAccount = processPostRoute({
+  Query: createQuery,
+  status: CREATED,
+  validateResult: validateResData(CustomerSchemaID),
+})
+
+export const deleteCustomerAccount = processDeleteRoute({
+  Query: deleteQuery,
+  status: OK,
+  validateResult: validateResData(CustomerSchemaID),
+})
 /* TODO: MOVE TO CLIENT!!!... */
 // /**
 //  * @description Updates user information.
