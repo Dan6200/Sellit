@@ -4,47 +4,17 @@ import BadRequestError from '../../errors/bad-request.js'
 import NotFoundError from '../../errors/not-found.js'
 import { isTypeQueryResultRow } from '../../types/response.js'
 
-// Define a type for Supabase response for clarity
-interface SupabaseResponse<T> {
-  data: T[] | T | null
-  error: {
-    message: string
-    details?: string
-    hint?: string
-    code?: string
-  } | null
-  count?: number | null
-  status?: number
-  statusText?: string
-}
-
-// Type guard for Supabase response
-function isSupabaseResponse<T>(result: any): result is SupabaseResponse<T> {
-  return (
-    typeof result === 'object' &&
-    result !== null &&
-    'data' in result &&
-    'error' in result
-  )
-}
-
 /**
  * @description Validates DB result against schema
  * */
 export function validateResData<T>(
   schema: ArraySchema<T>,
-): (
-  result: QueryResult<QueryResultRow> | SupabaseResponse<T> | any[],
-) => boolean
+): (result: QueryResult<QueryResultRow> | any[]) => boolean
 export function validateResData<T>(
   schema: ObjectSchema<T>,
-): (
-  result: QueryResult<QueryResultRow> | SupabaseResponse<T> | any[],
-) => boolean
+): (result: QueryResult<QueryResultRow> | any[]) => boolean
 export function validateResData<T>(schema: ArraySchema<T> | ObjectSchema<T>) {
-  return (
-    result: QueryResult<QueryResultRow> | SupabaseResponse<T> | any[],
-  ) => {
+  return (result: QueryResult<QueryResultRow> | any[]) => {
     process.env.DEBUG &&
       console.log(
         'DEBUG: DB response (validate step) -> ' + JSON.stringify(result),
@@ -77,48 +47,13 @@ export function validateResData<T>(schema: ArraySchema<T> | ObjectSchema<T>) {
         return false
       }
       return true
-    } else if (isSupabaseResponse<T>(result)) {
-      if (result.error) {
-        throw new BadRequestError(
-          `Supabase operation failed: ${result.error.message}`,
-        )
-      }
-
-      const dataToValidate = Array.isArray(result.data)
-        ? result.data
-        : result.data
-          ? [result.data]
-          : []
-
-      if (dataToValidate.length === 0) {
-        throw new NotFoundError(
-          'Requested resource was not found from Supabase',
-        )
-      }
-
-      if (dataToValidate.length > 1) {
-        if (schema.type === 'object') {
-          throw new BadRequestError(
-            `Supabase operation operated erroneously: expected single item, got multiple`,
-          )
-        } else if (schema.type === 'array') {
-          const { error } = schema.validate(dataToValidate)
-          if (error) throw new BadRequestError(error.message)
-        }
-      } else if (dataToValidate.length === 1) {
-        const { error } = schema.validate(dataToValidate[0])
-        if (error) throw new BadRequestError(error.message)
-      } else {
-        return false
-      }
-      return true
     } else {
-      // This block handles `any[]` results, not `QueryResult` or SupabaseResponse
-      if (result.length === 0) {
+      // This block handles `any[]` results, not `QueryResult`
+      if (result?.length === 0) {
         // Assuming empty array means resource not found for generic array results
         throw new NotFoundError(`Requested resource was not found`)
       }
-      if (result.length > 1) {
+      if (result?.length > 1) {
         if (schema.type === 'object') {
           throw new BadRequestError(
             `Operation operated erroneously: expected single item, got multiple`,
@@ -127,7 +62,7 @@ export function validateResData<T>(schema: ArraySchema<T> | ObjectSchema<T>) {
           const { error } = schema.validate(result)
           if (error) throw new BadRequestError(error.message)
         }
-      } else if (result.length === 1) {
+      } else if (result?.length === 1) {
         const { error } = schema.validate(result[0])
         if (error) throw new BadRequestError(error.message)
       } else {

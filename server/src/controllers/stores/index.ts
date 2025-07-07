@@ -98,10 +98,10 @@ const getAllQuery = async ({
   return stores.map((store) => ({
     ...store,
     store_pages: store.store_pages
-      ? JSON.parse(store.store_pages as unknown as string)
+      ? JSON.parse(JSON.stringify(store.store_pages))
       : undefined,
     default_page_styling: store.default_page_styling
-      ? JSON.parse(store.default_page_styling as unknown as string)
+      ? JSON.parse(JSON.stringify(store.default_page_styling))
       : undefined,
   }))
 }
@@ -134,15 +134,17 @@ const getQuery = async ({
 
   if (!store) return undefined
 
-  return {
-    ...store,
-    store_pages: store.store_pages
-      ? JSON.parse(store.store_pages as unknown as string)
-      : undefined,
-    default_page_styling: store.default_page_styling
-      ? JSON.parse(store.default_page_styling as unknown as string)
-      : undefined,
-  }
+  return [
+    {
+      ...store,
+      store_pages: store.store_pages
+        ? JSON.parse(JSON.stringify(store.store_pages))
+        : undefined,
+      default_page_styling: store.default_page_styling
+        ? JSON.parse(JSON.stringify(store.default_page_styling))
+        : undefined,
+    },
+  ]
 }
 
 /* @param {QueryParams} qp

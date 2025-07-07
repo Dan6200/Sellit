@@ -76,7 +76,7 @@ export default ({
                 'The Requested Resource Could not be found',
               )
           }
-          throw new BadRequestError('Invalid Database Response')
+          // throw new BadRequestError('Invalid Database Response')
         }
         let responseData: any = null
         if (isTypeQueryResultRow(dbResponse)) {
@@ -91,6 +91,7 @@ export default ({
       }
       response.status(status).end()
     } catch (error) {
+      process.env.DEBUG && console.error
       if (error instanceof GeneralAPIError)
         return response.status(error.statusCode).send(error.message)
       throw error
