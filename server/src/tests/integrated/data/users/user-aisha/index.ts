@@ -1,4 +1,4 @@
-import { UserRequestData } from '../../../../../../types/users/index.js'
+import { UserRequestData } from '@/types/users/index.js'
 import {
   listOfShippingInfo,
   listOfUpdatedShippingInfo,
@@ -13,6 +13,8 @@ const userInfo: UserRequestData = {
   password: '236!a15HA04',
   dob: new Date('2004-6-23'),
   country: 'Nigeria',
+  is_customer: true,
+  is_vendor: false,
 }
 
 const updatedUserInfo = {

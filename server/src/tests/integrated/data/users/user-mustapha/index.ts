@@ -1,5 +1,5 @@
 // cspell: disable
-import { UserRequestData } from '../../../../../../types/users/index.js'
+import { UserRequestData } from '@/types/users/index.js'
 import {
   listOfShippingInfo,
   listOfUpdatedShippingInfo,
@@ -13,6 +13,8 @@ const userInfo: UserRequestData = {
   password: '!23AishaBaggy9384',
   dob: new Date('2000-10-19'),
   country: 'Nigeria',
+  is_customer: true,
+  is_vendor: false,
 }
 
 const updatedUserInfo = {

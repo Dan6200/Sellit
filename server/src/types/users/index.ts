@@ -9,6 +9,7 @@ export interface UserData {
   dob: Date
   country: string
   is_customer: boolean
+  is_vendor: boolean
   deleted_at?: Date
 }
 

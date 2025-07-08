@@ -6,7 +6,6 @@ import {
   testPostProduct,
   testUploadProductMedia,
 } from '../products/utils/index.js'
-import { testPostVendor } from '../users/vendors/definitions/index.js'
 import { supabase } from '#supabase-config'
 import { bulkDeleteImages } from '../utils/bulk-delete.js'
 

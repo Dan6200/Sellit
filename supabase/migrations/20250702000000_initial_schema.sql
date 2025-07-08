@@ -18,7 +18,7 @@ create table if not exists users (
 							 or email is not null and phone is null),
   dob          date                      not        null,
   country      varchar                   not        null 			default  		'Nigeria',
-	is_customer  boolean 									 not 				null 			default 		false,
+	is_customer  boolean 									 not 				null 			default 		true,
 	is_vendor    boolean 									 not 				null 			default 		false,
   check        (current_date - dob > 18),
   deleted_at   timestamptz
@@ -186,12 +186,11 @@ create table if not exists customer_reviews (
   rating           numeric(3,2)   not       null,
   vendor_remark    varchar
 );
-
 -- Function to handle new user creation in auth.users
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.users (user_id, first_name, last_name, email, phone, dob, country)
+  insert into public.users (user_id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor)
   values (
     new.id,
     new.raw_user_meta_data->>'first_name',
@@ -199,7 +198,9 @@ begin
     new.email,
     new.phone,
     (new.raw_user_meta_data->>'dob')::date,
-    coalesce(new.raw_user_meta_data->>'country', 'Nigeria')
+    coalesce(new.raw_user_meta_data->>'country', 'Nigeria'),
+    coalesce((new.raw_user_meta_data->>'is_customer')::boolean, true),
+    coalesce((new.raw_user_meta_data->>'is_vendor')::boolean, false)
   );
   return new;
 end;
@@ -210,12 +211,36 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
+-- Function to handle user updates from auth.users
+create or replace function public.handle_update_user()
+returns trigger as $$
+begin
+  update public.users
+  set
+    first_name = new.raw_user_meta_data->>'first_name',
+    last_name = new.raw_user_meta_data->>'last_name',
+    email = new.email,
+    phone = new.phone,
+    dob = (new.raw_user_meta_data->>'dob')::date,
+    country = coalesce(new.raw_user_meta_data->>'country', 'Nigeria'),
+    is_customer = coalesce((new.raw_user_meta_data->>'is_customer')::boolean, true),
+    is_vendor = coalesce((new.raw_user_meta_data->>'is_vendor')::boolean, false)
+  where user_id = new.id;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+-- Trigger to call handle_update_user on auth.users update
+create trigger on_auth_user_updated
+  after update on auth.users
+  for each row execute procedure public.handle_update_user();
+
 -- Function to handle user deletion from auth.users
 create or replace function public.handle_delete_user()
 returns trigger as $$
 begin
   -- update public.users
-  -- set deleted_at = now() <- Soft Delete Later
+  set deleted_at = now() -- <- Soft Delete. Set cronjob to delete after 30 days
   delete from public.users
   where user_id = old.id;
   return old;

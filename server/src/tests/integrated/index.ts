@@ -1,22 +1,20 @@
 //cspell:disable
 import testUserAccount from './users/index.js'
 import testUserAccountWithoutSignIn from './users/no-signin.js'
-import testCustomerAccount from './users/customers/index.js'
-import testVendorAccount from './users/vendors/index.js'
 import testStoresWithNoVendor from './stores/no-vendor-account.js'
 import testStores from './stores/index.js'
 import testShipping from './shipping-info/index.js'
 import testProducts from './products/index.js'
 import testPublicProducts from './public/products/index.js'
 import testMedia from './media/index.js'
-import * as Ebuka from './data/users/customers/user-ebuka/index.js'
-import * as Aisha from './data/users/customers/user-aisha/index.js'
-import * as Mustapha from './data/users/customers/user-mustapha/index.js'
-import * as Aliyu from './data/users/vendors/user-aliyu/index.js'
+import * as Ebuka from './data/users/user-ebuka/index.js'
+import * as Aisha from './data/users/user-aisha/index.js'
+import * as Mustapha from './data/users/user-mustapha/index.js'
+import * as Aliyu from './data/users/user-aliyu/index.js'
 
 const users = [Ebuka, Aliyu, Aisha, Mustapha]
-const customers = [Ebuka, Aisha, Mustapha]
-const vendors = [Aliyu]
+const customers = [Ebuka, Aisha, Mustapha] // is_customer is true
+const vendors = [Aliyu] // is_vendor is true
 
 export default function (): void {
   /** Public Routes **/
@@ -37,15 +35,6 @@ export default function (): void {
       testUserAccountWithoutSignIn(user))
   }
 
-  /** Customer Account actions **/
-
-  for (let customer of customers) {
-    const { userInfo } = customer
-    const { first_name: name } = userInfo
-    describe(`Testing Customer Account for ${name}`, () =>
-      testCustomerAccount(customer))
-  }
-
   /** Shipping Info related tests **/
 
   for (let customer of customers) {
@@ -53,15 +42,6 @@ export default function (): void {
     const { first_name: name } = userInfo
     describe(`Testing the Shipping Information of ${name}'s account`, async () =>
       testShipping(customer))
-  }
-
-  /** Vendor Account actions **/
-
-  for (let vendor of vendors) {
-    const { userInfo } = vendor
-    const { first_name: name } = userInfo
-    describe(`Testing Vendor Account for ${name}`, () =>
-      testVendorAccount(vendor))
   }
 
   /** Stores related tests **/

@@ -1,5 +1,5 @@
 import chai from 'chai'
-import { stores } from '../data/users/vendors/user-aliyu/index.js'
+import { stores } from '../data/users/user-aliyu/index.js'
 
 export async function createStoreForTesting(token: string) {
   return chai

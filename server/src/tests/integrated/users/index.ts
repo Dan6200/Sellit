@@ -34,19 +34,5 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
         path,
         token,
       }))
-
-    it("should not have a customer's account", () =>
-      testHasNoCustomerAccount({
-        server,
-        path,
-        token,
-      }))
-
-    it("should not have a vendor's account", () =>
-      testHasNoVendorAccount({
-        server,
-        path,
-        token,
-      }))
   })
 }

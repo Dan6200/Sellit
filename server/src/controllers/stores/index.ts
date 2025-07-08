@@ -21,6 +21,7 @@ import { validateReqData } from '../utils/request-validation.js'
 import { validateResData } from '../utils/response-validation.js'
 import { Knex } from 'knex'
 import { knex } from '@/db/index.js'
+import assert from 'assert'
 
 /**
  * @param {QueryParams} qp
@@ -33,21 +34,23 @@ import { knex } from '@/db/index.js'
 
 const createQuery = async ({
   body,
-  userId: vendorId,
+  userId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
-  if (!vendorId) throw new UnauthorizedError('Cannot access resource')
-  // check if vendor account exists
-  const result = await knex('vendors')
-    .where('vendor_id', vendorId)
-    .select('vendor_id')
-  if (result.length === 0)
+  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  // check if vendor account is enabled
+  const result = await knex('users')
+    .where('user_id', userId)
+    .select('is_vendor')
+    .limit(1)
+  assert(!!result && result.length === 1)
+  if (result[0] === false)
     throw new BadRequestError(
-      'No vendor account found. Please create a vendor account',
+      'Vendor account disabled. Need to enable it to create a shipping address',
     )
   // Limit the amount of store addresses a user can have:
   const LIMIT = 5
   let { count } = (
-    await knex('stores').where('vendor_id', vendorId).count('store_id')
+    await knex('stores').where('vendor_id', userId).count('store_id')
   )[0]
   if (typeof count === 'string') count = parseInt(count)
   if (count > LIMIT)
@@ -68,7 +71,7 @@ const createQuery = async ({
       : undefined,
   }
   return knex<DBFriendlyStoreData>('stores')
-    .insert({ vendor_id: vendorId, ...dBFriendlyStoreData })
+    .insert({ vendor_id: userId, ...dBFriendlyStoreData })
     .returning('store_id')
 }
 
@@ -81,18 +84,22 @@ const createQuery = async ({
  */
 
 const getAllQuery = async ({
-  userId: vendorId,
+  userId,
 }: QueryParams): Promise<Knex.QueryBuilder<StoreData[]>> => {
-  if (!vendorId) throw new UnauthorizedError('Cannot access resource')
-  const result = await knex('vendors')
-    .where('vendor_id', vendorId)
-    .select('vendor_id')
-  if (result.length === 0)
+  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  // check if vendor account is enabled
+  const result = await knex('users')
+    .where('user_id', userId)
+    .select('is_vendor')
+    .limit(1)
+  assert(!!result && result.length === 1)
+  console.log('Get All Stores ->' + JSON.stringify(result))
+  if (result[0] === false)
     throw new BadRequestError(
-      'No vendor account found. Please create a vendor account',
+      'Vendor account disabled. Need to enable it to create a shipping address',
     )
   const stores = await knex<StoreData>('stores')
-    .where('vendor_id', vendorId)
+    .where('vendor_id', userId)
     .select('*')
 
   return stores.map((store) => ({
@@ -115,17 +122,20 @@ const getAllQuery = async ({
 
 const getQuery = async ({
   params,
-  userId: vendorId,
+  userId,
 }: QueryParams): Promise<Knex.QueryBuilder<StoreData[]>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { storeId } = params
-  if (!vendorId) throw new UnauthorizedError('Cannot access resource')
-  const result = await knex('vendors')
-    .where('vendor_id', vendorId)
-    .select('vendor_id')
-  if (result.length === 0)
+  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  // check if vendor account is enabled
+  const result = await knex('users')
+    .where('user_id', userId)
+    .select('is_vendor')
+    .limit(1)
+  assert(!!result && result.length === 1)
+  if (result[0] === false)
     throw new BadRequestError(
-      'No vendor account found. Please create a vendor account',
+      'Vendor account disabled. Need to enable it to create a shipping address',
     )
   const store = await knex<StoreData>('stores')
     .where('store_id', storeId)
@@ -159,20 +169,23 @@ const getQuery = async ({
 const updateQuery = async ({
   params,
   body,
-  userId: vendorId,
+  userId,
 }: QueryParams): Promise<Knex.QueryBuilder<number>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { storeId } = params
   if (!isValidStoreDataRequest(body)) throw new BadRequestError('Invalid data')
   const storeData = body
   if (!storeId) throw new BadRequestError('Need ID to update resource')
-  if (!vendorId) throw new UnauthorizedError('Cannot access resource')
-  const result = await knex('vendors')
-    .where('vendor_id', vendorId)
-    .select('vendor_id')
-  if (result.length === 0)
+  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  // check if vendor account is enabled
+  const result = await knex('users')
+    .where('user_id', userId)
+    .select('is_vendor')
+    .limit(1)
+  assert(!!result && result.length === 1)
+  if (result[0] === false)
     throw new BadRequestError(
-      'No vendor account found. Please create a vendor account',
+      'Vendor account disabled. Need to enable it to create a shipping address',
     )
   const dBFriendlyStoreData: DBFriendlyStoreData = {
     ...storeData,
@@ -201,18 +214,21 @@ const updateQuery = async ({
 
 const deleteQuery = async ({
   params,
-  userId: vendorId,
+  userId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { storeId } = params
   if (!storeId) throw new BadRequestError('Need Id param to delete resource')
-  if (!vendorId) throw new UnauthorizedError('Cannot access resource')
-  const result = await knex('vendors')
-    .where('vendor_id', vendorId)
-    .select('vendor_id')
-  if (result.length === 0)
+  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  // check if vendor account is enabled
+  const result = await knex('users')
+    .where('user_id', userId)
+    .select('is_vendor')
+    .limit(1)
+  assert(!!result && result.length === 1)
+  if (result[0] === false)
     throw new BadRequestError(
-      'No vendor account found. Please create a vendor account',
+      'Vendor account disabled. Need to enable it to create a shipping address',
     )
   return knex<StoreData>('stores')
     .where('store_id', storeId)

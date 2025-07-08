@@ -11,8 +11,11 @@ import assert from 'assert'
 import { UserRequestData } from '../../../types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
-import { createVendorForTesting } from '../helpers/create-vendor.js'
 import { signInForTesting } from '../helpers/signin-user.js'
+import {
+  testHasNoCustomerAccount,
+  testHasVendorAccount,
+} from '../users/definitions.js'
 
 export default function ({
   userInfo,
@@ -31,11 +34,25 @@ export default function ({
     // Create user after...
     await createUserForTesting(userInfo)
     token = await signInForTesting(userInfo)
-    await createVendorForTesting(token)
   })
   const path = '/v1/stores'
 
   let storeIds: string[] = []
+
+  it("should not have a customer's account", () =>
+    testHasNoCustomerAccount({
+      server,
+      path: '/v1/users',
+      token,
+    }))
+
+  it("should have a vendor's account", () =>
+    testHasVendorAccount({
+      server,
+      path: '/v1/users',
+      token,
+    }))
+
   it('should create a store for the vendor', async () => {
     // Create stores using store information
     assert(!!stores.length)
@@ -49,11 +66,6 @@ export default function ({
       storeIds.push(store_id)
     }
   })
-
-  // describe('Operations after Creation...', () => {
-  //   before(async () => {
-  //     await createStoresForTesting(token)
-  //   })
 
   it('it should fetch all the stores with one request', async () => {
     await testGetAllStores({ server, token, path })

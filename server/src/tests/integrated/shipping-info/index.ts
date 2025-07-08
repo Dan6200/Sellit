@@ -10,8 +10,11 @@ import assert from 'assert'
 import { UserRequestData } from '../../../types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
-import { createCustomerForTesting } from '../helpers/create-customer.js'
 import { signInForTesting } from '../helpers/signin-user.js'
+import {
+  testHasCustomerAccount,
+  testHasNoVendorAccount,
+} from '../users/definitions.js'
 
 export default function ({
   userInfo,
@@ -30,12 +33,18 @@ export default function ({
     // Create user after...
     await createUserForTesting(userInfo)
     token = await signInForTesting(userInfo)
-    await createCustomerForTesting(token)
   })
 
   const shippingPath = '/v1/shipping-info'
 
   const shippingIds: number[] = []
+
+  it("should have a customer's account", () =>
+    testHasCustomerAccount({
+      server,
+      path: '/v1/users',
+      token,
+    }))
 
   it(`it should add multiple shipping addresses for the customer`, async () => {
     assert(!!listOfShippingInfo.length)
