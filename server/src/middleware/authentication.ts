@@ -12,19 +12,19 @@ export default async (
   try {
     // check header for token
     const authHeader = request.headers.authorization
-    if (!authHeader || !authHeader?.startsWith('Bearer '))
-      throw new UnauthorizedError('Unauthorized Operation: missing token')
-    const token = authHeader.split(' ')[1]
-    // Supabase JWT verification
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token)
-    if (error || !user.id) {
-      console.error('Supabase token verification error:', error?.message)
-      throw new UnauthorizedError('Unauthorized Operation: token invalid')
+    if (authHeader && authHeader?.startsWith('Bearer ')) {
+      const token = authHeader.split(' ')[1]
+      // Supabase JWT verification
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser(token)
+      if (error || !user.id) {
+        console.error('Supabase token verification error:', error?.message)
+        throw new UnauthorizedError('Unauthorized Operation: token invalid')
+      }
+      request.userId = user.id // 'sub' typically contains the user ID in JWT claims
     }
-    request.userId = user.id // 'sub' typically contains the user ID in JWT claims
     next()
   } catch (error) {
     if (error instanceof GeneralAPIError)

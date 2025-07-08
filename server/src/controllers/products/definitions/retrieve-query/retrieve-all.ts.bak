@@ -2,7 +2,6 @@ import { QueryResult, QueryResultRow } from 'pg'
 import { pg, knex } from '../../../../db/index.js'
 import BadRequestError from '../../../../errors/bad-request.js'
 import { QueryParams } from '../../../../types/process-routes.js'
-import { handleSortQuery } from './utility.js'
 
 /**
  * @param {QueryParams} {query, userId}
@@ -12,7 +11,7 @@ import { handleSortQuery } from './utility.js'
 export default async ({
   query,
 }: QueryParams): Promise<QueryResult<QueryResultRow>> => {
-  const { sort, limit, offset, userId, storeId } = query
+  const { userId, storeId } = query
   let response
   if (userId) {
     response = await knex('products')

@@ -20,7 +20,6 @@ import { validateReqData } from '../utils/request-validation.js'
 import { validateResData } from '../utils/response-validation.js'
 import { Knex } from 'knex'
 import { knex } from '@/db/index.js'
-import assert from 'assert'
 
 /**
  * @param {QueryParams} qp
@@ -41,8 +40,7 @@ const createQuery = async ({
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  assert(!!result && result.length === 1)
-  if (result[0].is_customer === false)
+  if (result[0]?.is_customer)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )
@@ -56,7 +54,6 @@ const createQuery = async ({
   if (typeof count === 'string') count = parseInt(count)
   if (count > LIMIT)
     throw new BadRequestError(`Cannot have more than ${LIMIT} stores`)
-
   if (!isValidShippingInfoRequest(body))
     throw new BadRequestError('Invalid shipping info')
   const shippingData: ShippingInfo = body
@@ -87,8 +84,7 @@ const getAllQuery = async ({
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  assert(!!result && result.length === 1)
-  if (result[0].is_customer === false)
+  if (result[0]?.is_customer)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )
@@ -108,21 +104,21 @@ const getQuery = async ({
   params,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<ShippingInfo[]>> => {
+  if (!userId) throw new UnauthorizedError('Cannot access resource')
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
   // check if customer account is enabled
   const result = await knex('users')
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  assert(!!result && result.length === 1)
-  if (result[0].is_customer === false)
+  if (result[0]?.is_customer)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('shipping_info_id', shippingInfoId)
+    .where('customer_id', userId)
     .select('*')
 }
 
@@ -140,20 +136,19 @@ const updateQuery = async ({
   body,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<number>> => {
+  if (!userId) throw new UnauthorizedError('Cannot access resource')
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   if (!isValidShippingInfoRequest(body))
     throw new BadRequestError('Invalid data')
   const shippingData = body
   if (!shippingInfoId) throw new BadRequestError('Need ID to update resource')
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
   // check if customer account is enabled
   const result = await knex('users')
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  assert(!!result && result.length === 1)
-  if (result[0].is_customer === false)
+  if (result[0]?.is_customer)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )
@@ -163,6 +158,7 @@ const updateQuery = async ({
   }
   return knex<ShippingInfo>('shipping_info')
     .where('shipping_info_id', shippingInfoId)
+    .where('customer_id', userId)
     .update(DBFriendlyData)
     .returning('shipping_info_id')
 }
@@ -180,23 +176,23 @@ const deleteQuery = async ({
   params,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
+  if (!userId) throw new UnauthorizedError('Cannot access resource')
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   if (!shippingInfoId)
     throw new BadRequestError('Need Id param to delete resource')
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
   // check if customer account is enabled
   const result = await knex('users')
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  assert(!!result && result.length === 1)
-  if (result[0].is_customer === false)
+  if (result[0]?.is_customer)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('shipping_info_id', shippingInfoId)
+    .where('customer_id', userId)
     .del()
     .returning('shipping_info_id')
 }

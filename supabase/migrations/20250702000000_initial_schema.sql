@@ -28,17 +28,43 @@ create table if not exists users (
 
 create table if not exists shipping_info (
   shipping_info_id        serial        primary   key,
-  customer_id             uuid           not       null    references   users   on   delete   cascade,
-  recipient_first_name    varchar(30)   not       null,
-  recipient_last_name     varchar(30)   not       null,
-  address                 varchar       not       null,
+  customer_id             uuid           not      null    references   users   on   delete   cascade,
+  recipient_full_name    	varchar(30)   not       null,
+  address_line_1          varchar       not       null,
+  address_line_2          varchar       not       null,
   city                    varchar       not       null,
   state                   varchar       not       null,
-  postal_code             varchar       not       null,
+  zip_postal_code         varchar       not       null,
   country									varchar       not       null,
-  delivery_contact        varchar       not       null,
+  phone_number 		        varchar       not       null,
   delivery_instructions   varchar
 );
+
+
+-- create a trigger to update the updated_at column for shipping_info
+create trigger set_timestamp
+before update on shipping_info
+for each row
+execute procedure trigger_set_timestamp();
+
+-- create orders table
+create table orders (
+    order_id 						serial					primary 				key,
+    customer_id 				serial					references 			users(user_id) on delete cascade not null,
+    store_id 						serial					references 			stores(store_id) on delete cascade not null,
+    shipping_info_id 		serial					references 			shipping_info(shipping_info_id) on delete set null,
+    order_date 					timestamptz 		default 				now(),
+    total_amount 				numeric(10, 2) 	not null,
+    status 							text 						default 				'pending' not null,
+    created_at 					timestamptz 		default 				now(),
+    updated_at 					timestamptz 		default 				now()
+);
+
+-- create a trigger to update the updated_at column for orders
+create trigger set_timestamp
+before update on orders
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists payment_info (
 );
