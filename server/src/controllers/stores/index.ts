@@ -43,7 +43,7 @@ const createQuery = async ({
     .select('is_vendor')
     .limit(1)
   assert(!!result && result.length === 1)
-  if (result[0] === false)
+  if (result[0].is_vendor === false)
     throw new BadRequestError(
       'Vendor account disabled. Need to enable it to create a shipping address',
     )
@@ -93,8 +93,9 @@ const getAllQuery = async ({
     .select('is_vendor')
     .limit(1)
   assert(!!result && result.length === 1)
-  console.log('Get All Stores ->' + JSON.stringify(result))
-  if (result[0] === false)
+  process.env.DEBUG &&
+    console.log(`\nDEBUG: Is Vendor? -> ${JSON.stringify(result)}`)
+  if (result[0].is_vendor === false)
     throw new BadRequestError(
       'Vendor account disabled. Need to enable it to create a shipping address',
     )
@@ -133,7 +134,7 @@ const getQuery = async ({
     .select('is_vendor')
     .limit(1)
   assert(!!result && result.length === 1)
-  if (result[0] === false)
+  if (result[0].is_vendor === false)
     throw new BadRequestError(
       'Vendor account disabled. Need to enable it to create a shipping address',
     )
@@ -183,7 +184,7 @@ const updateQuery = async ({
     .select('is_vendor')
     .limit(1)
   assert(!!result && result.length === 1)
-  if (result[0] === false)
+  if (result[0].is_vendor === false)
     throw new BadRequestError(
       'Vendor account disabled. Need to enable it to create a shipping address',
     )
@@ -226,7 +227,7 @@ const deleteQuery = async ({
     .select('is_vendor')
     .limit(1)
   assert(!!result && result.length === 1)
-  if (result[0] === false)
+  if (result[0].is_vendor === false)
     throw new BadRequestError(
       'Vendor account disabled. Need to enable it to create a shipping address',
     )

@@ -66,7 +66,7 @@ export default ({
 
       if (validateResult) {
         process.env.DEBUG &&
-          console.log('DEBUG: DB Response -> ' + JSON.stringify(dbResponse))
+          console.log('\nDEBUG: DB Response -> ' + JSON.stringify(dbResponse))
         // validateBody throws error if data is invalid
         // check for errors returns true if response is valid
         if (!validateResult(dbResponse)) {

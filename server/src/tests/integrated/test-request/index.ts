@@ -34,14 +34,14 @@ export default function ({
       .send(<object>requestBody)
 
     process.env.DEBUG &&
-      console.log('DEBUG: request ->' + JSON.stringify(request) + '\n')
+      console.log('\nDEBUG: request ->' + JSON.stringify(request) + '\n')
 
     // Add request token
     if (token) request.auth(token, { type: 'bearer' })
     const response = await request
 
     process.env.DEBUG &&
-      console.log('DEBUG: response ->' + JSON.stringify(response) + '\n')
+      console.log('\nDEBUG: response ->' + JSON.stringify(response) + '\n')
     response.should.have.status(statusCode)
 
     // Validate the response body

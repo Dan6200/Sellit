@@ -13,7 +13,6 @@ import {
 import { UserRequestData } from '../../../types/users/index.js'
 import assert from 'assert'
 import { createUserForTesting } from '../helpers/create-user.js'
-import { createVendorForTesting } from '../helpers/create-vendor.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { signInForTesting } from '../helpers/signin-user.js'
 import { createStoreForTesting } from '../helpers/create-store.js'
@@ -41,7 +40,6 @@ export default function ({
       // Create user after...
       await createUserForTesting(userInfo)
       token = await signInForTesting(userInfo)
-      await createVendorForTesting(token)
       const response = await createStoreForTesting(token)
       ;({ store_id: storeId } = response.body)
     })

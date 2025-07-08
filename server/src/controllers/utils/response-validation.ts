@@ -17,7 +17,7 @@ export function validateResData<T>(schema: ArraySchema<T> | ObjectSchema<T>) {
   return (result: QueryResult<QueryResultRow> | any[]) => {
     process.env.DEBUG &&
       console.log(
-        'DEBUG: DB response (validate step) -> ' + JSON.stringify(result),
+        '\nDEBUG: DB response (validate step) -> ' + JSON.stringify(result),
       )
     if (isTypeQueryResultRow(result)) {
       if (result.rows?.length === 0) {

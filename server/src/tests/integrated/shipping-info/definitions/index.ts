@@ -5,8 +5,8 @@ import {
   isValidShippingInfoResponse,
   isValidShippingInfoResponseList,
 } from '../../../../types/shipping-info.js'
-import { TestRequest, TestRequestWithBody } from '../../types/test-request.js'
 import testRequest from '../../test-request/index.js'
+import { TestRequestWithBody, TestRequest } from '../../test-request/types.js'
 
 const { CREATED, OK, NOT_FOUND } = StatusCodes
 

@@ -11,6 +11,7 @@ import { UserRequestData } from '../../../types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 import { signInForTesting } from '../helpers/signin-user.js'
+import { knex } from '@/db/index.js'
 
 export default function ({
   userInfo,
@@ -28,6 +29,12 @@ export default function ({
     await deleteAllUsersForTesting()
     // Create user after...
     await createUserForTesting(userInfo)
+    const response = await knex('users')
+      .update('is_vendor', false)
+      .where({ email: userInfo.email })
+      .returning('*')
+    process.env.DEBUG &&
+      console.log('\nDEBUG: Updated User role -> ' + JSON.stringify(response))
     token = await signInForTesting(userInfo)
   })
   const path = '/v1/stores'
