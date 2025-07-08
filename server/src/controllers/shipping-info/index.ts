@@ -42,7 +42,7 @@ const createQuery = async ({
     .select('is_customer')
     .limit(1)
   assert(!!result && result.length === 1)
-  if (result[0] === false)
+  if (result[0].is_customer === false)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )
@@ -88,7 +88,7 @@ const getAllQuery = async ({
     .select('is_customer')
     .limit(1)
   assert(!!result && result.length === 1)
-  if (result[0] === false)
+  if (result[0].is_customer === false)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )
@@ -117,7 +117,7 @@ const getQuery = async ({
     .select('is_customer')
     .limit(1)
   assert(!!result && result.length === 1)
-  if (result[0] === false)
+  if (result[0].is_customer === false)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )
@@ -153,7 +153,7 @@ const updateQuery = async ({
     .select('is_customer')
     .limit(1)
   assert(!!result && result.length === 1)
-  if (result[0] === false)
+  if (result[0].is_customer === false)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )
@@ -191,7 +191,7 @@ const deleteQuery = async ({
     .select('is_customer')
     .limit(1)
   assert(!!result && result.length === 1)
-  if (result[0] === false)
+  if (result[0].is_customer === false)
     throw new BadRequestError(
       'Customer account disabled. Need to enable it to create a shipping address',
     )

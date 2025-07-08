@@ -9,18 +9,25 @@ import { handleSortQuery } from './utility.js'
  * @returns {Promise<QueryResult<QueryResultRow>>}
  * @description Retrieve all products
  */
-export default async <T>({
+export default async ({
   query,
-  userId: vendorId,
-}: QueryParams<T>): Promise<QueryResult<QueryResultRow>> => {
-  const { sort, limit, offset } = query
-  const response = await knex('vendors')
-    .where('vendor_id', vendorId)
-    .first('vendor_id')
-  if (response.length)
-    throw new BadRequestError(
-      'Must have a Vendor account to be able to view products',
-    )
+}: QueryParams): Promise<QueryResult<QueryResultRow>> => {
+  const { sort, limit, offset, userId, storeId } = query
+  let response
+  if (userId) {
+    response = await knex('products')
+      .where('vendor_id', userId)
+      .first('product_id')
+    if (!response.length)
+      throw new BadRequestError('No products associated with this user.')
+  }
+  if (storeId) {
+    response = await knex('products')
+      .where('store_id', storeId)
+      .first('product_id')
+    if (!response.length)
+      throw new BadRequestError('No products associated with this store.')
+  }
   let dbQueryString = `
 	WITH product_data AS (
 	 SELECT p.*, 
@@ -33,12 +40,9 @@ export default async <T>({
 				FROM products p 
 				JOIN categories c USING (category_id)
 				JOIN subcategories s USING (subcategory_id)
-				WHERE p.vendor_id=$1
-			${sort ? `${handleSortQuery(<string>sort)}` : ''}
-			${limit ? `LIMIT ${limit}` : ''}
-			${offset ? `OFFSET ${offset}` : ''})
+				${userId && storeId ? `WHERE p.vendor_id=$1 AND p.store_id=$2` : userId ? `WHERE p.vendor_id=$1` : storeId ? `WHERE p.store_id=$1` : ''})
 
 SELECT JSON_AGG(product_data) AS products, 
 	(SELECT COUNT(*) FROM products) AS total_products FROM product_data;`
-  return pg.query(dbQueryString, [vendorId])
+  return pg.query(dbQueryString, [userId, storeId])
 }
