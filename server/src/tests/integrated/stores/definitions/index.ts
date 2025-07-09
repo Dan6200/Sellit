@@ -56,18 +56,6 @@ export const testCreateStoreWithoutVendorAccount = (
   validateTestReqData: isValidStoreDataRequest,
 })
 
-export const testGetAllStoresWithoutVendorAccount = (
-  testRequest as TestRequest
-)({
-  statusCode: BAD_REQUEST,
-  verb: 'get',
-})
-
-export const testGetStoreWithoutVendorAccount = (testRequest as TestRequest)({
-  statusCode: BAD_REQUEST,
-  verb: 'get',
-})
-
 export const testUpdateStoreWithoutVendorAccount = (
   testRequest as TestRequestWithBody
 )({

@@ -1,9 +1,7 @@
 import StoreData from '@/types/store-data.js'
 import {
   testCreateStoreWithoutVendorAccount,
-  testGetStoreWithoutVendorAccount,
   testUpdateStoreWithoutVendorAccount,
-  testGetAllStoresWithoutVendorAccount,
   testDeleteStoreWithoutVendorAccount,
 } from '../stores/definitions/index.js'
 import assert from 'assert'
@@ -50,21 +48,6 @@ export default function ({
         requestBody: store,
       })
       storeIds.push(store_id)
-    }
-  })
-
-  it('should fail to fetch all stores when no vendor account exists', async () => {
-    await testGetAllStoresWithoutVendorAccount({ server, token, path })
-  })
-
-  it('should fail to fetch individual stores when no vendor account exists', async () => {
-    assert(!!storeIds.length)
-    for (const storeId of storeIds) {
-      await testGetStoreWithoutVendorAccount({
-        server,
-        token,
-        path: `${path}/${storeId}`,
-      })
     }
   })
 

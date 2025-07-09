@@ -116,6 +116,23 @@ before update on orders
 for each row
 execute procedure trigger_set_timestamp();
 
+-- create order_items table
+create table order_items (
+    order_item_id       serial          primary     key,
+    order_id            serial          not         null    references  orders          on  delete  cascade,
+    product_id          int             not         null    references  products        on  delete  cascade,
+    quantity            int             not         null    check       (quantity > 0),
+    price_at_purchase   numeric(19,4)   not         null,
+    created_at          timestamptz     default     now(),
+    updated_at          timestamptz     default     now()
+);
+
+-- create a trigger to update the updated_at column for order_items
+create trigger set_timestamp
+before update on order_items
+for each row
+execute procedure trigger_set_timestamp();
+
 create table if not exists product_media (
   product_id					int					not null   references   products   on   delete   cascade,
   filename						varchar			primary    key,
@@ -260,9 +277,8 @@ create trigger on_auth_user_updated
 create or replace function public.handle_delete_user()
 returns trigger as $$
 begin
-  -- update public.users
+  update public.users
   set deleted_at = now() -- <- Soft Delete. Set cronjob to delete after 30 days
-  delete from public.users
   where user_id = old.id;
   return old;
 end;
