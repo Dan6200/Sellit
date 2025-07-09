@@ -11,7 +11,7 @@ export type ProductResponseData = {
   title: string
   category_id: number
   subcategory_id: number
-  description: string
+  description: string[]
   list_price: number
   net_price: number
   quantity_available: number
@@ -22,6 +22,16 @@ export type ProductRequestData = {
   category_id: number
   subcategory_id: number
   description: string[]
+  list_price: number
+  net_price: number
+  quantity_available: number
+}
+
+export type DBFriendlyProductData = {
+  title: string
+  category_id: number
+  subcategory_id: number
+  description: string
   list_price: number
   net_price: number
   quantity_available: number
@@ -39,7 +49,7 @@ export type ProductMedia = {
 }
 
 export function isValidProductRequestData(
-  productData: unknown
+  productData: unknown,
 ): productData is ProductRequestData {
   const { error } = ProductRequestSchema.validate(productData)
   error && console.error(error)
@@ -47,7 +57,7 @@ export function isValidProductRequestData(
 }
 
 export function isValidProductResponseData(
-  data: unknown
+  data: unknown,
 ): data is ProductResponseData {
   const { error } = ProductResponseSchema.validate(data)
   error && console.error(error)
@@ -65,7 +75,7 @@ export function isValidProductId(data: unknown): data is ProductID {
 }
 
 export function isValidProductListResponseData(
-  data: unknown
+  data: unknown,
 ): data is ProductResponseData[] {
   const { error } = ProductListResponseSchema.validate(data)
   error && console.error(error)

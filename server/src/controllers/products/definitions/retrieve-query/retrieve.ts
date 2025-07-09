@@ -4,7 +4,7 @@ import BadRequestError from '../../../../errors/bad-request.js'
 import { QueryParams } from '../../../../types/process-routes.js'
 
 /**
- * @param {QueryParams} {params, query, userId}
+ * @param {QueryParams} { params, query }
  * @returns {Promise<QueryResult<QueryResultRow>>}
  * @description Retrieve a product
  **/

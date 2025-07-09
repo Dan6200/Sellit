@@ -21,6 +21,7 @@ import { validateReqData } from '../utils/request-validation.js'
 import { validateResData } from '../utils/response-validation.js'
 import { Knex } from 'knex'
 import { knex } from '@/db/index.js'
+import ForbiddenError from '@/errors/forbidden.js'
 
 /**
  * @param {QueryParams} qp
@@ -35,14 +36,14 @@ const createQuery = async ({
   body,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  if (!userId) throw new UnauthorizedError('Cannot access store')
   // check if vendor account is enabled
   const result = await knex('users')
     .where('user_id', userId)
     .select('is_vendor')
     .limit(1)
   if (!result[0]?.is_vendor)
-    throw new BadRequestError(
+    throw new ForbiddenError(
       'Vendor account disabled. Need to enable it to create a store',
     )
   // Limit the amount of store addresses a user can have:
@@ -52,12 +53,11 @@ const createQuery = async ({
   )[0]
   if (typeof count === 'string') count = parseInt(count)
   if (count > LIMIT)
-    throw new BadRequestError(`Cannot have more than ${LIMIT} stores`)
+    throw new ForbiddenError(`Cannot have more than ${LIMIT} stores`)
   //
   if (!isValidStoreDataRequest(body))
     throw new BadRequestError('Invalid store data')
   const storeData: StoreData = body
-  if (!storeData) throw new BadRequestError('No data sent in request body')
 
   const dBFriendlyStoreData: DBFriendlyStoreData = {
     ...storeData,
@@ -114,6 +114,7 @@ const getQuery = async ({
 }: QueryParams): Promise<Knex.QueryBuilder<StoreData[]>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { storeId } = params
+  if (!storeId) throw new BadRequestError('Need Store ID to retrieve store')
   const store = await knex<StoreData>('stores')
     .where('store_id', storeId)
     .select('*')
@@ -148,11 +149,13 @@ const updateQuery = async ({
   body,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<number>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
-  if (params == null) throw new BadRequestError('No route parameters provided')
+  if (!userId) throw new UnauthorizedError('Cannot access store')
+  if (params == null)
+    throw new BadRequestError('No valid route parameters provided')
   const { storeId } = params
-  if (!storeId) throw new BadRequestError('Need ID to update resource')
-  if (!isValidStoreDataRequest(body)) throw new BadRequestError('Invalid data')
+  if (!storeId) throw new BadRequestError('Need Store ID to update store')
+  if (!isValidStoreDataRequest(body))
+    throw new BadRequestError('Invalid request data')
   const storeData = body
   // check if vendor account is enabled
   const result = await knex('users')
@@ -160,7 +163,7 @@ const updateQuery = async ({
     .select('is_vendor')
     .limit(1)
   if (!result[0]?.is_vendor)
-    throw new BadRequestError(
+    throw new ForbiddenError(
       'Vendor account disabled. Need to enable it to create a store',
     )
   const dBFriendlyStoreData: DBFriendlyStoreData = {
@@ -193,17 +196,18 @@ const deleteQuery = async ({
   params,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
-  if (!userId) throw new UnauthorizedError('Cannot modify resource')
-  if (params == null) throw new BadRequestError('No route parameters provided')
+  if (!userId) throw new UnauthorizedError('Cannot modify store')
+  if (params == null)
+    throw new BadRequestError('No valid route parameters provided')
   const { storeId } = params
-  if (!storeId) throw new BadRequestError('Need Id param to delete resource')
+  if (!storeId) throw new BadRequestError('Need store ID param to delete store')
   // check if vendor account is enabled
   const result = await knex('users')
     .where('user_id', userId)
     .select('is_vendor')
     .limit(1)
   if (!result[0]?.is_vendor)
-    throw new BadRequestError(
+    throw new ForbiddenError(
       'Vendor account disabled. Need to enable it to create a store',
     )
   return knex<StoreData>('stores')

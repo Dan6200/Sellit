@@ -12,7 +12,7 @@ import { QueryParams } from '../../../types/process-routes.js'
 export default async ({
   params,
   userId: vendorId,
-  params: { storeId },
+  query,
 }: QueryParams): Promise<number> => {
   if (params == null) throw new BadRequestError('Must provide product id')
   const { productId } = params

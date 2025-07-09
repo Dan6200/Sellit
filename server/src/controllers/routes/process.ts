@@ -2,11 +2,9 @@ import { Response } from 'express'
 import { RequestWithPayload } from '../../types/request.js'
 import { isTypeQueryResultRow, Status } from '../../types/response.js'
 import { QueryDB } from '../../types/process-routes.js'
-import BadRequestError from '../../errors/bad-request.js'
 import { QueryResult, QueryResultRow } from 'pg'
 import NotFoundError from '../../errors/not-found.js'
 import GeneralAPIError from '@/errors/general-api.js'
-import UnauthorizedError from '@/errors/unauthorized.js'
 
 export default ({
   Query,

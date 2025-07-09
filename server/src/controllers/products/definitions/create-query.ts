@@ -2,7 +2,10 @@
 import { knex } from '../../../db/index.js'
 import BadRequestError from '../../../errors/bad-request.js'
 import { QueryParams } from '../../../types/process-routes.js'
-import { isValidProductRequestData } from '../../../types/products.js'
+import {
+  DBFriendlyProductData,
+  isValidProductRequestData,
+} from '../../../types/products.js'
 
 /**
  * @param {QueryParams} {body, query, userId}
@@ -11,41 +14,43 @@ import { isValidProductRequestData } from '../../../types/products.js'
  */
 export default async ({
   body,
-  userId: vendorId,
-  params: { storeId },
-  // query: {
+  userId,
+  query: { storeId },
 }: QueryParams): Promise<number> => {
-  let response = await knex('vendors')
-    .where('vendor_id', vendorId)
-    .first('vendor_id')
-  if (response.length === 0) {
+  // check if vendor account is enabled
+  const result = await knex('users')
+    .where('user_id', userId)
+    .select('is_vendor')
+    .limit(1)
+  if (!result[0]?.is_vendor)
     throw new BadRequestError(
-      'Must have a Vendor account to be able to list products',
+      'Vendor account disabled. Need to enable it to create a store',
     )
-  }
-  response = await knex('stores')
-    .where('vendor_id', vendorId)
+  const response = await knex('stores')
+    .where('vendor_id', userId)
     .where('store_id', storeId)
     .first('vendor_id')
-  if (response.length === 0) {
+
+  if (!response.length || !result[0]?.vendor_id)
     throw new BadRequestError('Must create a store to be able to list products')
-  }
 
   if (!isValidProductRequestData(body))
     throw new BadRequestError('Invalid product data')
 
   const productData = body
 
-  const DBFriendlyProductData = {
+  const dBFriendlyProductData = {
     ...productData,
     description: JSON.stringify(productData.description),
   }
 
-  return knex('products')
+  return knex<DBFriendlyProductData & { vendor_id: string; store_id: string }>(
+    'products',
+  )
     .insert({
-      ...DBFriendlyProductData,
-      vendor_id: vendorId,
-      store_id: storeId,
+      ...dBFriendlyProductData,
+      vendor_id: userId,
+      store_id: storeId as string,
     })
     .returning('product_id')
 }

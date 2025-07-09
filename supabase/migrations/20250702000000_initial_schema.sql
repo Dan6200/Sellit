@@ -49,15 +49,15 @@ execute procedure trigger_set_timestamp();
 
 -- create orders table
 create table orders (
-    order_id 						serial					primary 				key,
-    customer_id 				serial					references 			users(user_id) on delete cascade not null,
-    store_id 						serial					references 			stores(store_id) on delete cascade not null,
-    shipping_info_id 		serial					references 			shipping_info(shipping_info_id) on delete set null,
-    order_date 					timestamptz 		default 				now(),
-    total_amount 				numeric(10, 2) 	not null,
-    status 							text 						default 				'pending' not null,
-    created_at 					timestamptz 		default 				now(),
-    updated_at 					timestamptz 		default 				now()
+    order_id 						serial						primary 				key,
+    customer_id 				serial						references 			users 						on delete cascade not null,
+    store_id 						serial						references 			stores 						on delete cascade not null,
+    shipping_info_id 		serial						references 			shipping_info 		on delete set null,
+    order_date 					timestamptz				default 				now(),
+    total_amount 				numeric(10, 2)		not null,
+    status 							text							default 				'pending' 				not null,
+    created_at 					timestamptz				default 				now(),
+    updated_at 					timestamptz				default 				now()
 );
 
 -- create a trigger to update the updated_at column for orders
@@ -67,6 +67,8 @@ for each row
 execute procedure trigger_set_timestamp();
 
 create table if not exists payment_info (
+	payment_id 				serial 				primary 			key,
+	payment_token 		varchar 			not 					null
 );
 
 
@@ -92,20 +94,6 @@ create table if not exists subcategories (
 	category_id 				int						not 				null		references		categories			on 		delete	cascade,
 	subcategory_name		varchar
 );
-
-insert into categories(category_name) values ('Electronics'),
-('Clothing'),
-('Books'),
-('Beauty Products'),
-('Automobiles'),
-('Video Games'),
-('Outdoor & Sports');
-
-insert into subcategories(category_id, subcategory_name) values ((select category_id from categories where category_name = 'Electronics'), 'Computers'),
-((select category_id from categories where category_name = 'Electronics'), 'Smartphones'),
-((select category_id from categories where category_name = 'Electronics'), 'Accessories'),
-((select category_id from categories where category_name = 'Clothing'), 'Women''s Fashion'),
-((select category_id from categories where category_name = 'Clothing'), 'Men''s Fashion');
 
 create table if not exists products (
   product_id           serial           primary   key,

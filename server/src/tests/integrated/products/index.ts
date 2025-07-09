@@ -9,7 +9,7 @@ import {
   testUpdateProduct,
   testDeleteProduct,
   testGetNonExistentProduct,
-} from './utils/index.js'
+} from './definitions/index.js'
 import { UserRequestData } from '../../../types/users/index.js'
 import assert from 'assert'
 import { createUserForTesting } from '../helpers/create-user.js'

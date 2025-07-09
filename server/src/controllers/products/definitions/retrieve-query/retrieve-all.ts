@@ -4,7 +4,7 @@ import { QueryParams } from '../../../../types/process-routes.js'
 import { handleSortQuery } from './utility.js'
 
 /**
- * @param {QueryParams} {query, userId}
+ * @param {QueryParams} {query}
  * @returns {Promise<QueryResult<QueryResultRow>>}
  * @description Retrieve all products
  */

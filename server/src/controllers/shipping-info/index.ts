@@ -20,6 +20,7 @@ import { validateReqData } from '../utils/request-validation.js'
 import { validateResData } from '../utils/response-validation.js'
 import { Knex } from 'knex'
 import { knex } from '@/db/index.js'
+import ForbiddenError from '@/errors/forbidden.js'
 
 /**
  * @param {QueryParams} qp
@@ -40,9 +41,9 @@ const createQuery = async ({
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  if (result[0]?.is_customer)
-    throw new BadRequestError(
-      'Customer account disabled. Need to enable it to create a shipping address',
+  if (!result[0]?.is_customer)
+    throw new ForbiddenError(
+      'User is not a customer. Only customers can create shipping addresses.',
     )
   // Limit the amount of shipping addresses a user can have:
   const LIMIT = 5
@@ -53,11 +54,11 @@ const createQuery = async ({
   )[0]
   if (typeof count === 'string') count = parseInt(count)
   if (count > LIMIT)
-    throw new BadRequestError(`Cannot have more than ${LIMIT} stores`)
+    throw new ForbiddenError(`Cannot have more than ${LIMIT} stores`)
   if (!isValidShippingInfoRequest(body))
     throw new BadRequestError('Invalid shipping info')
   const shippingData: ShippingInfo = body
-  if (!shippingData) throw new BadRequestError('No data sent in request body')
+
   const DBFriendlyData = {
     ...shippingData,
     delivery_instructions: JSON.stringify(shippingData.delivery_instructions),
@@ -84,9 +85,9 @@ const getAllQuery = async ({
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  if (result[0]?.is_customer)
-    throw new BadRequestError(
-      'Customer account disabled. Need to enable it to create a shipping address',
+  if (!result[0]?.is_customer)
+    throw new ForbiddenError(
+      'User is not a customer. Only customers can create shipping addresses.',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('customer_id', userId)
@@ -112,9 +113,9 @@ const getQuery = async ({
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  if (result[0]?.is_customer)
-    throw new BadRequestError(
-      'Customer account disabled. Need to enable it to create a shipping address',
+  if (!result[0]?.is_customer)
+    throw new ForbiddenError(
+      'User is not a customer. Only customers can view shipping addresses.',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('shipping_info_id', shippingInfoId)
@@ -142,15 +143,16 @@ const updateQuery = async ({
   if (!isValidShippingInfoRequest(body))
     throw new BadRequestError('Invalid data')
   const shippingData = body
-  if (!shippingInfoId) throw new BadRequestError('Need ID to update resource')
+  if (!shippingInfoId)
+    throw new BadRequestError('Need shipping-info ID to update resource')
   // check if customer account is enabled
   const result = await knex('users')
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  if (result[0]?.is_customer)
-    throw new BadRequestError(
-      'Customer account disabled. Need to enable it to create a shipping address',
+  if (!result[0]?.is_customer)
+    throw new ForbiddenError(
+      'User is not a customer. Only customers can view shipping addresses.',
     )
   const DBFriendlyData = {
     ...shippingData,
@@ -186,9 +188,9 @@ const deleteQuery = async ({
     .where('user_id', userId)
     .select('is_customer')
     .limit(1)
-  if (result[0]?.is_customer)
-    throw new BadRequestError(
-      'Customer account disabled. Need to enable it to create a shipping address',
+  if (!result[0]?.is_customer)
+    throw new ForbiddenError(
+      'User is not a customer. Only customers can delete shipping addresses.',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('shipping_info_id', shippingInfoId)
