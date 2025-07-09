@@ -3,7 +3,6 @@ import { StatusCodes } from 'http-status-codes'
 import { QueryResult, QueryResultRow } from 'pg'
 import { ParsedQs } from 'qs'
 import { RequestWithPayload } from './request.js'
-import { PostgrestSingleResponse } from '@supabase/supabase-js'
 import { Knex } from 'knex'
 const { CREATED, OK, NO_CONTENT, NOT_FOUND } = StatusCodes
 
@@ -31,7 +30,9 @@ export type ProcessRouteWithoutBody = <T>({
 }: {
   Query(
     queryParams: QueryParams,
-  ): Promise<Knex.QueryBuilder | QueryResult<QueryResultRow | QueryResultRow[]>>
+  ): Promise<
+    void | Knex.QueryBuilder | QueryResult<QueryResultRow | QueryResultRow[]>
+  >
   status: Status
   validateResult: (
     result: QueryResult<QueryResultRow | QueryResultRow[]>,
@@ -85,23 +86,6 @@ export type ProcessRoute = <T>({
   status: Status
   validateBody: (data: unknown) => boolean
   validateResult: (
-    result: QueryResult<QueryResultRow | QueryResultRow[]>,
-  ) => boolean
-}) => (
-  request: RequestWithPayload,
-  response: Response,
-) => Promise<Response<T, Record<string, T>>>
-
-export type ProcessRouteWithForwarder = <T>({
-  QueryForwarder,
-  status,
-  validateBody,
-  validateResult,
-}: {
-  QueryForwarder: (s: string) => QueryDB
-  status: Status
-  validateBody?: (data: unknown) => boolean
-  validateResult?: (
     result: QueryResult<QueryResultRow | QueryResultRow[]>,
   ) => boolean
 }) => (

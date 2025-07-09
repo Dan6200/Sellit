@@ -5,7 +5,7 @@ import { ProductRequestData, ProductMedia } from '@/types/products.js'
 import {
   testPostProduct,
   testUploadProductMedia,
-} from '../products/utils/index.js'
+} from '../products/definitions/index.js'
 import { supabase } from '#supabase-config'
 import { bulkDeleteImages } from '../utils/bulk-delete.js'
 

@@ -45,12 +45,7 @@ export default function ({
     response.should.have.status(statusCode)
 
     // Validate the response body
-    if (
-      response.body &&
-      validateTestResData &&
-      !validateTestResData(response.body)
-    ) {
-      console.log(validateTestResData.name)
+    if (validateTestResData && !validateTestResData(response.body)) {
       if (response.status === 404) return null
       throw new Error('Invalid Database Result')
     }

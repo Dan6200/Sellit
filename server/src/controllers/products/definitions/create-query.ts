@@ -1,4 +1,5 @@
 //cspell:ignore jsonb
+import ForbiddenError from '@/errors/forbidden.js'
 import { knex } from '../../../db/index.js'
 import BadRequestError from '../../../errors/bad-request.js'
 import { QueryParams } from '../../../types/process-routes.js'
@@ -23,8 +24,12 @@ export default async ({
     .select('is_vendor')
     .limit(1)
   if (!result[0]?.is_vendor)
-    throw new BadRequestError(
+    throw new ForbiddenError(
       'Vendor account disabled. Need to enable it to create a store',
+    )
+  if (!storeId)
+    throw new BadRequestError(
+      'Need to provide Store ID as query param in order to list a product',
     )
   const response = await knex('stores')
     .where('vendor_id', userId)
@@ -32,7 +37,7 @@ export default async ({
     .first('vendor_id')
 
   if (!response.length || !result[0]?.vendor_id)
-    throw new BadRequestError('Must create a store to be able to list products')
+    throw new ForbiddenError('Must create a store to be able to list products')
 
   if (!isValidProductRequestData(body))
     throw new BadRequestError('Invalid product data')

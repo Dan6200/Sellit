@@ -71,8 +71,6 @@ create table if not exists payment_info (
 	payment_token 		varchar 			not 					null
 );
 
-
-
 create table if not exists stores (
   store_id                 serial      primary   key,   
   store_name               varchar     not       null,

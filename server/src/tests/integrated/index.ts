@@ -5,7 +5,6 @@ import testStoresWithNoVendor from './stores/no-vendor-account.js'
 import testStores from './stores/index.js'
 import testShipping from './shipping-info/index.js'
 import testProducts from './products/index.js'
-import testPublicProducts from './public/products/index.js'
 import testMedia from './media/index.js'
 import * as Ebuka from './data/users/user-ebuka/index.js'
 import * as Aisha from './data/users/user-aisha/index.js'
@@ -17,13 +16,8 @@ const customers = [Ebuka, Aisha, Mustapha] // is_customer is true
 const vendors = [Aliyu] // is_vendor is true
 
 export default function (): void {
-  /** Public Routes **/
-
-  /** Products **/
-
-  describe(`Testing Public Product Route`, () => testPublicProducts())
-
-  /** Private Routes **/
+  describe(`Testing Public Products`, () => testProducts(null))
+  describe(`Testing Public Stores`, () => testStores(null))
 
   /** User Account actions **/
 

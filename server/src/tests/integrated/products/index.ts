@@ -22,45 +22,51 @@ chai.use(chaiHttp).should()
 // Set server url
 const server = process.env.SERVER!
 
-export default function ({
-  userInfo,
-  products,
-  productReplaced,
-}: {
-  userInfo: UserRequestData
-  products: ProductRequestData[]
-  productReplaced: ProductRequestData[]
-}) {
+export default function (
+  testArgs: {
+    userInfo?: UserRequestData
+    products?: ProductRequestData[]
+    productReplaced?: ProductRequestData[]
+  } | null,
+) {
+  let userInfo: UserRequestData,
+    products: ProductRequestData[],
+    productReplaced: ProductRequestData[]
+  if (testArgs) ({ userInfo, products, productReplaced } = testArgs)
   describe('Testing Products In Each Store', async function () {
     let token: string
     let storeId: string
     before(async () => {
       // Delete all users from Supabase auth
       await deleteAllUsersForTesting()
-      // Create user after...
-      await createUserForTesting(userInfo)
-      token = await signInForTesting(userInfo)
-      const response = await createStoreForTesting(token)
-      ;({ store_id: storeId } = response.body)
+      if (userInfo) {
+        // Create user after...
+        await createUserForTesting(userInfo)
+        token = await signInForTesting(userInfo)
+        const response = await createStoreForTesting(token)
+        ;({ store_id: storeId } = response.body)
+      }
     })
 
     const productIds: number[] = []
 
     const getProductsRoute = () => `/v1/stores/${storeId}/products`
 
-    it('it should Add a couple products to each store', async () => {
-      const productsRoute = getProductsRoute()
+    if (userInfo) {
+      it('it should Add a couple products to each store', async () => {
+        const productsRoute = getProductsRoute()
 
-      for (const product of products) {
-        const { product_id } = await testPostProduct({
-          server,
-          path: `${productsRoute}`,
-          requestBody: product,
-          token,
-        })
-        productIds.push(product_id)
-      }
-    })
+        for (const product of products) {
+          const { product_id } = await testPostProduct({
+            server,
+            path: `${productsRoute}`,
+            requestBody: product,
+            token,
+          })
+          productIds.push(product_id)
+        }
+      })
+    }
 
     it('it should retrieve all the products', async () => {
       const productsRoute = getProductsRoute()
@@ -103,37 +109,39 @@ export default function ({
       }
     })
 
-    it('it should update all the products a vendor has for sale', async () => {
-      const productsRoute = getProductsRoute()
-      assert(productIds?.length === productReplaced.length)
-      for (const [idx, productId] of productIds.entries())
-        await testUpdateProduct({
-          server,
-          path: `${productsRoute}/${productId}`,
-          token,
-          requestBody: productReplaced[idx],
-        })
-    })
+    if (userInfo) {
+      it('it should update all the products a vendor has for sale', async () => {
+        const productsRoute = getProductsRoute()
+        assert(productIds?.length === productReplaced.length)
+        for (const [idx, productId] of productIds.entries())
+          await testUpdateProduct({
+            server,
+            path: `${productsRoute}/${productId}`,
+            token,
+            requestBody: productReplaced[idx],
+          })
+      })
 
-    it('it should delete all the product a vendor has for sale', async () => {
-      const productsRoute = getProductsRoute()
-      for (const productId of productIds)
-        await testDeleteProduct({
-          token,
-          server,
-          path: `${productsRoute}/${productId}`,
-        })
-    })
+      it('it should delete all the product a vendor has for sale', async () => {
+        const productsRoute = getProductsRoute()
+        for (const productId of productIds)
+          await testDeleteProduct({
+            token,
+            server,
+            path: `${productsRoute}/${productId}`,
+          })
+      })
 
-    it('it should fail to retrieve any of the deleted products', async () => {
-      const productsRoute = getProductsRoute()
-      for (const productId of productIds)
-        await testGetNonExistentProduct({
-          token,
-          server,
+      it('it should fail to retrieve any of the deleted products', async () => {
+        const productsRoute = getProductsRoute()
+        for (const productId of productIds)
+          await testGetNonExistentProduct({
+            token,
+            server,
 
-          path: `${productsRoute}/${productId}`,
-        })
-    })
+            path: `${productsRoute}/${productId}`,
+          })
+      })
+    }
   })
 }

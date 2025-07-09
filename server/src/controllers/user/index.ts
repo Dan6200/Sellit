@@ -8,6 +8,7 @@ import { QueryResult, QueryResultRow } from 'pg'
 import { validateResData } from '../utils/response-validation.js'
 import { UserResponseSchema } from '../../app-schema/users.js'
 import { pg } from '@/db/index.js'
+import UnauthorizedError from '@/errors/unauthorized.js'
 
 const { OK } = StatusCodes
 
@@ -17,8 +18,10 @@ const { OK } = StatusCodes
  **/
 const getQuery = async ({
   userId,
-}: QueryParams): Promise<QueryResult<QueryResultRow>> =>
-  pg.query('select * from users where user_id=$1', [userId])
+}: QueryParams): Promise<QueryResult<QueryResultRow>> => {
+  if (!userId) throw new UnauthorizedError('Cannot access this user account')
+  return pg.query('select * from users where user_id=$1', [userId])
+}
 
 const processGetRoute = <ProcessRouteWithoutBody>createRouteProcessor
 export const getUser = processGetRoute({

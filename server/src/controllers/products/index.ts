@@ -8,24 +8,21 @@ import {
 } from '../../app-schema/products.js'
 import {
   ProcessRoute,
-  ProcessRouteWithForwarder,
   ProcessRouteWithoutBody,
 } from '../../types/process-routes.js'
 import { validateReqData } from '../utils/request-validation.js'
-import {
-  getAllQueryForwarder,
-  getQueryForwarder,
-} from './definitions/retrieve-query.js'
 import createQuery from './definitions/create-query.js'
 import updateQuery from './definitions/update-query.js'
 import deleteQuery from './definitions/delete-query.js'
 import { validateResData } from '../utils/response-validation.js'
+import retrieveQuery from './definitions/retrieve-query/index.js'
+import retrieveQueryAll from './definitions/retrieve-query/all.js'
 
 const { CREATED, OK } = StatusCodes
 
 const processPostRoute = <ProcessRoute>createRouteProcessor
-const processGetAllRoute = <ProcessRouteWithForwarder>createRouteProcessor
-const processGetRoute = <ProcessRouteWithForwarder>createRouteProcessor
+const processGetAllRoute = <ProcessRouteWithoutBody>createRouteProcessor
+const processGetRoute = <ProcessRouteWithoutBody>createRouteProcessor
 const processPutRoute = <ProcessRoute>createRouteProcessor
 const processDeleteRoute = <ProcessRouteWithoutBody>createRouteProcessor
 
@@ -38,13 +35,13 @@ const createProduct = processPostRoute({
 })
 
 const getAllProducts = processGetAllRoute({
-  QueryForwarder: getAllQueryForwarder,
+  Query: retrieveQueryAll,
   status: OK,
   validateResult: validateResData(ProductListResponseSchema),
 })
 
 const getProduct = processGetRoute({
-  QueryForwarder: getQueryForwarder,
+  Query: retrieveQuery,
   status: OK,
   validateResult: validateResData(ProductResponseSchema),
 })
