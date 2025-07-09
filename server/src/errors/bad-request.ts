@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
-import GeneralAPIError from './general-api.js'
+import InternalServerError from './internal-server.js'
 
-class BadRequestError extends GeneralAPIError {
+class BadRequestError extends InternalServerError {
   name: string
   constructor(message: string) {
     super(message)

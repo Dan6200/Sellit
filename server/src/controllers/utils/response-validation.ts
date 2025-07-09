@@ -2,7 +2,7 @@ import { ArraySchema, ObjectSchema } from 'joi'
 import { QueryResult, QueryResultRow } from 'pg'
 import NotFoundError from '../../errors/not-found.js'
 import { isTypeQueryResultRow } from '../../types/response.js'
-import GeneralAPIError from '@/errors/general-api.js'
+import InternalServerError from '@/errors/internal-server.js'
 
 /**
  * @description Validates DB result against schema
@@ -23,25 +23,27 @@ export function validateResData<T>(schema: ArraySchema<T> | ObjectSchema<T>) {
       if (result.rows?.length === 0) {
         if (result.command === 'SELECT')
           throw new NotFoundError('Requested resource was not found')
-        throw new GeneralAPIError(`${result.command} Operation unsuccessful`)
+        throw new InternalServerError(
+          `${result.command} Operation unsuccessful`,
+        )
       }
 
       // Handle cases where more than one row is returned
       if (result.rowCount > 1) {
         if (schema.type === 'object') {
           // If an ObjectSchema is provided, but multiple rows are returned, it's an error
-          throw new GeneralAPIError(
+          throw new InternalServerError(
             `${result.command} operated erroneously: expected single row, got multiple`,
           )
         } else if (schema.type === 'array') {
           // If an ArraySchema is provided, validate the entire array of rows
           const { error } = schema.validate(result.rows)
-          if (error) throw new GeneralAPIError(error.message)
+          if (error) throw new InternalServerError(error.message)
         }
       } else if (result.rowCount === 1) {
         // If exactly one row is returned, validate it against the schema
         const { error } = schema.validate(result.rows[0])
-        if (error) throw new GeneralAPIError(error.message)
+        if (error) throw new InternalServerError(error.message)
       } else {
         // This case should ideally be caught by result.rows?.length === 0, but as a fallback
         return false
@@ -55,16 +57,16 @@ export function validateResData<T>(schema: ArraySchema<T> | ObjectSchema<T>) {
       }
       if (result?.length > 1) {
         if (schema.type === 'object') {
-          throw new GeneralAPIError(
+          throw new InternalServerError(
             `Operation operated erroneously: expected single item, got multiple`,
           )
         } else if (schema.type === 'array') {
           const { error } = schema.validate(result)
-          if (error) throw new GeneralAPIError(error.message)
+          if (error) throw new InternalServerError(error.message)
         }
       } else if (result?.length === 1) {
         const { error } = schema.validate(result[0])
-        if (error) throw new GeneralAPIError(error.message)
+        if (error) throw new InternalServerError(error.message)
       } else {
         return false
       }

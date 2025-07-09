@@ -7,6 +7,10 @@ import BadRequestError from '../../errors/bad-request.js'
 export const validateReqData =
   <T>(schema: ObjectSchema<T>) =>
   (data: unknown) => {
+    process.env.DEBUG &&
+      console.log(
+        '\nDEBUG: DB request data (validate step) -> ' + JSON.stringify(data),
+      )
     if (typeof data == 'undefined' || Object.keys(data)?.length === 0)
       throw new BadRequestError('request data cannot be empty')
     const { error } = schema.validate(data)

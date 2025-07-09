@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express'
 import UnauthorizedError from '../errors/unauthorized.js'
 import { RequestWithPayload } from '../types/request.js'
 import { supabase } from '#supabase-config'
-import GeneralAPIError from '@/errors/general-api.js'
+import InternalServerError from '@/errors/internal-server.js'
 
 export default async (
   request: RequestWithPayload,
@@ -27,7 +27,7 @@ export default async (
     }
     next()
   } catch (error) {
-    if (error instanceof GeneralAPIError)
+    if (error instanceof InternalServerError)
       return response.status(error.statusCode).send(error.message)
     throw error
   }

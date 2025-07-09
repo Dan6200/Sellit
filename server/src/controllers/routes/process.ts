@@ -4,7 +4,7 @@ import { isTypeQueryResultRow, Status } from '../../types/response.js'
 import { QueryDB } from '../../types/process-routes.js'
 import { QueryResult, QueryResultRow } from 'pg'
 import NotFoundError from '../../errors/not-found.js'
-import GeneralAPIError from '@/errors/general-api.js'
+import InternalServerError from '@/errors/internal-server.js'
 
 export default ({
   Query,
@@ -89,8 +89,8 @@ export default ({
       }
       response.status(status).end()
     } catch (error) {
-      process.env.DEBUG && console.error
-      if (error instanceof GeneralAPIError)
+      process.env.DEBUG && console.error(error)
+      if (error instanceof InternalServerError)
         return response.status(error.statusCode).send(error.message)
       throw error
     }
