@@ -73,3 +73,30 @@ insert into subcategories(category_id, subcategory_name) values ((select categor
 ((select category_id from categories where category_name = 'Handmade'), 'Handmade Jewelry'),
 ((select category_id from categories where category_name = 'Handmade'), 'Handmade Home Decor');
 
+-- Fake data for users
+insert into users (user_id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor) values
+('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'John', 'Doe', 'john.doe@example.com', '+2348012345678', '1990-01-15', 'Nigeria', true, true),
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'Jane', 'Smith', 'jane.smith@example.com', '+2348023456789', '1985-05-20', 'Nigeria', true, false),
+('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', 'Peter', 'Jones', 'peter.jones@example.com', '+2348034567890', '1992-11-01', 'Nigeria', false, true),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', 'Alice', 'Brown', 'alice.brown@example.com', '+2348045678901', '1988-03-25', 'Nigeria', true, false),
+('e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', 'Bob', 'White', 'bob.white@example.com', '+2348056789012', '1995-07-10', 'Nigeria', false, true);
+
+-- Fake data for stores
+insert into stores (store_name, custom_domain, vendor_id) values
+('John''s Gadgets', 'gadgets.example.com', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+('Peter''s Picks', null, 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33'),
+('Bob''s Bargains', 'bargains.example.com', 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55');
+
+-- Fake data for products
+insert into products (title, description, list_price, net_price, vendor_id, store_id, category_id, subcategory_id, quantity_available) values
+('Laptop Pro X', '{"features": ["16GB RAM", "512GB SSD", "Intel i7"]}', 1200.00, 1100.00, 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (select store_id from stores where store_name = 'John''s Gadgets'), (select category_id from categories where category_name = 'Electronics'), (select subcategory_id from subcategories where subcategory_name = 'Computers'), 50),
+('Smartphone Ultra', '{"features": ["6.7 inch display", "128GB storage", "Dual Camera"]}', 800.00, 750.00, 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (select store_id from stores where store_name = 'John''s Gadgets'), (select category_id from categories where category_name = 'Electronics'), (select subcategory_id from subcategories where subcategory_name = 'Smartphones'), 120),
+('Wireless Headphones', '{"features": ["Noise Cancelling", "20-hour battery life"]}', 150.00, 130.00, 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (select store_id from stores where store_name = 'John''s Gadgets'), (select category_id from categories where category_name = 'Electronics'), (select subcategory_id from subcategories where subcategory_name = 'Accessories'), 200),
+('Classic Leather Jacket', '{"material": "Genuine Leather", "color": "Black"}', 250.00, 220.00, 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', (select store_id from stores where store_name = 'Peter''s Picks'), (select category_id from categories where category_name = 'Clothing'), (select subcategory_id from subcategories where subcategory_name = 'Men''s Fashion'), 30),
+('Fantasy Novel Set', '{"author": "J.R.R. Tolkien", "genre": "Fantasy"}', 75.00, 65.00, 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', (select store_id from stores where store_name = 'Peter''s Picks'), (select category_id from categories where category_name = 'Books'), (select subcategory_id from subcategories where subcategory_name = 'Fiction'), 80),
+('Organic Skincare Kit', '{"type": "Anti-aging", "ingredients": ["Vitamin C", "Hyaluronic Acid"]}', 90.00, 80.00, 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', (select store_id from stores where store_name = 'Bob''s Bargains'), (select category_id from categories where category_name = 'Beauty Products'), (select subcategory_id from subcategories where subcategory_name = 'Skincare'), 100),
+('Gaming PC', '{"processor": "AMD Ryzen 9", "graphics": "NVIDIA RTX 3080"}', 2500.00, 2300.00, 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', (select store_id from stores where store_name = 'Bob''s Bargains'), (select category_id from categories where category_name = 'Video Games'), (select subcategory_id from subcategories where subcategory_name = 'PC Games'), 15),
+('Smart Home Hub', '{"compatibility": "Alexa, Google Assistant", "features": ["Voice Control", "Automation"]}', 120.00, 100.00, 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (select store_id from stores where store_name = 'John''s Gadgets'), (select category_id from categories where category_name = 'Home & Kitchen'), (select subcategory_id from subcategories where subcategory_name = 'Kitchen Appliances'), 70),
+('Plush Toy Bear', '{"size": "Large", "material": "Soft Plush"}', 35.00, 30.00, 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', (select store_id from stores where store_name = 'Peter''s Picks'), (select category_id from categories where category_name = 'Toys & Games'), (select subcategory_id from subcategories where subcategory_name = 'Action Figures'), 150),
+('Yoga Mat Eco-Friendly', '{"material": "Natural Rubber", "thickness": "6mm"}', 50.00, 45.00, 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', (select store_id from stores where store_name = 'Bob''s Bargains'), (select category_id from categories where category_name = 'Sports & Outdoors'), (select subcategory_id from subcategories where subcategory_name = 'Fitness Equipment'), 90);
+

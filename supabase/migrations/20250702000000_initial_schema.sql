@@ -1,6 +1,15 @@
 drop schema if exists public cascade;
 create schema if not exists public;
 
+-- function to update updated_at column
+create or replace function trigger_set_timestamp()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
 create table if not exists users (
   user_id 		 uuid                    primary    key, -- Get from Firebase
   first_name   varchar(30)               not        null,
@@ -47,25 +56,6 @@ before update on shipping_info
 for each row
 execute procedure trigger_set_timestamp();
 
--- create orders table
-create table orders (
-    order_id 						serial						primary 				key,
-    customer_id 				serial						references 			users 						on delete cascade not null,
-    store_id 						serial						references 			stores 						on delete cascade not null,
-    shipping_info_id 		serial						references 			shipping_info 		on delete set null,
-    order_date 					timestamptz				default 				now(),
-    total_amount 				numeric(10, 2)		not null,
-    status 							text							default 				'pending' 				not null,
-    created_at 					timestamptz				default 				now(),
-    updated_at 					timestamptz				default 				now()
-);
-
--- create a trigger to update the updated_at column for orders
-create trigger set_timestamp
-before update on orders
-for each row
-execute procedure trigger_set_timestamp();
-
 create table if not exists payment_info (
 	payment_id 				serial 				primary 			key,
 	payment_token 		varchar 			not 					null
@@ -106,6 +96,25 @@ create table if not exists products (
   created_at           timestamptz      not       null    default      		now(),
   quantity_available   int              not       null
 );
+
+-- create orders table
+create table orders (
+    order_id 						serial						primary 				key,
+    customer_id 				uuid						references 			users 						on delete cascade not null,
+    store_id 						serial						references 			stores 						on delete cascade not null,
+    shipping_info_id 		serial						references 			shipping_info 		on delete set null,
+    order_date 					timestamptz				default 				now(),
+    total_amount 				numeric(10, 2)		not null,
+    status 							text							default 				'pending' 				not null,
+    created_at 					timestamptz				default 				now(),
+    updated_at 					timestamptz				default 				now()
+);
+
+-- create a trigger to update the updated_at column for orders
+create trigger set_timestamp
+before update on orders
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists product_media (
   product_id					int					not null   references   products   on   delete   cascade,
