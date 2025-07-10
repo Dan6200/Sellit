@@ -81,7 +81,7 @@ export const testUpdateProduct = (<TestRequestWithQParamsAndBody>testRoutes)({
 export const testDeleteProduct = (<TestRequestWithQParams>testRoutes)({
   statusCode: NO_CONTENT,
   verb: 'delete',
-  validateTestResData: isValidProductResponseData,
+  validateTestResData: null,
 })
 
 export const testGetNonExistentProduct = (<TestRequestWithQParams>testRoutes)({

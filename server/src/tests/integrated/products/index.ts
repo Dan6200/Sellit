@@ -166,4 +166,6 @@ export default function ({
         })
     })
   })
+
+  after(async () => deleteAllUsersForTesting())
 }
