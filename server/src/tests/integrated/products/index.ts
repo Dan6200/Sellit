@@ -29,20 +29,18 @@ export default function ({
   userInfo?: UserRequestData
   products?: ProductRequestData[]
   productReplaced?: ProductRequestData[]
-} | null) {
+}) {
   describe('Testing Products In Each Store', async function () {
     let token: string
     let store_id: string
     before(async () => {
       // Delete all users from Supabase auth
       await deleteAllUsersForTesting()
-      if (userInfo) {
-        // Create user after...
-        await createUserForTesting(userInfo)
-        token = await signInForTesting(userInfo)
-        const response = await createStoreForTesting(token)
-        ;({ store_id } = response.body)
-      }
+      // Create user after...
+      await createUserForTesting(userInfo)
+      token = await signInForTesting(userInfo)
+      const response = await createStoreForTesting(token)
+      ;({ store_id } = response.body)
     })
 
     const productIds: number[] = []

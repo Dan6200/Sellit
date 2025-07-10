@@ -305,8 +305,16 @@ create table if not exists vendor_reviews (
   customer_id       uuid            not       null    references   users             on   delete   cascade,
   transaction_id    int            not       null    references   transactions				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
-  customer_remark   varchar
+  customer_remark   varchar,
+  created_at    timestamptz   not       null   default      now(),
+  updated_at    timestamptz   not       null   default      now()
 );
+
+-- create a trigger to update the updated_at column for vendor_reviews
+create trigger set_timestamp
+before update on vendor_reviews
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists customer_reviews (
   customer_id      uuid            primary   key     references   users             on   delete   cascade,

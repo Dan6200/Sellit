@@ -8,6 +8,11 @@ import {
 } from '../products/definitions/index.js'
 import { supabase } from '#supabase-config'
 import { bulkDeleteImages } from '../utils/bulk-delete.js'
+import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
+import { createUserForTesting } from '../helpers/create-user.js'
+import { signInForTesting } from '../helpers/signin-user.js'
+import { createStoreForTesting } from '../helpers/create-store.js'
+import { createProductsForTesting } from '../helpers/create-product.js'
 
 // globals
 const mediaRoute = '/v1/media'
@@ -20,7 +25,6 @@ const productIds: number[] = []
 
 export default function ({
   userInfo,
-  products,
   productMedia,
 }: {
   userInfo: UserRequestData
@@ -28,70 +32,35 @@ export default function ({
   productMedia: ProductMedia[][]
 }) {
   describe('Product media management', () => {
+    let token: string
+    let product_id: string
     before(async () => {
-      // Bulk delete media from cloudinary
-      await bulkDeleteImages()
-      // For testing, we'll create a user directly in Supabase and then sign in with email/password
-      // This replaces the Firebase custom token approach
-      const { email, password, ...user_metadata } = userInfo
+      // Delete all users from Supabase auth
+      await deleteAllUsersForTesting()
+      // Create user after...
+      await createUserForTesting(userInfo)
+      token = await signInForTesting(userInfo)
       const {
-        data: { user },
-        error,
-      } = await supabase.auth.admin.createUser({
-        email: userInfo.email,
-        password: userInfo.password,
-        user_metadata,
-        email_confirm: true,
-      })
-      if (error) throw error
-      userIdToDelete = user.id // Update userIdToDelete with Supabase user ID
-      const { data: signInData, error: signInError } =
-        await supabase.auth.signInWithPassword({
-          email: userInfo.email,
-          password: userInfo.password,
-        })
-      if (signInError) throw signInError
-      token = signInData.session?.access_token as string
-      await testPostVendor({ server, path: vendorsRoute })
-      for (const product of products) {
-        const { product_id } = await testPostProduct({
-          server,
-
-          path: `${productsRoute}`,
-          body: product,
-        })
-        productIds.push(product_id)
-      }
-    })
-
-    after(async function () {
-      // Delete users from db
-      if (userIdToDelete)
-        await knex('users').where('userId', userIdToDelete).del()
-      // Delete all users from firebase auth
-      await supabase.auth.admin
-        .deleteUser(userIdToDelete)
-        .catch((error: Error) =>
-          console.error(
-            `failed to delete user with userId ${userIdToDelete}: ${error}`,
-          ),
-        )
+        body: { store_id },
+      } = await createStoreForTesting(token)
+      ;({
+        body: { product_id },
+      } = await createProductsForTesting(token, store_id))
       // Bulk delete media from cloudinary
       await bulkDeleteImages()
     })
 
     // Create a product for the store
     it("it should add the product's media to an existing product", async () => {
-      for (const [idx, productId] of productIds.entries())
-        await testUploadProductMedia(
-          server,
-          mediaRoute,
-          productMedia[idx],
-          userInfo,
-          {
-            productId,
-          },
-        )
+      for (const media of productMedia)
+        await testUploadProductMedia(server, mediaRoute, media, userInfo, {
+          product_id,
+        })
     })
+  })
+
+  after(async () => {
+    // await deleteAllUsersForTesting()
+    // await bulkDeleteImages()
   })
 }

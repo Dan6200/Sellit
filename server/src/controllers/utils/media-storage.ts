@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'testing') {
     cloudinary,
     params: {
       use_filename: true,
-      folder: 'thrift-app-media',
+      folder: 'thrift-app-media-testing',
       unique_filename: true,
       overwrite: true,
       public_id: (_req, file) =>

@@ -147,7 +147,7 @@ export const productMedia: ProductMedia[][] = [
   [
     {
       name: 'airpods-1',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/crikey.jpg',
       description: 'Echo Wireless Earbuds',
       is_display_image: true,
       is_landing_image: false,
@@ -156,7 +156,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'airpods-2',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/517i7g9q7zL._AC_SX466_.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/bose-headphones/house.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -165,7 +165,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-3',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/josh.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -174,7 +174,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-4',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/crikey.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -183,7 +183,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-5',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -192,7 +192,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-6',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/crikey.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -201,7 +201,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-7',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/cat.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -210,7 +210,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-8',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/cat.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -219,7 +219,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-9',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/bose-headphones/blake.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -229,7 +229,7 @@ export const productMedia: ProductMedia[][] = [
   [
     {
       name: 'lenovo-tab-1',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/bose-headphones/blake.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: true,
       is_landing_image: false,
@@ -238,7 +238,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-2',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/bose-headphones/random.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -247,7 +247,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-3',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/bose-headphones/random.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -256,7 +256,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-4',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -265,7 +265,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-5',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -274,7 +274,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-6',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -285,7 +285,7 @@ export const productMedia: ProductMedia[][] = [
   [
     {
       name: 'echo-wireless-buds-1',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Echo Wireless Earbuds',
       is_display_image: true,
       is_landing_image: false,
@@ -294,7 +294,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-2',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -303,7 +303,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-3',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -312,7 +312,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-4',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -321,7 +321,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-5',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -330,7 +330,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-7',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -339,7 +339,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-8',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -348,7 +348,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'echo-wireless-buds-9',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -358,7 +358,7 @@ export const productMedia: ProductMedia[][] = [
   [
     {
       name: 'lenovo-tab-1',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: true,
       is_landing_image: false,
@@ -367,7 +367,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-2',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -376,7 +376,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-3',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -385,7 +385,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-4',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -394,7 +394,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-5',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -403,7 +403,7 @@ export const productMedia: ProductMedia[][] = [
 
     {
       name: 'lenovo-tab-6',
-      path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
       description: 'Lenovo Tablet M10 Plus Gen 3',
       is_display_image: false,
       is_landing_image: false,
@@ -413,58 +413,60 @@ export const productMedia: ProductMedia[][] = [
 ]
 
 // TODO: should be a matrix
-export const updatedProductMedia: ProductMedia[] = [
-  {
-    name: 'tozo-smartwatch-1',
-    path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
-    description: 'A fitness smartwatch',
-    is_display_image: false,
-    is_landing_image: false,
-    is_video: false,
-  },
+export const updatedProductMedia: ProductMedia[][] = [
+  [
+    {
+      name: 'tozo-smartwatch-1',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
+      description: 'A fitness smartwatch',
+      is_display_image: false,
+      is_landing_image: false,
+      is_video: false,
+    },
 
-  {
-    name: 'tozo-smartwatch-2',
-    path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
-    description: 'A fitness smartwatch',
-    is_display_image: false,
-    is_landing_image: false,
-    is_video: false,
-  },
+    {
+      name: 'tozo-smartwatch-2',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
+      description: 'A fitness smartwatch',
+      is_display_image: false,
+      is_landing_image: false,
+      is_video: false,
+    },
 
-  {
-    name: 'tozo-smartwatch-3',
-    path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
-    description: 'A fitness smartwatch',
-    is_display_image: false,
-    is_landing_image: false,
-    is_video: false,
-  },
+    {
+      name: 'tozo-smartwatch-3',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
+      description: 'A fitness smartwatch',
+      is_display_image: false,
+      is_landing_image: false,
+      is_video: false,
+    },
 
-  {
-    name: 'tozo-smartwatch-4',
-    path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
-    description: 'A fitness smartwatch',
-    is_display_image: false,
-    is_landing_image: false,
-    is_video: false,
-  },
+    {
+      name: 'tozo-smartwatch-4',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
+      description: 'A fitness smartwatch',
+      is_display_image: false,
+      is_landing_image: false,
+      is_video: false,
+    },
 
-  {
-    name: 'tozo-smartwatch-5',
-    path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
-    description: 'A fitness smartwatch',
-    is_display_image: false,
-    is_landing_image: false,
-    is_video: false,
-  },
+    {
+      name: 'tozo-smartwatch-5',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/airpods/display.jpg',
+      description: 'A fitness smartwatch',
+      is_display_image: false,
+      is_landing_image: false,
+      is_video: false,
+    },
 
-  {
-    name: 'tozo-smartwatch-6',
-    path: './server/src/tests/integrated-tests/data/users/vendors/user-aliyu/products/media/airpods/display.jpg',
-    description: 'A fitness smartwatch',
-    is_display_image: false,
-    is_landing_image: false,
-    is_video: false,
-  },
+    {
+      name: 'tozo-smartwatch-6',
+      path: './server/src/tests/integrated/data/users/user-aliyu/products/media/',
+      description: 'A fitness smartwatch',
+      is_display_image: false,
+      is_landing_image: false,
+      is_video: false,
+    },
+  ],
 ]
