@@ -19,7 +19,7 @@ import { signInForTesting } from '../../helpers/signin-user.js'
 
 chai.use(chaiHttp).should()
 
-const { CREATED, OK, NOT_FOUND } = StatusCodes
+const { CREATED, OK, NOT_FOUND, NO_CONTENT } = StatusCodes
 
 // export const testCreateProduct = async function* ({
 //   server,
@@ -79,7 +79,7 @@ export const testUpdateProduct = (<TestRequestWithQParamsAndBody>testRoutes)({
 })
 
 export const testDeleteProduct = (<TestRequestWithQParams>testRoutes)({
-  statusCode: OK,
+  statusCode: NO_CONTENT,
   verb: 'delete',
   validateTestResData: isValidProductResponseData,
 })

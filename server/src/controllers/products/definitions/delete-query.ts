@@ -25,9 +25,8 @@ export default async ({
   // check if vendor account is enabled
   const response = await knex('users')
     .where('user_id', userId)
-    .select('is_vendor')
-    .limit(1)
-  if (!response[0]?.is_vendor)
+    .first('is_vendor')
+  if (!response?.is_vendor)
     throw new ForbiddenError(
       'User is not a vendor. Need to enable your vendor account for this operation.',
     )

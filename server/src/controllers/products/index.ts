@@ -19,7 +19,7 @@ import { validateResData } from '../utils/response-validation.js'
 import retrieveQuery from './definitions/retrieve-query/index.js'
 import retrieveQueryAll from './definitions/retrieve-query/all.js'
 
-const { CREATED, OK } = StatusCodes
+const { CREATED, OK, NO_CONTENT } = StatusCodes
 
 const processPostRoute = <ProcessRoute>createRouteProcessor
 const processGetAllRoute = <ProcessRouteWithoutBody>createRouteProcessor
