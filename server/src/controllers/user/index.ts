@@ -19,7 +19,7 @@ const { OK } = StatusCodes
 const getQuery = async ({
   userId,
 }: QueryParams): Promise<QueryResult<QueryResultRow>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access this user account')
+  if (!userId) throw new UnauthorizedError('Signin to access user account.')
   return pg.query('select * from users where user_id=$1', [userId])
 }
 

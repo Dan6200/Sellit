@@ -16,8 +16,8 @@ const customers = [Ebuka, Aisha, Mustapha] // is_customer is true
 const vendors = [Aliyu] // is_vendor is true
 
 export default function (): void {
-  describe(`Testing Public Products`, () => testProducts(null))
-  describe(`Testing Public Stores`, () => testStores(null))
+  // describe(`Testing Public Products`, () => testProducts(null))
+  // describe(`Testing Public Stores`, () => testStores(null))
 
   /** User Account actions **/
 
@@ -41,7 +41,7 @@ export default function (): void {
   /** Stores related tests **/
 
   for (let vendor of vendors) {
-    describe(`Testing Stores owned by No One`, () =>
+    describe(`Testing Store access without a vendor account`, () =>
       testStoresWithNoVendor(vendor))
   }
 

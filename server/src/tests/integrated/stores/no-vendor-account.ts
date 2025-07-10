@@ -27,15 +27,17 @@ export default function ({
     await deleteAllUsersForTesting()
     // Create user after...
     await createUserForTesting(userInfo)
-    const response = await knex('users')
-      .update('is_vendor', false)
-      .where({ email: userInfo.email })
-      .returning('*')
-    process.env.DEBUG &&
-      console.log('\nDEBUG: Updated User role -> ' + JSON.stringify(response))
     token = await signInForTesting(userInfo)
   })
   const path = '/v1/stores'
+
+  beforeEach(async () => {
+    // important to move to before each because the supabase create user is interfering and causing race conditions
+    await knex('users')
+      .update('is_vendor', false)
+      .where({ email: userInfo.email })
+      .returning('*')
+  })
 
   let storeIds: string[] = []
   it('should fail to create a store when no vendor account exists', async () => {
@@ -72,5 +74,8 @@ export default function ({
         path: path + '/' + storeId,
       })
     }
+  })
+  after(async () => {
+    await deleteAllUsersForTesting()
   })
 }

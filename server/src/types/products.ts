@@ -1,8 +1,9 @@
 import {
   ProductIdSchema,
-  ProductListResponseSchema,
+  ProductGETAllResponseSchema,
   ProductRequestSchema,
   ProductResponseSchema,
+  ProductGETResponseSchema,
 } from '../app-schema/products.js'
 
 export type ProductResponseData = {
@@ -15,6 +16,7 @@ export type ProductResponseData = {
   list_price: number
   net_price: number
   quantity_available: number
+  updated_at?: Date
 }
 
 export type ProductRequestData = {
@@ -31,7 +33,7 @@ export type DBFriendlyProductData = {
   title: string
   category_id: number
   subcategory_id: number
-  description: string
+  description: string[]
   list_price: number
   net_price: number
   quantity_available: number
@@ -56,6 +58,14 @@ export function isValidProductRequestData(
   return !error
 }
 
+export function isValidProductGETResponseData(
+  data: unknown,
+): data is ProductResponseData {
+  const { error } = ProductGETResponseSchema.validate(data)
+  error && console.error(error)
+  return !error
+}
+
 export function isValidProductResponseData(
   data: unknown,
 ): data is ProductResponseData {
@@ -74,10 +84,10 @@ export function isValidProductId(data: unknown): data is ProductID {
   return !error
 }
 
-export function isValidProductListResponseData(
+export function isValidProductGETAllResponseData(
   data: unknown,
 ): data is ProductResponseData[] {
-  const { error } = ProductListResponseSchema.validate(data)
+  const { error } = ProductGETAllResponseSchema.validate(data)
   error && console.error(error)
   return !error
 }

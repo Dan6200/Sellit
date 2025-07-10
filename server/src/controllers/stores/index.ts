@@ -36,7 +36,7 @@ const createQuery = async ({
   body,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access store')
+  if (!userId) throw new UnauthorizedError('Sign-in to create store')
   // check if vendor account is enabled
   const result = await knex('users')
     .where('user_id', userId)
@@ -149,7 +149,7 @@ const updateQuery = async ({
   body,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<number>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access store')
+  if (!userId) throw new UnauthorizedError('Signin to modify store.')
   if (params == null)
     throw new BadRequestError('No valid route parameters provided')
   const { storeId } = params
@@ -196,7 +196,7 @@ const deleteQuery = async ({
   params,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
-  if (!userId) throw new UnauthorizedError('Cannot modify store')
+  if (!userId) throw new UnauthorizedError('Signin to delete store.')
   if (params == null)
     throw new BadRequestError('No valid route parameters provided')
   const { storeId } = params

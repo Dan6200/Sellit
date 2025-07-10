@@ -56,6 +56,8 @@ export const UserResponseSchema = joi
     country: joi.string().required(),
     is_customer: joi.boolean().required(),
     is_vendor: joi.boolean().required(),
+    created_at: joi.date().required(),
+    updated_at: joi.date().required(),
     deleted_at: joi.date().allow(null),
   })
   .or('email', 'phone')

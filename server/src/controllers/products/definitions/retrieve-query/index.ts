@@ -30,13 +30,6 @@ export default async ({
     whereClause += `AND p.store_id=$${paramIndex}`
     sqlParams.push(<string>storeId)
   }
-  const response = await knex('vendors')
-    .where('vendor_id', userId)
-    .first('vendor_id')
-  if (response.length)
-    throw new BadRequestError(
-      'Must have a Vendor account to be able to view product list',
-    )
   return pg.query(
     `SELECT p.*, 
 		(SELECT JSON_AGG(media_data) FROM

@@ -30,8 +30,16 @@ create table if not exists users (
 	is_customer  boolean 									 not 				null 			default 		true,
 	is_vendor    boolean 									 not 				null 			default 		false,
   check        (current_date - dob > 18),
-  deleted_at   timestamptz
+  deleted_at   timestamptz,
+  created_at   timestamptz               not 				null 			default      now(),
+  updated_at   timestamptz               not 				null 			default      now()
 );
+
+-- create a trigger to update the updated_at column for users
+create trigger set_timestamp
+before update on users
+for each row
+execute procedure trigger_set_timestamp();
 
 
 
@@ -46,6 +54,8 @@ create table if not exists shipping_info (
   zip_postal_code         varchar       not       null,
   country									varchar       not       null,
   phone_number 		        varchar       not       null,
+  created_at        			timestamptz     		not 			null 		default     now(),
+  updated_at        			timestamptz     		not 			null 		default     now(),
   delivery_instructions   varchar
 );
 
@@ -58,8 +68,16 @@ execute procedure trigger_set_timestamp();
 
 create table if not exists payment_info (
 	payment_id 				serial 				primary 			key,
-	payment_token 		varchar 			not 					null
+	payment_token 		varchar 			not 					null,
+  created_at        timestamptz     not 		null 			default     now(),
+  updated_at        timestamptz     not 		null 			default     now()
 );
+
+-- create a trigger to update the updated_at column for payment_info
+create trigger set_timestamp
+before update on payment_info
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists stores (
   store_id                 serial      primary   key,   
@@ -69,33 +87,63 @@ create table if not exists stores (
   favicon                  varchar,
   default_page_styling     jsonb,
   store_pages              jsonb,
-  date_created             date        not       null    default      current_date
+  created_at                timestamptz not       null    default      now(),
+  updated_at               timestamptz default      now()
 );
+
+-- create a trigger to update the updated_at column for stores
+create trigger set_timestamp
+before update on stores
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists categories (
 	category_id					serial					primary 	key,
-	category_name 			varchar
+	category_name 			varchar,
+  created_at          timestamptz     not 			null 				default     now(),
+  updated_at          timestamptz     not 			null 				default     now()
 );
+
+-- create a trigger to update the updated_at column for categories
+create trigger set_timestamp
+before update on categories
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists subcategories (
 	subcategory_id			serial				primary 		key,
 	category_id 				int						not 				null		references		categories			on 		delete	cascade,
-	subcategory_name		varchar
+	subcategory_name		varchar,
+  created_at          timestamptz     not 			null 			default     now(),
+  updated_at          timestamptz     not 			null 			default     now()
 );
+
+-- create a trigger to update the updated_at column for subcategories
+create trigger set_timestamp
+before update on subcategories
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists products (
   product_id           serial           primary   key,
   title                varchar,
-  description          jsonb,
+  description          text[],
   list_price           numeric(19,4),
   net_price            numeric(19,4),
   vendor_id            uuid             not       null    references			users         on   delete   cascade,
 	store_id 						 int 							not 			null 		references 			stores 					on 	 delete 	cascade,
   category_id          int           		not    		null    references   		categories      on   delete   cascade,
   subcategory_id       int           		not    		null    references   		subcategories   on   delete   cascade,
-  created_at           timestamptz      not       null    default      		now(),
-  quantity_available   int              not       null
+  quantity_available   int              not       null,
+  created_at           timestamptz      not 			null 		default      now(),
+  updated_at           timestamptz      not 			null 		default      now()
 );
+
+-- create a trigger to update the updated_at column for products
+create trigger set_timestamp
+before update on products
+for each row
+execute procedure trigger_set_timestamp();
 
 -- create orders table
 create table orders (
@@ -106,8 +154,8 @@ create table orders (
     order_date 					timestamptz				default 				now(),
     total_amount 				numeric(10, 2)		not null,
     status 							text							default 				'pending' 				not null,
-    created_at 					timestamptz				default 				now(),
-    updated_at 					timestamptz				default 				now()
+    created_at 					timestamptz				not 						null 							default 				now(),
+    updated_at 					timestamptz				not 						null 							default 				now()
 );
 
 -- create a trigger to update the updated_at column for orders
@@ -123,8 +171,8 @@ create table order_items (
     product_id          int             not         null    references  products        on  delete  cascade,
     quantity            int             not         null    check       (quantity > 0),
     price_at_purchase   numeric(19,4)   not         null,
-    created_at          timestamptz     default     now(),
-    updated_at          timestamptz     default     now()
+    created_at          timestamptz     not 				null 		default     now(),
+    updated_at          timestamptz     not 				null 		default     now()
 );
 
 -- create a trigger to update the updated_at column for order_items
@@ -140,8 +188,16 @@ create table if not exists product_media (
   description					varchar,
 	is_display_image		boolean			default		 false,
 	is_landing_image		boolean			default		 false,
-	is_video 						boolean			default		 false
+	is_video 						boolean			default		 false,
+  created_at          timestamptz     not  	 null 				default     now(),
+  updated_at          timestamptz     not  	 null 				default     now()
 );
+
+-- create a trigger to update the updated_at column for product_media
+create trigger set_timestamp
+before update on product_media
+for each row
+execute procedure trigger_set_timestamp();
 
 -- update landing image or display image for all rows when one row is changed
 create or replace function product_media_display_landing_trigger () 
@@ -172,42 +228,77 @@ for each row execute function product_media_display_landing_trigger();
 create table if not exists shopping_cart (
   cart_id       serial        primary   key,
   customer_id   uuid           not       null   references   users   on   delete   cascade,
-  created       timestamptz   not       null   default      now(),
-  updated       timestamptz   not       null   default      now()
+  created_at    timestamptz   not       null   default      now(),
+  updated_at    timestamptz   not       null   default      now()
 );
+
+-- create a trigger to update the updated_at column for shopping_cart
+create trigger set_timestamp
+before update on shopping_cart
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists shopping_cart_item (
   item_id      serial   primary   key,
   cart_id      int      not       null   references   shopping_cart   on   delete   cascade,
   product_id   int      not       null   references   products        on   delete   cascade,
-  quantity     int      not       null   check        (quantity > 0)
+  quantity     int      not       null   check        (quantity > 0),
+  created_at    timestamptz   not       null   default      now(),
+  updated_at    timestamptz   not       null   default      now()
 );
+
+-- create a trigger to update the updated_at column for shopping_cart_item
+create trigger set_timestamp
+before update on shopping_cart_item
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists transactions(
   transaction_id   serial           primary      key,
   customer_id      uuid              not          null,
   vendor_id        uuid              not          null,
   total_amount     numeric(19,4)    not          null,
-  created          timestamptz      not          null    default   now()   unique,
+  created_at       timestamptz      not          null    default   now()   unique,
+  updated_at       timestamptz      not          null    default   now(),
   check            (customer_id <>  vendor_id)
 );
+
+-- create a trigger to update the updated_at column for transactions
+create trigger set_timestamp
+before update on transactions
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists purchases (
   item_id          serial        primary   key,
   product_id       int           not       null   references   products              on        delete   cascade,
   transaction_id   int           not       null   references   transactions				   on        delete   cascade,
-  created          timestamptz   not       null   default      now()                 unique,
-  updated          timestamptz   not       null   default      now()                 unique,
+  created_at       timestamptz   not       null   default      now()                 unique,
+  updated_at       timestamptz   not       null   default      now(),
   quantity         int           not       null   check        (quantity > 0)
 );
+
+-- create a trigger to update the updated_at column for purchases
+create trigger set_timestamp
+before update on purchases
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists product_reviews (
   product_id        int            primary   key     references   products              on   delete   cascade,
   transaction_id    int            not       null    references   transactions				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
   customer_id       uuid            not       null    references   users             on   delete   cascade,
-  customer_remark   varchar
+  customer_remark   varchar,
+  created_at    timestamptz   not       null   default      now(),
+  updated_at    timestamptz   not       null   default      now()
 );
+
+-- create a trigger to update the updated_at column for product_reviews
+create trigger set_timestamp
+before update on product_reviews
+for each row
+execute procedure trigger_set_timestamp();
 
 create table if not exists vendor_reviews (
   vendor_id         uuid            primary   key     references   users               on   delete   cascade,
@@ -222,8 +313,16 @@ create table if not exists customer_reviews (
   vendor_id        uuid            not       null    references   users               on   delete   cascade,
   transaction_id   int            not       null    references   transactions   on   delete   cascade,
   rating           numeric(3,2)   not       null,
-  vendor_remark    varchar
+  vendor_remark    varchar,
+  created_at    timestamptz   not       null   default      now(),
+  updated_at    timestamptz   not       null   default      now()
 );
+
+-- create a trigger to update the updated_at column for customer_reviews
+create trigger set_timestamp
+before update on customer_reviews
+for each row
+execute procedure trigger_set_timestamp();
 -- Function to handle new user creation in auth.users
 create or replace function public.handle_new_user()
 returns trigger as $$

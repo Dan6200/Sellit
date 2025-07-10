@@ -134,7 +134,7 @@ export const stores: StoreData[] = [
   {
     store_name: 'Oraimo Electronics',
     favicon: 'https://oraimoelectronics.com/favicon.ico',
-    custom_domain: 'https://oraimoelectronics.com',
+    custom_domain: 'oraimoelectronics.com',
     store_pages: [
       {
         pageType: 'storePage',
@@ -201,7 +201,7 @@ export const updatedStores: StoreData[] = [
   {
     store_name: 'Inspire Denims',
     favicon: 'https://inspiredenims.com/favicon.ico',
-    custom_domain: 'https://inspiredenims.com',
+    custom_domain: 'inspiredenims.com',
     store_pages: [
       {
         pageType: 'storePage',
@@ -269,7 +269,7 @@ export const updatedStores: StoreData[] = [
   {
     store_name: 'Oraimo Electronics',
     favicon: 'https://oraimoelectronics.com/favicon.ico',
-    custom_domain: 'https://oraimo.electronics.com',
+    custom_domain: 'oraimo.electronics.com',
     store_pages: [
       {
         pageType: 'storePage',

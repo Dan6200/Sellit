@@ -3,17 +3,17 @@ import joi from 'joi'
 
 export const ShippingInfoRequestSchema = joi
   .object({
-    recipient_first_name: joi.string().alphanum().min(3).max(30).required(),
-    recipient_last_name: joi.string().alphanum().min(3).max(30).required(),
-    address: joi.string().required(),
+    recipient_full_name: joi.string().min(3).max(60).required(),
+    address_line_1: joi.string().required(),
+    address_line_2: joi.string().allow('').required(),
     city: joi.string().required(),
     state: joi.string().required(),
-    postal_code: joi.string().required(),
+    zip_postal_code: joi.string().required(),
     country: joi.string().required(),
-    delivery_contact: joi
+    phone_number: joi
       .string()
       .pattern(
-        /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
+        /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/,
       )
       .required(),
     delivery_instructions: joi.string().required(),
@@ -30,20 +30,22 @@ export const ShippingInfoResponseSchema = joi
   .object({
     shipping_info_id: joi.number().required(),
     customer_id: joi.string().required(),
-    recipient_first_name: joi.string().alphanum().min(3).max(30).required(),
-    recipient_last_name: joi.string().alphanum().min(3).max(30).required(),
-    address: joi.string().required(),
+    recipient_full_name: joi.string().min(3).max(60).required(),
+    address_line_1: joi.string().required(),
+    address_line_2: joi.string().allow('').required(),
     city: joi.string().required(),
     state: joi.string().required(),
-    postal_code: joi.string().required(),
+    zip_postal_code: joi.string().required(),
     country: joi.string().required(),
-    delivery_contact: joi
+    phone_number: joi
       .string()
       .pattern(
-        /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
+        /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/,
       )
       .required(),
     delivery_instructions: joi.string().required(),
+    created_at: joi.date().required(),
+    updated_at: joi.date().required(),
   })
   .required()
 
@@ -52,20 +54,22 @@ export const ShippingInfoResponseListSchema = joi.array().items(
     .object({
       shipping_info_id: joi.number().required(),
       customer_id: joi.string().required(),
-      recipient_first_name: joi.string().alphanum().min(3).max(30).required(),
-      recipient_last_name: joi.string().alphanum().min(3).max(30).required(),
-      address: joi.string().required(),
+      recipient_full_name: joi.string().min(3).max(60).required(),
+      address_line_1: joi.string().required(),
+      address_line_2: joi.string().allow('').required(),
       city: joi.string().required(),
       state: joi.string().required(),
-      postal_code: joi.string().required(),
+      zip_postal_code: joi.string().required(),
       country: joi.string().required(),
-      delivery_contact: joi
+      phone_number: joi
         .string()
         .pattern(
-          /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
+          /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/,
         )
         .required(),
       delivery_instructions: joi.string().required(),
+      created_at: joi.date().required(),
+      updated_at: joi.date().required(),
     })
-    .required()
+    .required(),
 )

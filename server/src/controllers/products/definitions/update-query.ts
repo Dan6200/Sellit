@@ -1,19 +1,16 @@
 //cspell:ignore jsonb
-import { QueryResult, QueryResultRow } from 'pg'
 import { knex } from '../../../db/index.js'
 import BadRequestError from '../../../errors/bad-request.js'
 import { QueryParams } from '../../../types/process-routes.js'
 import {
-  DBFriendlyProductData,
   isValidProductRequestData,
-  ProductRequestData,
   ProductResponseData,
 } from '../../../types/products.js'
 import ForbiddenError from '@/errors/forbidden.js'
-import { Knex } from 'knex'
+import UnauthorizedError from '@/errors/unauthorized.js'
 
 /* @param {QueryParams} {params, query, body, userId}
- * @returns {Promise<number>}
+ * @returns {Promise<ProductResponseData[]>}
  * @description Update a product
  */
 export default async ({
@@ -21,16 +18,18 @@ export default async ({
   body,
   userId,
   query,
-}: QueryParams): Promise<Knex.QueryBuilder> => {
+}: QueryParams): Promise<ProductResponseData[]> => {
+  if (!userId) {
+    throw new UnauthorizedError('Sign-in to update product.')
+  }
   if (params == null) throw new BadRequestError('Must provide product id')
   const { productId } = params
-  const { storeId } = query
+  const { store_id: storeId } = query
   // check if vendor account is enabled
   const response = await knex('users')
     .where('user_id', userId)
-    .select('is_vendor')
-    .limit(1)
-  if (!response[0]?.is_vendor)
+    .first('is_vendor')
+  if (!response?.is_vendor)
     throw new ForbiddenError(
       'User is not a vendor. Need to enable your vendor account for this operation.',
     )
@@ -41,17 +40,17 @@ export default async ({
     .where('store_id', storeId)
     .first('vendor_id')
 
-  if (!storeQRes.length || !storeQRes[0]?.vendor_id)
+  if (!storeQRes?.vendor_id)
     throw new ForbiddenError('Must have a store to be able to update products')
 
   if (!isValidProductRequestData(body))
     throw new BadRequestError('Invalid product data')
 
-  const dBFriendlyProductData: Omit<ProductRequestData, 'description'> & {
-    description: string
-  } = {
+  const productData = body
+
+  const dBFriendlyProductData = {
     ...body,
-    description: JSON.stringify(body.description),
+    description: knex.raw('ARRAY[?]::text[]', [productData.description]),
   }
 
   return knex('products')

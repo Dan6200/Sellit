@@ -113,6 +113,8 @@ export default interface StoreData {
   favicon: string
   default_page_styling?: PageStyling // Store-wide default styling for pages
   store_pages?: Page[]
+  created_at?: Date
+  updated_at?: Date
 }
 
 export type DBFriendlyStoreData = Omit<

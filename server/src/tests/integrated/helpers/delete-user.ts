@@ -31,8 +31,9 @@ export const deleteAllUsersForTesting = async () => {
           ),
         )
     }
-    console.log(`Deleted ${data.users.length} users from Supabase auth.`)
+    process.env.DEBUG &&
+      console.log(`Deleted ${data.users.length} users from Supabase auth.`)
   } else {
-    console.log('No users to delete from Supabase auth.')
+    process.env.DEBUG && console.log('No users to delete from Supabase auth.')
   }
 }

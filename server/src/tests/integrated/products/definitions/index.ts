@@ -2,19 +2,16 @@ import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { StatusCodes } from 'http-status-codes'
 import { readFile } from 'node:fs/promises'
-import BadRequestError from '../../../../errors/bad-request.js'
 import {
   ProductMedia,
   isValidProductRequestData,
-  isValidProductListResponseData,
   isValidProductResponseData,
-  isValidProductId,
+  isValidProductGETAllResponseData,
+  isValidProductGETResponseData,
 } from '../../../../types/products.js'
 import {
-  TestRequest,
-  TestRequestPublic,
-  TestRequestWithBody,
   TestRequestWithQParams,
+  TestRequestWithQParamsAndBody,
 } from '../../test-request/types.js'
 import testRoutes from '../../test-request/index.js'
 import { UserRequestData } from '@/types/users/index.js'
@@ -24,102 +21,76 @@ chai.use(chaiHttp).should()
 
 const { CREATED, OK, NOT_FOUND } = StatusCodes
 
-const testCreateProduct = async function* ({
-  server,
-  token,
-  path,
-  query,
-  dataList,
-}: {
-  server: string
-  token: string
-  path: string
-  query: object
-  dataList: object[]
-}) {
-  const range = dataList.length
-  for (let idx = 0; idx < range; idx++) {
-    const response = await chai
-      .request(server)
-      .post(path)
-      .send(dataList[idx])
-      .auth(token, { type: 'bearer' })
-      .query(query)
-    response.should.have.status(CREATED)
-    // Check that the response contains the product id
-    if (!isValidProductId(response.body))
-      throw new BadRequestError(
-        'Product Id is the expected response after a product is created',
-      )
-    yield response.body
-  }
-}
-
-export const testPostProduct = (<TestRequestWithBody>testRoutes)({
+// export const testCreateProduct = async function* ({
+//   server,
+//   token,
+//   path,
+//   query,
+//   dataList,
+// }: {
+//   server: string
+//   token: string
+//   path: string
+//   query: object
+//   dataList: object[]
+// }) {
+//   const range = dataList.length
+//   for (let idx = 0; idx < range; idx++) {
+//     const response = await chai
+//       .request(server)
+//       .post(path)
+//       .send(dataList[idx])
+//       .auth(token, { type: 'bearer' })
+//       .query(query)
+//     response.should.have.status(CREATED)
+//     // Check that the response contains the product id
+//     if (!isValidProductId(response.body))
+//       throw new BadRequestError(
+//         'Product Id is the expected response after a product is created',
+//       )
+//     yield response.body
+//   }
+// }
+//
+export const testPostProduct = (<TestRequestWithQParamsAndBody>testRoutes)({
   statusCode: CREATED,
   verb: 'post',
   validateTestReqData: isValidProductRequestData,
-  validateTestResData: isValidProductId,
-})
-
-export const testGetAllProductsWithQParams = (<TestRequestWithQParams>(
-  testRoutes
-))({
-  statusCode: OK,
-  verb: 'get',
-  validateTestResData: isValidProductListResponseData,
-})
-
-const testGetAllProducts = (<TestRequest>testRoutes)({
-  statusCode: OK,
-  verb: 'get',
-  validateTestResData: isValidProductListResponseData,
-})
-
-export const testGetAllProductsPublic = (<TestRequestPublic>testRoutes)({
-  statusCode: OK,
-  verb: 'get',
-  validateTestResData: isValidProductListResponseData,
-})
-
-export const testGetProductWithQParams = (<TestRequestWithQParams>testRoutes)({
-  statusCode: OK,
-  verb: 'get',
   validateTestResData: isValidProductResponseData,
 })
 
-const testGetProduct = (<TestRequest>testRoutes)({
+export const testGetAllProducts = (<TestRequestWithQParams>testRoutes)({
   statusCode: OK,
   verb: 'get',
-  validateTestResData: isValidProductResponseData,
+  validateTestResData: isValidProductGETAllResponseData,
 })
 
-export const testGetProductPublic = (<TestRequestPublic>testRoutes)({
+export const testGetProduct = (<TestRequestWithQParams>testRoutes)({
   statusCode: OK,
   verb: 'get',
-  validateTestResData: isValidProductResponseData,
+  validateTestResData: isValidProductGETResponseData,
 })
 
-const testUpdateProduct = (<TestRequestWithBody>testRoutes)({
+export const testUpdateProduct = (<TestRequestWithQParamsAndBody>testRoutes)({
   statusCode: OK,
   verb: 'patch',
   validateTestReqData: isValidProductRequestData,
-  validateTestResData: isValidProductId,
+  validateTestResData: isValidProductResponseData,
 })
 
-const testDeleteProduct = (<TestRequest>testRoutes)({
+export const testDeleteProduct = (<TestRequestWithQParams>testRoutes)({
   statusCode: OK,
   verb: 'delete',
-  validateTestResData: isValidProductId,
+  validateTestResData: isValidProductResponseData,
 })
 
-const testGetNonExistentProduct = (<TestRequest>testRoutes)({
+export const testGetNonExistentProduct = (<TestRequestWithQParams>testRoutes)({
   verb: 'get',
   statusCode: NOT_FOUND,
   validateTestResData: null,
 })
 
-const testUploadProductMedia = async function (
+export const testUploadProductMedia = async function (
   server: string,
   urlPath: string,
   files: ProductMedia[],
@@ -170,16 +141,6 @@ const testUploadProductMedia = async function (
   // Check the data in the body if accurate
   checkMedia(response.body)
   return response.body
-}
-
-export {
-  testCreateProduct,
-  testGetAllProducts,
-  testGetProduct,
-  testUpdateProduct,
-  testDeleteProduct,
-  testGetNonExistentProduct,
-  testUploadProductMedia,
 }
 
 async function checkMedia(body: any) {

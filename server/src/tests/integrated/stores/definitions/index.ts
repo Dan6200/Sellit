@@ -8,7 +8,7 @@ import {
 import testRequest from '../../test-request/index.js'
 import { TestRequestWithBody, TestRequest } from '../../test-request/types.js'
 
-const { CREATED, OK, NOT_FOUND, BAD_REQUEST } = StatusCodes
+const { CREATED, OK, NOT_FOUND, FORBIDDEN } = StatusCodes
 
 export const testCreateStore = (testRequest as TestRequestWithBody)({
   verb: 'post',
@@ -52,21 +52,21 @@ export const testCreateStoreWithoutVendorAccount = (
   testRequest as TestRequestWithBody
 )({
   verb: 'post',
-  statusCode: BAD_REQUEST,
+  statusCode: FORBIDDEN,
   validateTestReqData: isValidStoreDataRequest,
 })
 
 export const testUpdateStoreWithoutVendorAccount = (
   testRequest as TestRequestWithBody
 )({
-  statusCode: BAD_REQUEST,
+  statusCode: FORBIDDEN,
   verb: 'put',
   validateTestReqData: isValidStoreDataRequest,
 })
 
 export const testDeleteStoreWithoutVendorAccount = (testRequest as TestRequest)(
   {
-    statusCode: BAD_REQUEST,
+    statusCode: FORBIDDEN,
     verb: 'delete',
   },
 )

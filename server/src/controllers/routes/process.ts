@@ -29,6 +29,8 @@ export default ({
     const { params, query, body } = request
     let userId: string | undefined
     if (request.userId != null) ({ userId } = request)
+    process.env.DEBUG &&
+      console.log('\nDEBUG: DB request data -> ' + JSON.stringify(body))
 
     try {
       // Validate request data

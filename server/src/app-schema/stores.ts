@@ -126,8 +126,8 @@ const PageSchema = joi
 export const StoreDataRequestSchema = joi
   .object({
     store_name: joi.string().min(3).max(50).required(),
-    favicon: joi.string().uri().required(),
-    custom_domain: joi.string().uri().allow(null).required(),
+    favicon: joi.string().uri().optional(),
+    custom_domain: joi.string().hostname().allow(null).required(),
     default_page_styling: PageStylingSchema.optional(),
     store_pages: joi.array().items(PageSchema).optional(),
   })
@@ -136,7 +136,7 @@ export const StoreDataRequestSchema = joi
 export const StoreDataRequestPartialSchema = joi.object({
   store_name: joi.string().min(3).max(50).optional(),
   favicon: joi.string().uri().optional(),
-  custom_domain: joi.string().uri().allow(null).optional(),
+  custom_domain: joi.string().hostname().optional(),
   default_page_styling: PageStylingSchema.optional(),
   store_pages: joi.array().items(PageSchema).optional(),
 })
@@ -152,14 +152,13 @@ export const StoreDataResponseListSchema = joi
       .object({
         store_id: joi.number().required(),
         store_name: joi.string().min(3).max(50).required(),
-        custom_domain: joi.string().uri().allow(null).required(),
+        custom_domain: joi.string().hostname().allow(null).required(),
         vendor_id: joi.string().guid({ version: 'uuidv4' }).required(),
-        favicon: joi.string().uri().required(),
+        favicon: joi.string().uri().allow(null).required(),
         default_page_styling: PageStylingSchema.optional(),
         store_pages: joi.array().items(PageSchema).optional(),
-        date_created: joi
-          .alternatives()
-          .try(joi.string().required(), joi.date().required()),
+        created_at: joi.date().required(),
+        updated_at: joi.date().required(),
       })
       .required(),
   )
@@ -169,13 +168,12 @@ export const StoreDataResponseSchema = joi
   .object({
     store_id: joi.number().required(),
     store_name: joi.string().min(3).max(50).required(),
-    custom_domain: joi.string().uri().allow(null).required(),
+    custom_domain: joi.string().hostname().allow(null).required(),
     vendor_id: joi.string().guid({ version: 'uuidv4' }).required(),
-    favicon: joi.string().uri().required(),
+    favicon: joi.string().uri().allow(null).required(),
     default_page_styling: PageStylingSchema.optional(),
     store_pages: joi.array().items(PageSchema).optional(),
-    date_created: joi
-      .alternatives()
-      .try(joi.string().required(), joi.date().required()),
+    created_at: joi.date().required(),
+    updated_at: joi.date().required(),
   })
   .required()

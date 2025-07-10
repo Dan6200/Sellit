@@ -2,13 +2,14 @@ import { StatusCodes } from 'http-status-codes'
 import createRouteProcessor from '../routes/process.js'
 import {
   ProductResponseSchema,
-  ProductIdSchema,
-  ProductListResponseSchema,
   ProductRequestSchema,
+  ProductGETResponseSchema,
+  ProductGETAllResponseSchema,
 } from '../../app-schema/products.js'
 import {
   ProcessRoute,
   ProcessRouteWithoutBody,
+  ProcessRouteWithoutBodyAndDBResult,
 } from '../../types/process-routes.js'
 import { validateReqData } from '../utils/request-validation.js'
 import createQuery from './definitions/create-query.js'
@@ -24,39 +25,40 @@ const processPostRoute = <ProcessRoute>createRouteProcessor
 const processGetAllRoute = <ProcessRouteWithoutBody>createRouteProcessor
 const processGetRoute = <ProcessRouteWithoutBody>createRouteProcessor
 const processPutRoute = <ProcessRoute>createRouteProcessor
-const processDeleteRoute = <ProcessRouteWithoutBody>createRouteProcessor
+const processDeleteRoute = <ProcessRouteWithoutBodyAndDBResult>(
+  createRouteProcessor
+)
 
 //cspell:ignore DBID
 const createProduct = processPostRoute({
   Query: createQuery,
   status: CREATED,
   validateBody: validateReqData(ProductRequestSchema),
-  validateResult: validateResData(ProductIdSchema),
+  validateResult: validateResData(ProductResponseSchema),
 })
 
 const getAllProducts = processGetAllRoute({
   Query: retrieveQueryAll,
   status: OK,
-  validateResult: validateResData(ProductListResponseSchema),
+  validateResult: validateResData(ProductGETAllResponseSchema),
 })
 
 const getProduct = processGetRoute({
   Query: retrieveQuery,
   status: OK,
-  validateResult: validateResData(ProductResponseSchema),
+  validateResult: validateResData(ProductGETResponseSchema),
 })
 
 const updateProduct = processPutRoute({
   Query: updateQuery,
   status: OK,
   validateBody: validateReqData(ProductRequestSchema),
-  validateResult: validateResData(ProductIdSchema),
+  validateResult: validateResData(ProductResponseSchema),
 })
 
 const deleteProduct = processDeleteRoute({
   Query: deleteQuery,
-  status: OK,
-  validateResult: validateResData(ProductIdSchema),
+  status: NO_CONTENT,
 })
 
 export {

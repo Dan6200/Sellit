@@ -35,7 +35,8 @@ const createQuery = async ({
   body,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  if (!userId)
+    throw new UnauthorizedError('Sign-in to access shipping information.')
   // check if customer account is enabled
   const result = await knex('users')
     .where('user_id', userId)
@@ -79,7 +80,8 @@ const createQuery = async ({
 const getAllQuery = async ({
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<ShippingInfo[]>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  if (!userId)
+    throw new UnauthorizedError('Sign-in to access shipping information.')
   // check if customer account is enabled
   const result = await knex('users')
     .where('user_id', userId)
@@ -105,7 +107,8 @@ const getQuery = async ({
   params,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<ShippingInfo[]>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  if (!userId)
+    throw new UnauthorizedError('Signin to access shipping information.')
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   // check if customer account is enabled
@@ -137,7 +140,8 @@ const updateQuery = async ({
   body,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<number>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  if (!userId)
+    throw new UnauthorizedError('Signin to access shipping information.')
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   if (!isValidShippingInfoRequest(body))
@@ -178,7 +182,8 @@ const deleteQuery = async ({
   params,
   userId,
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
-  if (!userId) throw new UnauthorizedError('Cannot access resource')
+  if (!userId)
+    throw new UnauthorizedError('Signin to delete shipping information.')
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   if (!shippingInfoId)

@@ -21,7 +21,9 @@ export default async (
       } = await supabase.auth.getUser(token)
       if (error || !user.id) {
         console.error('Supabase token verification error:', error?.message)
-        throw new UnauthorizedError('Unauthorized Operation: token invalid')
+        throw new UnauthorizedError(
+          'Invalid token please retry the signin process',
+        )
       }
       request.userId = user.id // 'sub' typically contains the user ID in JWT claims
     }
