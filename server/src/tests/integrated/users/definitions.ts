@@ -38,7 +38,7 @@ const hasNoVendorAccount = (data: unknown) => {
 }
 
 const testRequestBase = <TestRequest>testRequest
-export const testGetUser = testRequestBase({
+export const testGetUserProfile = testRequestBase({
   verb: 'get',
   statusCode: OK,
   validateTestResData: isValidUserResponseData,

@@ -9,10 +9,10 @@ import { createUserForTesting } from '../helpers/create-user.js'
 chai.use(chaiHttp).should()
 
 export default function ({ userInfo }: { userInfo: UserRequestData }) {
-  describe('User account management without sign-in', () => {
+  describe('User profile management without sign-in', () => {
     // Set server url
     const server = process.env.SERVER!
-    const path = '/v1/users'
+    const path = '/v1/me'
     let token = null
 
     beforeEach(async function () {
@@ -22,7 +22,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
       await createUserForTesting(userInfo)
     })
 
-    it('should fail to get the user account without sign-in', () =>
+    it('should fail to get the user profile without sign-in', () =>
       testGetUserWithoutSignIn({
         server,
         path,

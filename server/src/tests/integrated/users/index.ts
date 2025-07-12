@@ -1,11 +1,7 @@
 //cspell:ignore userIds
 import chai from 'chai'
 import chaiHttp from 'chai-http'
-import {
-  testGetUser,
-  testHasNoVendorAccount,
-  testHasNoCustomerAccount,
-} from './definitions.js'
+import { testGetUserProfile } from './definitions.js'
 import { UserRequestData } from '#src/types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
@@ -17,7 +13,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
   describe('User account management', () => {
     // Set server url
     const server = process.env.SERVER!
-    const path = '/v1/users'
+    const path = '/v1/me'
     let token: string
 
     beforeEach(async function () {
@@ -28,8 +24,8 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
       token = await signInForTesting(userInfo)
     })
 
-    it("should get the user's account", () =>
-      testGetUser({
+    it("should get the user's profile", () =>
+      testGetUserProfile({
         server,
         path,
         token,

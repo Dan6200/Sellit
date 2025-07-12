@@ -7,7 +7,7 @@ import morgan from 'morgan'
 import rateLimiter from 'express-rate-limit'
 import cookieParser from 'cookie-parser'
 // routers
-import userRouter from './routes/user/index.js'
+import profileRouter from './routes/user/index.js'
 import shippingRouter from './routes/shipping/index.js'
 import storesRouter from './routes/stores/index.js'
 import mediaRouter from './routes/media/index.js'
@@ -57,7 +57,7 @@ if (process.env.NODE_ENV !== 'production') app.use(morgan('combined'))
 else app.use(morgan('dev'))
 // application routes
 const v1Router = Router()
-v1Router.use('/users', authenticateUser, userRouter)
+v1Router.use('/me', authenticateUser, profileRouter)
 v1Router.use('/shipping-info', authenticateUser, shippingRouter)
 v1Router.use('/stores', authenticateUser, storesRouter)
 v1Router.use('/products', authenticateUser, productsRouter)

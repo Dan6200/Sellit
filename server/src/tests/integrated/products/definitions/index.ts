@@ -93,7 +93,7 @@ export const testGetNonExistentProduct = (<TestRequestWithQParams>testRoutes)({
 export const testUploadProductMedia = async function (
   server: string,
   urlPath: string,
-  files: ProductMedia[],
+  media: ProductMedia[],
   userInfo: UserRequestData,
   queryParams: { [k: string]: any },
 ): Promise<any> {
@@ -105,28 +105,29 @@ export const testUploadProductMedia = async function (
     .auth(token, { type: 'bearer' })
     .query(queryParams)
   await Promise.all(
-    files.map(async (file) => {
+    media.map(async (file) => {
       const data = await readFile(file.path)
       request.attach(fieldName, data, file.name)
+      console.log(`\t${file.name} uploaded...`)
     }),
   )
 
-  const descriptions = files.reduce((acc: { [k: string]: any }, file) => {
+  const descriptions = media.reduce((acc: { [k: string]: any }, file) => {
     acc[file.name] = file.description
     return acc
   }, {})
 
-  const isDisplayImage = files.reduce((acc: { [k: string]: any }, file) => {
+  const isDisplayImage = media.reduce((acc: { [k: string]: any }, file) => {
     acc[file.name] = file.is_display_image
     return acc
   }, {})
 
-  const isLandingImage = files.reduce((acc: { [k: string]: any }, file) => {
+  const isLandingImage = media.reduce((acc: { [k: string]: any }, file) => {
     acc[file.name] = file.is_landing_image
     return acc
   }, {})
 
-  const isVideo = files.reduce((acc: { [k: string]: any }, file) => {
+  const isVideo = media.reduce((acc: { [k: string]: any }, file) => {
     acc[file.name] = file.is_video
     return acc
   }, {})

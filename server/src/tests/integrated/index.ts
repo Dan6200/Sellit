@@ -24,8 +24,9 @@ export default function (): void {
   for (let user of users) {
     const { userInfo } = user
     const { first_name: name } = userInfo
-    describe(`Testing User Account for ${name}`, () => testUserAccount(user))
-    describe(`Testing User Account without Signing In`, () =>
+    describe(`Testing retrieving user profile for ${name}`, () =>
+      testUserAccount(user))
+    describe(`Testing retrieving user profile without Signing In`, () =>
       testUserAccountWithoutSignIn(user))
   }
 
@@ -66,6 +67,6 @@ export default function (): void {
     describe(`Testing Media for Different Products`, async () =>
       testMedia(vendor))
   }
-
+  //
   // end
 }

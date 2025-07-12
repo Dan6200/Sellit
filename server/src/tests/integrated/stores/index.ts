@@ -39,7 +39,7 @@ export default function ({
   it("should have a vendor's account", () =>
     testHasVendorAccount({
       server,
-      path: '/v1/users',
+      path: '/v1/me',
       token,
     }))
 

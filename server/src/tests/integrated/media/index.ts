@@ -52,10 +52,11 @@ export default function ({
 
     // Create a product for the store
     it("it should add the product's media to an existing product", async () => {
-      for (const media of productMedia)
+      for (const media of productMedia) {
         await testUploadProductMedia(server, mediaRoute, media, userInfo, {
           product_id,
         })
+      }
     })
   })
 

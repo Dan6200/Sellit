@@ -24,7 +24,7 @@ const getQuery = async ({
 }
 
 const processGetRoute = <ProcessRouteWithoutBody>createRouteProcessor
-export const getUser = processGetRoute({
+export const getProfile = processGetRoute({
   Query: getQuery,
   status: OK,
   validateResult: validateResData(UserResponseSchema),
