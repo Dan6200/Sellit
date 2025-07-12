@@ -3,9 +3,9 @@
 // import fs from 'fs/promises'
 // import axios from 'axios'
 // import { Product } from '../../types-and-interfaces/products.js'
-// import { AccountData } from '../../types-and-interfaces/account.js'
-// import { ProductMedia } from '../../types-and-interfaces/products.js'
-// import { StoresData } from '../../types-and-interfaces/stores-data.js'
+// import { AccountData } from '../../types/account.js'
+// import { ProductMedia } from '../../types/products.js'
+// import { StoresData } from '../../types/stores-data.js'
 // import { faker } from '@faker-js/faker'
 //
 // async function createProducts({

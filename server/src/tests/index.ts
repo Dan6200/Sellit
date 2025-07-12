@@ -1,3 +1,3 @@
-import integratedTests from './integrated-tests/index.js'
+import integratedTests from './integrated/index.js'
 
 describe('Testing typical user actions', integratedTests)

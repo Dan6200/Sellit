@@ -6,5 +6,5 @@
   "extension": ["ts", "js", "tsx"],
   "exit": true,
   "enable-source-maps": true,
-  "reporter": "mochawesome"
+  "reporter": "spec"
 }

@@ -4,7 +4,7 @@ import BadRequestError from '../../errors/bad-request.js'
 import { knex } from '../../db/index.js'
 
 const uploadProductMedia = async (req: any, res: any) => {
-  const { productId } = req.query
+  const { product_id } = req.query
   let { descriptions, is_display_image, is_landing_image, is_video } = req.body
 
   if (descriptions) descriptions = JSON.parse(descriptions)
@@ -19,7 +19,7 @@ const uploadProductMedia = async (req: any, res: any) => {
       // Returns filename as Id instead of product_id
       return knex('product_media')
         .insert({
-          product_id: productId,
+          product_id,
           filename,
           filepath,
           description: descriptions[originalname],
@@ -28,7 +28,7 @@ const uploadProductMedia = async (req: any, res: any) => {
           is_video: is_video[originalname],
         })
         .returning('filename')
-    })
+    }),
   )
   res.status(StatusCodes.CREATED).send(files)
 }

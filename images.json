@@ -1,0 +1,552 @@
+[
+    {
+        "title": "Laptop Pro X",
+        "description": "{\"16GB RAM\", \"512GB SSD\", \"Intel i7\"}",
+        "filename": "./Laptop_Pro_X.jpg"
+    },
+    {
+        "title": "Smartphone Ultra",
+        "description": "{\"6.7 inch display\", \"128GB storage\", \"Dual Camera\"}",
+        "filename": "./Smartphone_Ultra.jpg"
+    },
+    {
+        "title": "Wireless Headphones",
+        "description": "{\"Noise Cancelling\", \"20-hour battery life\"}",
+        "filename": "./Wireless_Headphones.jpg"
+    },
+    {
+        "title": "Classic Leather Jacket",
+        "description": "{\"Genuine Leather\", \"Black\"}",
+        "filename": "./Classic_Leather_Jacket.jpg"
+    },
+    {
+        "title": "Fantasy Novel Set",
+        "description": "{\"J.R.R. Tolkien\", \"Fantasy\"}",
+        "filename": "./Fantasy_Novel_Set.jpg"
+    },
+    {
+        "title": "Organic Skincare Kit",
+        "description": "{\"Anti-aging\", \"Vitamin C\", \"Hyaluronic Acid\"}",
+        "filename": "./Organic_Skincare_Kit.jpg"
+    },
+    {
+        "title": "Gaming PC",
+        "description": "{\"AMD Ryzen 9\", \"NVIDIA RTX 3080\"}",
+        "filename": "./Gaming_PC.jpg"
+    },
+    {
+        "title": "Smart Home Hub",
+        "description": "{\"Alexa, Google Assistant\", \"Voice Control\", \"Automation\"}",
+        "filename": "./Smart_Home_Hub.jpg"
+    },
+    {
+        "title": "Plush Toy Bear",
+        "description": "{\"Large\", \"Soft Plush\"}",
+        "filename": "./Plush_Toy_Bear.jpg"
+    },
+    {
+        "title": "Yoga Mat Eco-Friendly",
+        "description": "{\"Natural Rubber\", \"6mm\"}",
+        "filename": "./Yoga_Mat_Eco-Friendly.jpg"
+    },
+    {
+        "title": "Smartwatch Series 7",
+        "description": "{\"GPS\", \"Heart Rate Monitor\"}",
+        "filename": "./Smartwatch_Series_7.jpg"
+    },
+    {
+        "title": "4K Smart TV 55\"",
+        "description": "{\"HDR\", \"Voice Control\"}",
+        "filename": "./4K_Smart_TV_55.jpg"
+    },
+    {
+        "title": "Gaming Mouse RGB",
+        "description": "{\"Programmable Buttons\", \"High DPI\"}",
+        "filename": "./Gaming_Mouse_RGB.jpg"
+    },
+    {
+        "title": "Portable Bluetooth Speaker",
+        "description": "{\"Waterproof\", \"10-hour playtime\"}",
+        "filename": "./Portable_Bluetooth_Speaker.jpg"
+    },
+    {
+        "title": "Digital Camera DSLR",
+        "description": "{\"24MP\", \"4K Video\"}",
+        "filename": "./Digital_Camera_DSLR.jpg"
+    },
+    {
+        "title": "Robot Vacuum Cleaner",
+        "description": "{\"Smart Mapping\", \"App Control\"}",
+        "filename": "./Robot_Vacuum_Cleaner.jpg"
+    },
+    {
+        "title": "Air Fryer XL",
+        "description": "{\"5.8 Quart\", \"Digital Display\"}",
+        "filename": "./Air_Fryer_XL.jpg"
+    },
+    {
+        "title": "External SSD 1TB",
+        "description": "{\"USB 3.1\", \"Fast Transfer\"}",
+        "filename": "./External_SSD_1TB.jpg"
+    },
+    {
+        "title": "Noise Cancelling Earbuds",
+        "description": "{\"True Wireless\", \"Active Noise Cancellation\"}",
+        "filename": "./Noise_Cancelling_Earbuds.jpg"
+    },
+    {
+        "title": "Smart Light Bulbs 4-Pack",
+        "description": "{\"Dimmable\", \"Color Changing\"}",
+        "filename": "./Smart_Light_Bulbs_4-Pack.jpg"
+    },
+    {
+        "title": "Women's Summer Dress",
+        "description": "{\"Floral Print\", \"Cotton\"}",
+        "filename": "./Womens_Summer_Dress.jpg"
+    },
+    {
+        "title": "Men's Casual Shirt",
+        "description": "{\"Linen Blend\", \"Button-down\"}",
+        "filename": "./Mens_Casual_Shirt.jpg"
+    },
+    {
+        "title": "Children's Story Book",
+        "description": "{\"Illustrated\", \"Ages 3-6\"}",
+        "filename": "./Childrens_Story_Book.jpg"
+    },
+    {
+        "title": "Sci-Fi Paperback Novel",
+        "description": "{\"Dystopian\", \"Award-winning\"}",
+        "filename": "./Sci-Fi_Paperback_Novel.jpg"
+    },
+    {
+        "title": "Board Game Strategy",
+        "description": "{\"Family Fun\", \"Ages 10+\"}",
+        "filename": "./Board_Game_Strategy.jpg"
+    },
+    {
+        "title": "Building Blocks Set",
+        "description": "{\"Creative Play\", \"500 pieces\"}",
+        "filename": "./Building_Blocks_Set.jpg"
+    },
+    {
+        "title": "Running Shoes Men's",
+        "description": "{\"Breathable Mesh\", \"Cushioned Sole\"}",
+        "filename": "./Running_Shoes_Mens.jpg"
+    },
+    {
+        "title": "Classic Literature Collection",
+        "description": "{\"Hardcover\", \"Complete Works\"}",
+        "filename": "./Classic_Literature_Collection.jpg"
+    },
+    {
+        "title": "Kids' Backpack Animal Design",
+        "description": "{\"Durable\", \"Water-resistant\"}",
+        "filename": "./Kids_Backpack_Animal_Design.jpg"
+    },
+    {
+        "title": "Puzzle 1000 Pieces",
+        "description": "{\"Landscape Scene\", \"Challenging\"}",
+        "filename": "./Puzzle_1000_Pieces.jpg"
+    },
+    {
+        "title": "Vitamin D3 Supplements",
+        "description": "{\"5000 IU\", \"120 Softgels\"}",
+        "filename": "./Vitamin_D3_Supplements.jpg"
+    },
+    {
+        "title": "All-Purpose Cleaner",
+        "description": "{\"Eco-Friendly\", \"Lemon Scent\"}",
+        "filename": "./All-Purpose_Cleaner.jpg"
+    },
+    {
+        "title": "PS5 Game - Adventure",
+        "description": "{\"Open World\", \"Single Player\"}",
+        "filename": "./PS5_Game_-_Adventure.jpg"
+    },
+    {
+        "title": "Xbox Series X Game - RPG",
+        "description": "{\"Multiplayer\", \"Fantasy\"}",
+        "filename": "./Xbox_Series_X_Game_-_RPG.jpg"
+    },
+    {
+        "title": "Sunscreen SPF 50",
+        "description": "{\"Water Resistant\", \"Non-Greasy\"}",
+        "filename": "./Sunscreen_SPF_50.jpg"
+    },
+    {
+        "title": "Hair Dryer Professional",
+        "description": "{\"Ionic Technology\", \"Fast Drying\"}",
+        "filename": "./Hair_Dryer_Professional.jpg"
+    },
+    {
+        "title": "Camping Tent 2-Person",
+        "description": "{\"Lightweight\", \"Easy Setup\"}",
+        "filename": "./Camping_Tent_2-Person.jpg"
+    },
+    {
+        "title": "Dumbbell Set Adjustable",
+        "description": "{\"5-50 lbs\", \"Compact Design\"}",
+        "filename": "./Dumbbell_Set_Adjustable.jpg"
+    },
+    {
+        "title": "Facial Cleansing Brush",
+        "description": "{\"Deep Cleanse\", \"Rechargeable\"}",
+        "filename": "./Facial_Cleansing_Brush.jpg"
+    },
+    {
+        "title": "PC Gaming Headset",
+        "description": "{\"Surround Sound\", \"Noise Cancelling Mic\"}",
+        "filename": "./PC_Gaming_Headset.jpg"
+    },
+    {
+        "title": "Curved Gaming Monitor",
+        "description": "{\"144Hz\", \"27 inch\"}",
+        "filename": "./Curved_Gaming_Monitor.jpg"
+    },
+    {
+        "title": "Wireless Keyboard and Mouse Combo",
+        "description": "{\"Ergonomic\", \"Long Battery Life\"}",
+        "filename": "./Wireless_Keyboard_and_Mouse_Combo.jpg"
+    },
+    {
+        "title": "Antivirus Software 1-Year",
+        "description": "{\"Real-time Protection\", \"Multi-device\"}",
+        "filename": "./Antivirus_Software_1-Year.jpg"
+    },
+    {
+        "title": "Operating System Home Edition",
+        "description": "{\"Latest Version\", \"Digital License\"}",
+        "filename": "./Operating_System_Home_Edition.jpg"
+    },
+    {
+        "title": "Webcam Full HD",
+        "description": "{\"1080p\", \"Built-in Mic\"}",
+        "filename": "./Webcam_Full_HD.jpg"
+    },
+    {
+        "title": "Network Router Wi-Fi 6",
+        "description": "{\"Dual Band\", \"High Speed\"}",
+        "filename": "./Network_Router_Wi-Fi_6.jpg"
+    },
+    {
+        "title": "Laser Printer Wireless",
+        "description": "{\"Monochrome\", \"Fast Printing\"}",
+        "filename": "./Laser_Printer_Wireless.jpg"
+    },
+    {
+        "title": "Projector Mini Portable",
+        "description": "{\"HD Ready\", \"HDMI Input\"}",
+        "filename": "./Projector_Mini_Portable.jpg"
+    },
+    {
+        "title": "Graphic Design Software",
+        "description": "{\"Professional Tools\", \"Subscription\"}",
+        "filename": "./Graphic_Design_Software.jpg"
+    },
+    {
+        "title": "Ergonomic Office Chair",
+        "description": "{\"Adjustable Lumbar\", \"Mesh Back\"}",
+        "filename": "./Ergonomic_Office_Chair.jpg"
+    },
+    {
+        "title": "Evening Gown Elegant",
+        "description": "{\"Silk Blend\", \"Floor Length\"}",
+        "filename": "./Evening_Gown_Elegant.jpg"
+    },
+    {
+        "title": "Men's Dress Shoes",
+        "description": "{\"Genuine Leather\", \"Oxford Style\"}",
+        "filename": "./Mens_Dress_Shoes.jpg"
+    },
+    {
+        "title": "Luxury Perfume 100ml",
+        "description": "{\"Floral Scent\", \"Long Lasting\"}",
+        "filename": "./Luxury_Perfume_100ml.jpg"
+    },
+    {
+        "title": "Handmade Silver Necklace",
+        "description": "{\"Sterling Silver\", \"Unique Design\"}",
+        "filename": "./Handmade_Silver_Necklace.jpg"
+    },
+    {
+        "title": "Artisanal Ceramic Vase",
+        "description": "{\"Hand-painted\", \"Modern Design\"}",
+        "filename": "./Artisanal_Ceramic_Vase.jpg"
+    },
+    {
+        "title": "Kids' Winter Coat",
+        "description": "{\"Waterproof\", \"Warm Lining\"}",
+        "filename": "./Kids_Winter_Coat.jpg"
+    },
+    {
+        "title": "Premium Makeup Brush Set",
+        "description": "{\"Synthetic Bristles\", \"12 Pieces\"}",
+        "filename": "./Premium_Makeup_Brush_Set.jpg"
+    },
+    {
+        "title": "Hand-knitted Scarf",
+        "description": "{\"Merino Wool\", \"Soft Texture\"}",
+        "filename": "./Hand-knitted_Scarf.jpg"
+    },
+    {
+        "title": "Designer Handbag",
+        "description": "{\"Genuine Leather\", \"Crossbody\"}",
+        "filename": "./Designer_Handbag.jpg"
+    },
+    {
+        "title": "Organic Lip Balm Set",
+        "description": "{\"Natural Ingredients\", \"Moisturizing\"}",
+        "filename": "./Organic_Lip_Balm_Set.jpg"
+    },
+    {
+        "title": "Coffee Maker Drip",
+        "description": "{\"12-Cup Capacity\", \"Programmable\"}",
+        "filename": "./Coffee_Maker_Drip.jpg"
+    },
+    {
+        "title": "Outdoor Patio Set",
+        "description": "{\"Rattan\", \"4-Piece\"}",
+        "filename": "./Outdoor_Patio_Set.jpg"
+    },
+    {
+        "title": "Acrylic Paint Set",
+        "description": "{\"24 Colors\", \"Non-toxic\"}",
+        "filename": "./Acrylic_Paint_Set.jpg"
+    },
+    {
+        "title": "Sewing Machine Beginner",
+        "description": "{\"Portable\", \"Multiple Stitches\"}",
+        "filename": "./Sewing_Machine_Beginner.jpg"
+    },
+    {
+        "title": "Garden Hose Expandable",
+        "description": "{\"50ft\", \"No-kink\"}",
+        "filename": "./Garden_Hose_Expandable.jpg"
+    },
+    {
+        "title": "Blender High-Speed",
+        "description": "{\"Smoothie Maker\", \"Ice Crushing\"}",
+        "filename": "./Blender_High-Speed.jpg"
+    },
+    {
+        "title": "Wall Art Canvas Print",
+        "description": "{\"Abstract Design\", \"Large Size\"}",
+        "filename": "./Wall_Art_Canvas_Print.jpg"
+    },
+    {
+        "title": "Gardening Gloves Durable",
+        "description": "{\"Leather Palm\", \"Breathable\"}",
+        "filename": "./Gardening_Gloves_Durable.jpg"
+    },
+    {
+        "title": "Embroidery Kit Beginner",
+        "description": "{\"Hoop, Thread, Fabric\"}",
+        "filename": "./Embroidery_Kit_Beginner.jpg"
+    },
+    {
+        "title": "Cookware Set Non-Stick",
+        "description": "{\"10-Piece\", \"Dishwasher Safe\"}",
+        "filename": "./Cookware_Set_Non-Stick.jpg"
+    },
+    {
+        "title": "Travel Backpack 40L",
+        "description": "{\"Waterproof\", \"Laptop Compartment\"}",
+        "filename": "./Travel_Backpack_40L.jpg"
+    },
+    {
+        "title": "Universal Power Adapter",
+        "description": "{\"Worldwide Compatibility\", \"USB Ports\"}",
+        "filename": "./Universal_Power_Adapter.jpg"
+    },
+    {
+        "title": "Gourmet Coffee Beans 1lb",
+        "description": "{\"Single Origin\", \"Medium Roast\"}",
+        "filename": "./Gourmet_Coffee_Beans_1lb.jpg"
+    },
+    {
+        "title": "World Map Wall Decal",
+        "description": "{\"Peel & Stick\", \"Educational\"}",
+        "filename": "./World_Map_Wall_Decal.jpg"
+    },
+    {
+        "title": "Portable Water Filter",
+        "description": "{\"Outdoor Use\", \"Emergency\"}",
+        "filename": "./Portable_Water_Filter.jpg"
+    },
+    {
+        "title": "International Cookbook",
+        "description": "{\"Recipes from Around the World\", \"Hardcover\"}",
+        "filename": "./International_Cookbook.jpg"
+    },
+    {
+        "title": "Yoga Blocks 2-Pack",
+        "description": "{\"High Density Foam\", \"Support\"}",
+        "filename": "./Yoga_Blocks_2-Pack.jpg"
+    },
+    {
+        "title": "Digital Luggage Scale",
+        "description": "{\"Accurate\", \"Compact\"}",
+        "filename": "./Digital_Luggage_Scale.jpg"
+    },
+    {
+        "title": "Reusable Shopping Bags 5-Pack",
+        "description": "{\"Foldable\", \"Durable\"}",
+        "filename": "./Reusable_Shopping_Bags_5-Pack.jpg"
+    },
+    {
+        "title": "Multi-tool Pocket Knife",
+        "description": "{\"Stainless Steel\", \"15 Functions\"}",
+        "filename": "./Multi-tool_Pocket_Knife.jpg"
+    },
+    {
+        "title": "Hand-painted Ceramic Mug",
+        "description": "{\"Unique Design\", \"Dishwasher Safe\"}",
+        "filename": "./Hand-painted_Ceramic_Mug.jpg"
+    },
+    {
+        "title": "Custom Engraved Wooden Sign",
+        "description": "{\"Personalized\", \"Home Decor\"}",
+        "filename": "./Custom_Engraved_Wooden_Sign.jpg"
+    },
+    {
+        "title": "Oil Painting Kit Advanced",
+        "description": "{\"Canvas, Brushes, Paints\"}",
+        "filename": "./Oil_Painting_Kit_Advanced.jpg"
+    },
+    {
+        "title": "Sculpting Clay Set",
+        "description": "{\"Non-toxic\", \"Modeling Tools\"}",
+        "filename": "./Sculpting_Clay_Set.jpg"
+    },
+    {
+        "title": "Vintage Coin Collection",
+        "description": "{\"Rare Finds\", \"Certificate of Authenticity\"}",
+        "filename": "./Vintage_Coin_Collection.jpg"
+    },
+    {
+        "title": "Collectible Stamps Album",
+        "description": "{\"Worldwide Stamps\", \"Historical\"}",
+        "filename": "./Collectible_Stamps_Album.jpg"
+    },
+    {
+        "title": "Hand-stitched Leather Wallet",
+        "description": "{\"Full Grain Leather\", \"Slim Design\"}",
+        "filename": "./Hand-stitched_Leather_Wallet.jpg"
+    },
+    {
+        "title": "Calligraphy Pen Set",
+        "description": "{\"Ink, Nibs, Paper\"}",
+        "filename": "./Calligraphy_Pen_Set.jpg"
+    },
+    {
+        "title": "Hand-blown Glass Figurine",
+        "description": "{\"Art Glass\", \"Decorative\"}",
+        "filename": "./Hand-blown_Glass_Figurine.jpg"
+    },
+    {
+        "title": "DIY Jewelry Making Kit",
+        "description": "{\"Beads, Charms, Tools\"}",
+        "filename": "./DIY_Jewelry_Making_Kit.jpg"
+    },
+    {
+        "title": "High-Performance Gaming Laptop",
+        "description": "{\"RTX 4070\", \"1TB SSD\"}",
+        "filename": "./High-Performance_Gaming_Laptop.jpg"
+    },
+    {
+        "title": "VR Headset Advanced",
+        "description": "{\"Immersive Experience\", \"Wireless\"}",
+        "filename": "./VR_Headset_Advanced.jpg"
+    },
+    {
+        "title": "Data Recovery Software",
+        "description": "{\"Lost Files\", \"Easy to Use\"}",
+        "filename": "./Data_Recovery_Software.jpg"
+    },
+    {
+        "title": "Laboratory Microscope Digital",
+        "description": "{\"1000x Magnification\", \"USB Output\"}",
+        "filename": "./Laboratory_Microscope_Digital.jpg"
+    },
+    {
+        "title": "3D Printer Desktop",
+        "description": "{\"High Precision\", \"Filament Included\"}",
+        "filename": "./3D_Printer_Desktop.jpg"
+    },
+    {
+        "title": "Smart Home Security Camera",
+        "description": "{\"Motion Detection\", \"Night Vision\"}",
+        "filename": "./Smart_Home_Security_Camera.jpg"
+    },
+    {
+        "title": "Server Rack Cabinet",
+        "description": "{\"12U\", \"Ventilated\"}",
+        "filename": "./Server_Rack_Cabinet.jpg"
+    },
+    {
+        "title": "Professional Audio Interface",
+        "description": "{\"USB-C\", \"Studio Quality\"}",
+        "filename": "./Professional_Audio_Interface.jpg"
+    },
+    {
+        "title": "Coding Bootcamp Course",
+        "description": "{\"Online Access\", \"Full Stack\"}",
+        "filename": "./Coding_Bootcamp_Course.jpg"
+    },
+    {
+        "title": "Drone with 4K Camera",
+        "description": "{\"GPS Return\", \"Long Flight Time\"}",
+        "filename": "./Drone_with_4K_Camera.jpg"
+    },
+    {
+        "title": "Women's Denim Jeans",
+        "description": "{\"High-Waist\", \"Skinny Fit\"}",
+        "filename": "./Womens_Denim_Jeans.jpg"
+    },
+    {
+        "title": "Men's Polo Shirt",
+        "description": "{\"Cotton Pique\", \"Classic Fit\"}",
+        "filename": "./Mens_Polo_Shirt.jpg"
+    },
+    {
+        "title": "Kids' Rain Boots",
+        "description": "{\"Waterproof\", \"Fun Design\"}",
+        "filename": "./Kids_Rain_Boots.jpg"
+    },
+    {
+        "title": "Ankle Boots Women's",
+        "description": "{\"Leather\", \"Block Heel\"}",
+        "filename": "./Ankle_Boots_Womens.jpg"
+    },
+    {
+        "title": "Matte Lipstick Set",
+        "description": "{\"Long-lasting\", \"Variety Pack\"}",
+        "filename": "./Matte_Lipstick_Set.jpg"
+    },
+    {
+        "title": "Hair Straightener Ceramic",
+        "description": "{\"Fast Heat-up\", \"Adjustable Temp\"}",
+        "filename": "./Hair_Straightener_Ceramic.jpg"
+    },
+    {
+        "title": "Unisex Sunglasses UV400",
+        "description": "{\"Polarized Lenses\", \"Classic Style\"}",
+        "filename": "./Unisex_Sunglasses_UV400.jpg"
+    },
+    {
+        "title": "Leather Belt Men's",
+        "description": "{\"Reversible\", \"Adjustable\"}",
+        "filename": "./Leather_Belt_Mens.jpg"
+    },
+    {
+        "title": "Body Lotion Hydrating",
+        "description": "{\"Shea Butter\", \"Vanilla Scent\"}",
+        "filename": "./Body_Lotion_Hydrating.jpg"
+    },
+    {
+        "title": "Fashion Scarf Silk Blend",
+        "description": "{\"Large Square\", \"Versatile\"}",
+        "filename": "./Fashion_Scarf_Silk_Blend.jpg"
+    }
+]

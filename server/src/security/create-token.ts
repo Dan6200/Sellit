@@ -1,4 +1,5 @@
-import jwt, { Secret } from 'jsonwebtoken'
+/* NO LONGER USING MY OWN AUTH!!! */
+// import jwt, { Secret } from 'jsonwebtoken'
 
 // // TODO: Optimization, is this faster sync or async
 // export const createToken = function (
@@ -19,8 +20,8 @@ import jwt, { Secret } from 'jsonwebtoken'
 // }
 
 // TODO: Optimization, is this faster sync or async
-export const createToken = function (userId: string): string {
-	return jwt.sign({ userId }, process.env.JWT_SECRET as Secret, {
-		expiresIn: process.env.JWT_LIFETIME,
-	})
-}
+// export const createToken = function (userId: string): string {
+// 	return jwt.sign({ userId }, process.env.JWT_SECRET as Secret, {
+// 		expiresIn: process.env.JWT_LIFETIME,
+// 	})
+// }
