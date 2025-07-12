@@ -19,24 +19,16 @@ export type QueryParams = {
   query?: ParsedQs
 }
 
-export type QueryDB = (
-  queryParams: QueryParams,
-) => Promise<Knex.QueryBuilder | QueryResult<QueryResultRow | QueryResultRow[]>>
+export type QueryDB = <T>(queryParams: QueryParams) => Promise<T | T[]>
 
 export type ProcessRouteWithoutBody = <T>({
   Query,
   status,
   validateResult,
 }: {
-  Query(
-    queryParams: QueryParams,
-  ): Promise<
-    void | Knex.QueryBuilder | QueryResult<QueryResultRow | QueryResultRow[]>
-  >
+  Query(queryParams: QueryParams): Promise<T | T[]>
   status: Status
-  validateResult: (
-    result: QueryResult<QueryResultRow | QueryResultRow[]>,
-  ) => boolean
+  validateResult: (result: QueryResult<T | T[]>) => boolean
 }) => (
   request: RequestWithPayload,
   response: Response,
@@ -64,7 +56,8 @@ export type ProcessRouteWithoutBodyAndDBResult = ({
   Query,
   status,
 }: {
-  Query: QueryDB
+  Query: (queryParams: QueryParams) => Promise<void>
+
   status: Status
 }) => (request: RequestWithPayload, response: Response) => Promise<void>
 
@@ -74,20 +67,10 @@ export type ProcessRoute = <T>({
   validateBody,
   validateResult,
 }: {
-  Query(
-    queryParams: QueryParams,
-  ): Promise<
-    | void
-    | string
-    | number
-    | Knex.QueryBuilder
-    | QueryResult<QueryResultRow | QueryResultRow[]>
-  >
+  Query(queryParams: QueryParams): Promise<T | T[]>
   status: Status
   validateBody: (data: unknown) => boolean
-  validateResult: (
-    result: QueryResult<QueryResultRow | QueryResultRow[]>,
-  ) => boolean
+  validateResult: (result: QueryResult<T | T[]>) => boolean
 }) => (
   request: RequestWithPayload,
   response: Response,

@@ -2,7 +2,7 @@
   "name": "thrift",
   "version": "1.0.0",
   "description": "",
-  "main": "server/built/server.js",
+  "main": "./built/server/src/server.js",
   "type": "module",
   "private": true,
   "imports": {

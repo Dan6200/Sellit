@@ -10,5 +10,7 @@ export default function (): UserRequestData & { password: string } {
     password: faker.internet.password(),
     dob: faker.date.birthdate({ min: 12 }),
     country: 'Nigeria',
+    is_vendor: Boolean(Math.round(Math.random())),
+    is_customer: Boolean(Math.round(Math.random())),
   }
 }

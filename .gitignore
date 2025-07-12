@@ -54,3 +54,4 @@ thrift-app-*.json
 # Ignore
 /supabase/.temp
 /supabase/volumes
+.vercel

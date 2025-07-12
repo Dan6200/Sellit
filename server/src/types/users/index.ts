@@ -10,6 +10,8 @@ export interface UserData {
   country: string
   is_customer: boolean
   is_vendor: boolean
+  created_at?: Date
+  updated_at?: Date
   deleted_at?: Date
 }
 

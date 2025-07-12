@@ -29,7 +29,6 @@ const processDeleteRoute = <ProcessRouteWithoutBodyAndDBResult>(
   createRouteProcessor
 )
 
-//cspell:ignore DBID
 const createProduct = processPostRoute({
   Query: createQuery,
   status: CREATED,
