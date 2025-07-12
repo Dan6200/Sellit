@@ -1,5 +1,5 @@
-import { cloudinary } from '@/controllers/utils/media-storage.js'
-import { knex } from '@/db/index.js'
+import { cloudinary } from '#src/controllers/utils/media-storage.js'
+import { knex } from '#src/db/index.js'
 
 const getImagesInFolder = async (folderName: string) => {
   try {
@@ -27,5 +27,5 @@ Promise.all(
         .update({ version })
         .where('filename', filename)) > 0
     console.log(count++, updated)
-  })
+  }),
 )

@@ -4,7 +4,7 @@ import { isTypeQueryResultRow, Status } from '../../types/response.js'
 import { QueryDB } from '../../types/process-routes.js'
 import { QueryResult, QueryResultRow } from 'pg'
 import NotFoundError from '../../errors/not-found.js'
-import InternalServerError from '@/errors/internal-server.js'
+import InternalServerError from '#src/errors/internal-server.js'
 
 export default ({
   Query,

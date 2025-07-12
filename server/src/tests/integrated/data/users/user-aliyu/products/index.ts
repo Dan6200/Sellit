@@ -3,7 +3,7 @@ import {
   ProductRequestData,
   ProductMedia,
   ProductRequestPartial,
-} from '@/types/products.js'
+} from '#src/types/products.js'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 

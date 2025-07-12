@@ -6,6 +6,9 @@
   "type": "module",
   "private": true,
   "imports": {
+    "#src/*": [
+      "./built/server/src/*"
+    ],
     "#supabase-config": [
       "./built/supabase/supabase.js"
     ]

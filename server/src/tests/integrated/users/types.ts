@@ -1,5 +1,5 @@
-import { UserResponseSchema } from '@/app-schema/users.js'
-import { UserData } from '@/types/users/index.js'
+import { UserResponseSchema } from '#src/app-schema/users.js'
+import { UserData } from '#src/types/users/index.js'
 
 export type UserRequestData = UserData & ({ email: string } | { phone: string })
 

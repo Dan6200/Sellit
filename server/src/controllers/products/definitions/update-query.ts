@@ -6,8 +6,8 @@ import {
   isValidProductRequestData,
   ProductResponseData,
 } from '../../../types/products.js'
-import ForbiddenError from '@/errors/forbidden.js'
-import UnauthorizedError from '@/errors/unauthorized.js'
+import ForbiddenError from '#src/errors/forbidden.js'
+import UnauthorizedError from '#src/errors/unauthorized.js'
 
 /* @param {QueryParams} {params, query, body, userId}
  * @returns {Promise<ProductResponseData[]>}

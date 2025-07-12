@@ -1,9 +1,9 @@
 //cspell:ignore jsonb
-import ForbiddenError from '@/errors/forbidden.js'
+import ForbiddenError from '#src/errors/forbidden.js'
 import { knex } from '../../../db/index.js'
 import BadRequestError from '../../../errors/bad-request.js'
 import { QueryParams } from '../../../types/process-routes.js'
-import UnauthorizedError from '@/errors/unauthorized.js'
+import UnauthorizedError from '#src/errors/unauthorized.js'
 
 /**
  * @param {QueryParams} { params, query, userId }

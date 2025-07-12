@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["server/src/*"],
+      "#src/*": ["server/src/*"],
       "#supabase-config": ["supabase/supabase.ts"]
     },
     "resolveJsonModule": true,

@@ -1,5 +1,5 @@
 import { supabase } from '#supabase-config'
-import { knex } from '@/db/index.js'
+import { knex } from '#src/db/index.js'
 
 export const deleteAllUsersForTesting = async () => {
   const { data, error } = await supabase.auth.admin.listUsers()

@@ -1,5 +1,5 @@
 //cspell:disable
-import ShippingInfo from '@/types/shipping-info.js'
+import ShippingInfo from '#src/types/shipping-info.js'
 
 const listOfShippingInfo: ShippingInfo[] = [
   {

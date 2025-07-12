@@ -1,5 +1,5 @@
 // cspell:disable
-import StoreData from '@/types/store-data.js'
+import StoreData from '#src/types/store-data.js'
 
 export const stores: StoreData[] = [
   {

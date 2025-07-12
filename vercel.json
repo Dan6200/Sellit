@@ -3,7 +3,9 @@
   "version": 2,
   "buildCommand": "pnpm build",
   "rewrites": [
+    { "source": "/api", "destination": "/server/src/app.ts" },
     { "source": "/api/(.*)", "destination": "/server/src/app.ts" },
+    { "source": "/v1", "destination": "/server/src/app.ts" },
     { "source": "/v1/(.*)", "destination": "/server/src/app.ts" },
     { "source": "/api.json", "destination": "/server/src/app.ts" },
     {

@@ -1,7 +1,7 @@
 //cspell:ignore cloudinary
 import { knex } from '../../../db/index.js'
-import { UserRequestData } from '@/types/users/index.js'
-import { ProductRequestData, ProductMedia } from '@/types/products.js'
+import { UserRequestData } from '#src/types/users/index.js'
+import { ProductRequestData, ProductMedia } from '#src/types/products.js'
 import {
   testPostProduct,
   testUploadProductMedia,

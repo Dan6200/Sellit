@@ -4,7 +4,7 @@ import {
   StoreDataResponseListSchema,
   StoreIDSchema,
   StoreDataResponseSchema,
-} from '@/app-schema/stores.js'
+} from '#src/app-schema/stores.js'
 import BadRequestError from '../../errors/bad-request.js'
 import UnauthorizedError from '../../errors/unauthorized.js'
 import {
@@ -20,8 +20,8 @@ import processRoute from '../routes/process.js'
 import { validateReqData } from '../utils/request-validation.js'
 import { validateResData } from '../utils/response-validation.js'
 import { Knex } from 'knex'
-import { knex } from '@/db/index.js'
-import ForbiddenError from '@/errors/forbidden.js'
+import { knex } from '#src/db/index.js'
+import ForbiddenError from '#src/errors/forbidden.js'
 
 /**
  * @param {QueryParams} qp

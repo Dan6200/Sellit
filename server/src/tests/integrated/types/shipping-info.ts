@@ -1,4 +1,4 @@
-// import ShippingInfo from '@/types/shipping-info.js'
+// import ShippingInfo from '#src/types/shipping-info.js'
 //
 // export const isValidShippingInfoRequestForTesting = (
 //   data: unknown,

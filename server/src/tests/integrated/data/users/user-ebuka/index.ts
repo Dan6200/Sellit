@@ -1,5 +1,5 @@
 // cspell: disable
-import { UserRequestData } from '@/types/users/index.js'
+import { UserRequestData } from '#src/types/users/index.js'
 import {
   listOfShippingInfo,
   listOfUpdatedShippingInfo,

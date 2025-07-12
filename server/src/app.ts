@@ -22,12 +22,12 @@ import yaml from 'js-yaml'
 import { readFile } from 'fs/promises'
 import path from 'path'
 
-let apiDocsPath = ''
-if (process.env.NODE_ENV === 'production') apiDocsPath = './api-docs/dist.yaml'
-else apiDocsPath = './server/api-docs/dist.yaml'
-const swaggerDocument = await readFile(path.resolve(apiDocsPath), 'utf8').then(
-  (doc) => yaml.load(doc),
-)
+// if (process.env.NODE_ENV === 'production') apiDocsPath = './api-docs/dist.yaml'
+// else apiDocsPath = './server/api-docs/dist.yaml'
+const swaggerDocument = await readFile(
+  path.resolve('./server/api-docs/dist.yaml'),
+  'utf8',
+).then((doc) => yaml.load(doc))
 
 ////////////// Middlewares //////////////
 let app: Express = express()

@@ -1,4 +1,4 @@
-import StoreData from '@/types/store-data.js'
+import StoreData from '#src/types/store-data.js'
 import {
   testCreateStoreWithoutVendorAccount,
   testUpdateStoreWithoutVendorAccount,
@@ -9,7 +9,7 @@ import { UserRequestData } from '../../../types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 import { signInForTesting } from '../helpers/signin-user.js'
-import { knex } from '@/db/index.js'
+import { knex } from '#src/db/index.js'
 
 export default function ({
   userInfo,

@@ -2,7 +2,7 @@
 import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { testGetUserWithoutSignIn } from './definitions.js'
-import { UserRequestData } from '@/types/users/index.js'
+import { UserRequestData } from '#src/types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 

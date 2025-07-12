@@ -7,8 +7,8 @@ import createRouteProcessor from '../routes/process.js'
 import { QueryResult, QueryResultRow } from 'pg'
 import { validateResData } from '../utils/response-validation.js'
 import { UserResponseSchema } from '../../app-schema/users.js'
-import { pg } from '@/db/index.js'
-import UnauthorizedError from '@/errors/unauthorized.js'
+import { pg } from '#src/db/index.js'
+import UnauthorizedError from '#src/errors/unauthorized.js'
 
 const { OK } = StatusCodes
 

@@ -2,7 +2,7 @@ import { ArraySchema, ObjectSchema } from 'joi'
 import { QueryResult, QueryResultRow } from 'pg'
 import NotFoundError from '../../errors/not-found.js'
 import { isTypeQueryResultRow } from '../../types/response.js'
-import InternalServerError from '@/errors/internal-server.js'
+import InternalServerError from '#src/errors/internal-server.js'
 
 /**
  * @description Validates DB result against schema
