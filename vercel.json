@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/server/src/app.ts" },
+    { "source": "/v1/(.*)", "destination": "/server/src/app.ts" },
+    { "source": "/api.json", "destination": "/server/src/app.ts" },
+    {
+      "source": "/.well-known/acme-challenge/(.*)",
+      "destination": "/public/.well-known/acme-challenge/$1"
+    }
+  ]
+}
