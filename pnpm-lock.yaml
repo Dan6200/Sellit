@@ -4,14 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-<<<<<<< HEAD
-patchedDependencies:
-  long@5.2.3:
-    hash: 9719ae8d15fda96e94385c055dc467f59ab81006efcb106258fbe585831025be
-    path: patches/long@5.2.3.patch
-
-=======
->>>>>>> dev
 importers:
   .:
     dependencies:
