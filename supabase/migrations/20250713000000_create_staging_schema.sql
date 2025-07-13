@@ -369,7 +369,7 @@ end;
 $$ language plpgsql security definer;
 
 -- Replicate on_auth_user_created trigger
-create trigger on_auth_user_created
+create trigger on_auth_user_created_staging
   after insert on auth.users
   for each row execute procedure staging.handle_new_user();
 
@@ -393,7 +393,7 @@ end;
 $$ language plpgsql security definer;
 
 -- Replicate on_auth_user_updated trigger
-create trigger on_auth_user_updated
+create trigger on_auth_user_updated_staging
   after update on auth.users
   for each row execute procedure staging.handle_update_user();
 
@@ -409,7 +409,7 @@ end;
 $$ language plpgsql security definer;
 
 -- Replicate on_auth_user_deleted trigger
-create trigger on_auth_user_deleted
+create trigger on_auth_user_deleted_staging
   after delete on auth.users
   for each row execute procedure staging.handle_delete_user();
 
