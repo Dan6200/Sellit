@@ -1,10 +1,11 @@
 import { fileURLToPath } from 'url'
-import app from './app.js'
+import app from '../../api/index.js'
 import dotenv from 'dotenv'
-// if (process.env.NODE_ENV === 'production')
-//   dotenv.config({ path: `/etc/secrets/.env.production` })
-// else dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+
+let path = 'env.' + process.env.NODE_ENV
+if (process.env.NODE_ENV === 'testing' && process.env.CI) path += '-ci'
+else path += '-local'
+dotenv.config({ path })
 
 const port = process.env.PORT || 1024
 
