@@ -1,6 +1,6 @@
 // cspell:disable
 import cors from 'cors'
-import express, { Express, Router } from 'express'
+import express, { Request, Response, Router } from 'express'
 import 'express-async-errors'
 import helmet from 'helmet'
 import morgan from 'morgan'
@@ -30,7 +30,7 @@ const swaggerDocument = await readFile(
 ).then((doc) => yaml.load(doc))
 
 ////////////// Middlewares //////////////
-let app: Express = express()
+let app = express()
 app.set('trust proxy', 1)
 app.use(cookieParser())
 if (process.env.NODE_ENV === 'production')
@@ -49,7 +49,10 @@ app.use(
   '/.well-known/acme-challenge',
   express.static('public/.well-known/acme-challenge'),
 )
-app.get('/api.json', (_, res) => res.json(swaggerDocument))
+app.get('/api.json', (_req: Request, res: Response) =>
+  // @ts-ignore (vercel workaround)
+  res.json(swaggerDocument),
+)
 
 app.use(helmet())
 app.use(cors())

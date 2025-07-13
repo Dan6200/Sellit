@@ -2,7 +2,10 @@ import { connectionString } from './config.js'
 
 export const knexOptions = {
   client: 'pg',
-  connection: connectionString,
+  connection: {
+    connectionString,
+    searchPath: process.env.VERCEL_ENV === 'preview' ? ['staging'] : undefined, // Use preview as staging to workaround vercel's BS!
+  },
 }
 
 export const pgOptions = {
@@ -14,4 +17,5 @@ export const pgOptions = {
     : false,
   idleTimeoutMillis: 0,
   connectionTimeoutMillis: 0,
+  searchPath: process.env.VERCEL_ENV === 'preview' ? ['staging'] : undefined,
 }

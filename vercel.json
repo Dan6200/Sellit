@@ -3,7 +3,7 @@
   "version": 2,
   "buildCommand": "pnpm build",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/built/server/src/app.js" },
+    { "source": "/(.*)", "destination": "/api" },
     {
       "source": "/.well-known/acme-challenge/(.*)",
       "destination": "/public/.well-known/acme-challenge/$1"

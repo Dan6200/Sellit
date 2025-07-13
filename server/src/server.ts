@@ -2,9 +2,13 @@ import { fileURLToPath } from 'url'
 import app from '../../api/index.js'
 import dotenv from 'dotenv'
 
-let path = 'env.' + process.env.NODE_ENV
-if (process.env.NODE_ENV === 'testing' && process.env.CI) path += '-ci'
-else path += '-local'
+let path = '.env.' + process.env.VERCEL_ENV
+
+if (process.env.NODE_ENV === 'testing') {
+  if (process.env.CI) path += '.ci'
+  else path += '.local'
+}
+
 dotenv.config({ path })
 
 const port = process.env.PORT || 1024

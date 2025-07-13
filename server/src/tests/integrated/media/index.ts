@@ -61,7 +61,7 @@ export default function ({
   })
 
   after(async () => {
-    // await deleteAllUsersForTesting()
-    // await bulkDeleteImages()
+    await deleteAllUsersForTesting()
+    await bulkDeleteImages()
   })
 }

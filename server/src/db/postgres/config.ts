@@ -1,6 +1,12 @@
 import dotenv from 'dotenv'
-if (process.env.NODE_ENV === 'production')
-  dotenv.config({ path: `/etc/secrets/.env.${process.env.NODE_ENV}` })
-else dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+
+let path = '.env.' + process.env.VERCEL_ENV
+
+if (process.env.NODE_ENV === 'testing') {
+  if (process.env.CI) path += '.ci'
+  else path += '.local'
+}
+
+dotenv.config({ path })
 
 export const connectionString = process.env.PG_URL
