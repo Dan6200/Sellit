@@ -1,4 +1,4 @@
-// Purpose: Joi schema for account data
+// Purpose: Joi schema for user data
 // cspell:ignore alphanum
 import joi from 'joi'
 
