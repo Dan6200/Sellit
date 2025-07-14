@@ -188,9 +188,12 @@ create table if not exists product_media (
   description					varchar,
 	is_display_image		boolean			default		 false,
 	is_landing_image		boolean			default		 false,
-	is_video 						boolean			default		 false,
+	filetype            varchar     not        null    default    'image',
   created_at          timestamptz     not  	 null 				default     now(),
-  updated_at          timestamptz     not  	 null 				default     now()
+  updated_at          timestamptz     not  	 null 				default     now(),
+  check (filetype in ('image', 'video')),
+  check (not (is_display_image = true and filetype != 'image')),
+  check (not (is_landing_image = true and filetype != 'image'))
 );
 
 -- create a trigger to update the updated_at column for product_media

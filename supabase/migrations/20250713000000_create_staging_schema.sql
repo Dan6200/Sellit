@@ -196,9 +196,12 @@ create table if not exists staging.product_media (
   description					varchar,
 	is_display_image		boolean			default		 false,
 	is_landing_image		boolean			default		 false,
-	is_video 						boolean			default		 false,
+	filetype            varchar     not        null    default    'image',
   created_at          timestamptz     not  	 null 				default     now(),
-  updated_at          timestamptz     not  	 null 				default     now()
+  updated_at          timestamptz     not  	 null 				default     now(),
+  check (filetype in ('image', 'video')),
+  check (not (is_display_image = true and filetype != 'image')),
+  check (not (is_landing_image = true and filetype != 'image'))
 );
 
 -- create a trigger to update the updated_at column for staging.product_media
@@ -210,19 +213,22 @@ execute procedure staging.trigger_set_timestamp();
 -- Replicate product_media_display_landing_trigger function
 create or replace function staging.product_media_display_landing_trigger ()
 returns trigger as $$
-declare
-    r record;
+
 begin
     if (tg_op='insert' or tg_op='update') then
         if new.is_display_image=true then
-            for r in (select * from staging.product_media where is_display_image=true and filename != new.filename) loop
-                r.is_display_image := false;
-            end loop;
+            update staging.product_media
+            set is_display_image = false
+            where product_id = new.product_id
+              and filename != new.filename
+              and is_display_image = true;
         end if;
         if new.is_landing_image=true then
-            for r in (select * from staging.product_media where is_landing_image=true and filename != new.filename) loop
-                r.is_landing_image := false;
-            end loop;
+            update staging.product_media
+            set is_landing_image = false
+            where product_id = new.product_id
+              and filename != new.filename
+              and is_landing_image = true;
         end if;
     end if;
     return new;
@@ -267,10 +273,10 @@ execute procedure staging.trigger_set_timestamp();
 -- Replicate transactions table
 create table if not exists staging.transactions(
   transaction_id   serial           primary      key,
-  customer_id      uuid              not          null,
-  vendor_id        uuid              not          null,
+  customer_id      uuid              not          null    references   staging.users,
+  vendor_id        uuid              not          null    references   staging.users,
   total_amount     numeric(19,4)    not          null,
-  created_at       timestamptz      not          null    default   now()   unique,
+  created_at       timestamptz      not          null    default   now(),
   updated_at       timestamptz      not          null    default   now(),
   check            (customer_id <>  vendor_id)
 );
@@ -286,7 +292,7 @@ create table if not exists staging.purchases (
   item_id          serial        primary   key,
   product_id       int           not       null   references   staging.products              on        delete   cascade,
   transaction_id   int           not       null   references   staging.transactions				   on        delete   cascade,
-  created_at       timestamptz   not       null   default      now()                 unique,
+  created_at       timestamptz   not       null   default      now(),
   updated_at       timestamptz   not       null   default      now(),
   quantity         int           not       null   check        (quantity > 0)
 );
@@ -299,7 +305,8 @@ execute procedure staging.trigger_set_timestamp();
 
 -- Replicate product_reviews table
 create table if not exists staging.product_reviews (
-  product_id        int            primary   key     references   staging.products              on   delete   cascade,
+  review_id         serial         primary key,
+  product_id        int            not       null    references   staging.products              on   delete   cascade,
   transaction_id    int            not       null    references   staging.transactions				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
   customer_id       uuid            not       null    references   staging.users             on   delete   cascade,
@@ -316,7 +323,8 @@ execute procedure staging.trigger_set_timestamp();
 
 -- Replicate vendor_reviews table
 create table if not exists staging.vendor_reviews (
-  vendor_id         uuid            primary   key     references   staging.users               on   delete   cascade,
+  review_id         serial         primary key,
+  vendor_id         uuid            not       null    references   staging.users               on   delete   cascade,
   customer_id       uuid            not       null    references   staging.users             on   delete   cascade,
   transaction_id    int            not       null    references   staging.transactions				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
@@ -333,7 +341,8 @@ execute procedure staging.trigger_set_timestamp();
 
 -- Replicate customer_reviews table
 create table if not exists staging.customer_reviews (
-  customer_id      uuid            primary   key     references   staging.users             on   delete   cascade,
+  review_id        serial         primary key,
+  customer_id      uuid            not       null    references   staging.users             on   delete   cascade,
   vendor_id        uuid            not       null    references   staging.users               on   delete   cascade,
   transaction_id   int            not       null    references   staging.transactions   on   delete   cascade,
   rating           numeric(3,2)   not       null,
