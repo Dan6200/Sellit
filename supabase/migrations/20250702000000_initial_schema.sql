@@ -258,7 +258,7 @@ create table if not exists transactions(
   customer_id      uuid              not          null,
   vendor_id        uuid              not          null,
   total_amount     numeric(19,4)    not          null,
-  created_at       timestamptz      not          null    default   now()   unique,
+  created_at       timestamptz      not          null    default   now(),
   updated_at       timestamptz      not          null    default   now(),
   check            (customer_id <>  vendor_id)
 );
@@ -273,7 +273,7 @@ create table if not exists purchases (
   item_id          serial        primary   key,
   product_id       int           not       null   references   products              on        delete   cascade,
   transaction_id   int           not       null   references   transactions				   on        delete   cascade,
-  created_at       timestamptz   not       null   default      now()                 unique,
+  created_at       timestamptz   not       null   default      now(),
   updated_at       timestamptz   not       null   default      now(),
   quantity         int           not       null   check        (quantity > 0)
 );
@@ -285,13 +285,14 @@ for each row
 execute procedure trigger_set_timestamp();
 
 create table if not exists product_reviews (
-  product_id        int            primary   key     references   products              on   delete   cascade,
+  product_id        int            not       null    references   products              on   delete   cascade,
   transaction_id    int            not       null    references   transactions				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
   customer_id       uuid            not       null    references   users             on   delete   cascade,
   customer_remark   varchar,
   created_at    timestamptz   not       null   default      now(),
-  updated_at    timestamptz   not       null   default      now()
+  updated_at    timestamptz   not       null   default      now(),
+  primary key (product_id, transaction_id)
 );
 
 -- create a trigger to update the updated_at column for product_reviews
@@ -301,13 +302,14 @@ for each row
 execute procedure trigger_set_timestamp();
 
 create table if not exists vendor_reviews (
-  vendor_id         uuid            primary   key     references   users               on   delete   cascade,
+  vendor_id         uuid            not       null    references   users               on   delete   cascade,
   customer_id       uuid            not       null    references   users             on   delete   cascade,
   transaction_id    int            not       null    references   transactions				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
   customer_remark   varchar,
   created_at    timestamptz   not       null   default      now(),
-  updated_at    timestamptz   not       null   default      now()
+  updated_at    timestamptz   not       null   default      now(),
+  primary key (vendor_id, transaction_id)
 );
 
 -- create a trigger to update the updated_at column for vendor_reviews
@@ -317,13 +319,14 @@ for each row
 execute procedure trigger_set_timestamp();
 
 create table if not exists customer_reviews (
-  customer_id      uuid            primary   key     references   users             on   delete   cascade,
+  customer_id      uuid            not       null    references   users             on   delete   cascade,
   vendor_id        uuid            not       null    references   users               on   delete   cascade,
   transaction_id   int            not       null    references   transactions   on   delete   cascade,
   rating           numeric(3,2)   not       null,
   vendor_remark    varchar,
   created_at    timestamptz   not       null   default      now(),
-  updated_at    timestamptz   not       null   default      now()
+  updated_at    timestamptz   not       null   default      now(),
+  primary key (customer_id, transaction_id)
 );
 
 -- create a trigger to update the updated_at column for customer_reviews
