@@ -5,9 +5,11 @@
 import { CloudinaryStorage, Options } from 'multer-storage-cloudinary'
 import { v2 as cloudinary } from 'cloudinary'
 import dotenv from 'dotenv'
-if (process.env.NODE_ENV === 'production')
-  dotenv.config({ path: `/etc/secrets/.env.${process.env.NODE_ENV}` })
-else dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+if (process.env.NODE_ENV === 'production') {
+  if (process.env.VERCEL_ENV)
+    dotenv.config({ path: `.env.${process.env.VERCEL_ENV}` })
+  else dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+} else dotenv.config({ path: `.env.${process.env.NODE_ENV ?? 'development'}` })
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

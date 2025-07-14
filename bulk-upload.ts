@@ -12,7 +12,10 @@ async function bulkUpload() {
       })
     })
     const results = await Promise.all(uploadPromises)
-    console.log('Uploaded files: ', results)
+    console.log(
+      'Uploaded files: ',
+      results.map((result) => result.public_id),
+    )
   } catch (err) {
     console.error('Error Bulk uploading files', err)
   }
