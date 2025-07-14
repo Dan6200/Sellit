@@ -202,19 +202,22 @@ execute procedure trigger_set_timestamp();
 -- update landing image or display image for all rows when one row is changed
 create or replace function product_media_display_landing_trigger () 
 returns trigger as $$
-declare
-    r record;
+
 begin 
     if (tg_op='insert' or tg_op='update') then
         if new.is_display_image=true then
-            for r in (select * from product_media where is_display_image=true and filename != new.filename) loop
-                r.is_display_image := false;
-            end loop;
+            update product_media
+            set is_display_image = false
+            where product_id = new.product_id
+              and filename != new.filename
+              and is_display_image = true;
         end if;
         if new.is_landing_image=true then
-            for r in (select * from product_media where is_landing_image=true and filename != new.filename) loop
-                r.is_landing_image := false;
-            end loop;
+            update product_media
+            set is_landing_image = false
+            where product_id = new.product_id
+              and filename != new.filename
+              and is_landing_image = true;
         end if;
     end if;
     return new;
