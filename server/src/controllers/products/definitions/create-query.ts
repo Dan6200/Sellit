@@ -48,7 +48,7 @@ export default async ({
 
   const dBFriendlyProductData = {
     ...productData,
-    description: knex.raw('ARRAY[?]::text[]', [productData.description]),
+    description: knex.raw('ARRAY[?]::text[]', [productData.description]), // TODO: test this
   }
 
   return knex('products')

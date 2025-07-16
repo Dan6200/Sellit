@@ -1,0 +1,64 @@
+name: supabase-backup
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at midnight
+
+env:
+  BACKUP_ENABLED: true
+
+jobs:
+  run_db_backup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for Supabase CLI to authenticate with Supabase Storage
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      BACKUP_ENABLED: ${{ vars.BACKUP_ENABLED }} # Repository variable (true or false)
+    steps:
+      - name: Check if backups are enabled
+        run: |
+          if [ "$BACKUP_ENABLED" != "true" ]; then
+            echo "Backups are disabled. Exiting workflow."
+            exit 0
+          fi
+
+      - name: Checkout repository
+        if: env.BACKUP_ENABLED == 'true'
+        uses: actions/checkout@v3
+
+      - name: Setup Supabase CLI
+        if: env.BACKUP_ENABLED == 'true'
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Create timestamp folder
+        if: env.BACKUP_ENABLED == 'true'
+        run: mkdir -p db/backups
+
+      - name: Backup roles
+        if: env.BACKUP_ENABLED == 'true'
+        run: supabase db dump --db-url "$SUPABASE_DB_URL" -f db/backups/roles.sql --role-only
+
+      - name: Backup schema
+        if: env.BACKUP_ENABLED == 'true'
+        run: supabase db dump --db-url "$SUPABASE_DB_URL" -f db/backups/schema.sql
+
+      - name: Backup data
+        if: env.BACKUP_ENABLED == 'true'
+        run: supabase db dump --db-url "$SUPABASE_DB_URL" -f db/backups/data.sql --data-only --use-copy
+
+      - name: Upload backups to Supabase Storage
+        if: env.BACKUP_ENABLED == 'true'
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          supabase storage cp db/backups/roles.sql supabase://backups/$TIMESTAMP/roles.sql
+          supabase storage cp db/backups/schema.sql supabase://backups/$TIMESTAMP/schema.sql
+          supabase storage cp db/backups/data.sql supabase://backups/$TIMESTAMP/data.sql
