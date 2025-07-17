@@ -16,6 +16,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Check if build is enabled
+        run: |
+          if [ "$BUILD_ENABLED" != "true" ]; then
+            echo "Build is disabled. Exiting workflow."
+            exit 0
+          fi
+
+    steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
