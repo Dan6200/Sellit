@@ -62,6 +62,6 @@ jobs:
         if: env.BACKUP_ENABLED == 'true'
         run: |
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          supabase storage cp db/backups/roles.sql backups/$TIMESTAMP/roles.sql --linked --experimental
-          supabase storage cp db/backups/schema.sql backups/$TIMESTAMP/schema.sql --linked --experimental
-          supabase storage cp db/backups/data.sql backups/$TIMESTAMP/data.sql --linked --experimental
+          supabase storage cp db/backups/roles.sql backups/$TIMESTAMP/ --linked --experimental
+          supabase storage cp db/backups/schema.sql backups/$TIMESTAMP/ --linked --experimental
+          supabase storage cp db/backups/data.sql backups/$TIMESTAMP/ --linked --experimental
