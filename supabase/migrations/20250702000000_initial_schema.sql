@@ -11,7 +11,7 @@ end;
 $$ language plpgsql;
 
 create table if not exists profiles (
-  user_id 		 uuid                    primary    key, -- Get from Firebase
+  id 		 uuid                    primary    key, -- Get from Firebase
   first_name   varchar(30)               not        null,
 	check				 (first_name ~* '^[a-zA-Z]+$'),
   last_name    varchar(30)               not        null,
@@ -307,11 +307,11 @@ create trigger set_timestamp
 before update on customer_reviews
 for each row
 execute procedure trigger_set_timestamp();
--- Function to handle new user creation in auth.profiles
+-- Function to handle new user creation in auth.users
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (user_id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor)
+  insert into public.profiles (id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor)
   values (
     new.id,
     new.raw_user_meta_data->>'first_name',
@@ -327,12 +327,12 @@ begin
 end;
 $$ language plpgsql security definer;
 
--- Trigger to call handle_new_user on auth.profiles insert
+-- Trigger to call handle_new_user on auth.users insert
 create trigger on_auth_user_created
-  after insert on auth.profiles
+  after insert on auth.users
   for each row execute procedure public.handle_new_user();
 
--- Function to handle user updates from auth.profiles
+-- Function to handle user updates from auth.users
 create or replace function public.handle_update_user()
 returns trigger as $$
 begin
@@ -346,30 +346,30 @@ begin
     country = coalesce(new.raw_user_meta_data->>'country', 'Nigeria'),
     is_customer = coalesce((new.raw_user_meta_data->>'is_customer')::boolean, true),
     is_vendor = coalesce((new.raw_user_meta_data->>'is_vendor')::boolean, false)
-  where user_id = new.id;
+  where id = new.id;
   return new;
 end;
 $$ language plpgsql security definer;
 
--- Trigger to call handle_update_user on auth.profiles update
+-- Trigger to call handle_update_user on auth.users update
 create trigger on_auth_user_updated
-  after update on auth.profiles
+  after update on auth.users
   for each row execute procedure public.handle_update_user();
 
--- Function to handle user deletion from auth.profiles
+-- Function to handle user deletion from auth.users
 create or replace function public.handle_delete_user()
 returns trigger as $$
 begin
   update public.profiles
   set deleted_at = now() -- <- Soft Delete. Set cronjob to delete after 30 days
-  where user_id = old.id;
+  where id = old.id;
   return old;
 end;
 $$ language plpgsql security definer;
 
--- Trigger to call handle_delete_user on auth.profiles delete
+-- Trigger to call handle_delete_user on auth.users delete
 create trigger on_auth_user_deleted
-  after delete on auth.profiles
+  after delete on auth.users
   for each row execute procedure public.handle_delete_user();
 
 -- Enable RLS for tables and create basic select policies

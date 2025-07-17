@@ -13,9 +13,9 @@ begin
 end;
 $$ language plpgsql;
 
--- Replicate users table
-create table if not exists staging.users (
-  user_id 		 uuid                    primary    key,
+-- Replicate profiles table
+create table if not exists staging.profiles (
+  id 		 uuid                    primary    key,
   first_name   varchar(30)               not        null,
 	check				 (first_name ~* '^[a-zA-Z]+$'),
   last_name    varchar(30)               not        null,
@@ -39,16 +39,16 @@ create table if not exists staging.users (
   updated_at   timestamptz               not 				null 			default      now()
 );
 
--- create a trigger to update the updated_at column for staging.users
+-- create a trigger to update the updated_at column for staging.profiles
 create trigger set_timestamp
-before update on staging.users
+before update on staging.profiles
 for each row
 execute procedure staging.trigger_set_timestamp();
 
 -- Replicate shipping_info table
 create table if not exists staging.shipping_info (
   shipping_info_id        serial        primary   key,
-  customer_id             uuid           not      null    references   staging.users   on   delete   cascade,
+  customer_id             uuid           not      null    references   staging.profiles   on   delete   cascade,
   recipient_full_name    	varchar(30)   not       null,
   address_line_1          varchar       not       null,
   address_line_2          varchar       not       null,
@@ -87,7 +87,7 @@ create table if not exists staging.stores (
   store_id                 serial      primary   key,
   store_name               varchar     not       null,
 	custom_domain            varchar     null,
-  vendor_id                uuid        not       null    references   staging.users        on   delete   cascade,
+  vendor_id                uuid        not       null    references   staging.profiles        on   delete   cascade,
   favicon                  varchar,
   default_page_styling     jsonb,
   store_pages              jsonb,
@@ -137,7 +137,7 @@ create table if not exists staging.products (
   description          text[],
   list_price           numeric(19,4),
   net_price            numeric(19,4),
-  vendor_id            uuid             not       null    references			staging.users         on   delete   cascade,
+  vendor_id            uuid             not       null    references			staging.profiles         on   delete   cascade,
 	store_id 						 int 							not 			null 		references 			staging.stores 					on 	 delete 	cascade,
   category_id          int           		not    		null    references   		staging.categories      on   delete   cascade,
   subcategory_id       int           		not    		null    references   		staging.subcategories   on   delete   cascade,
@@ -155,7 +155,7 @@ execute procedure staging.trigger_set_timestamp();
 -- Replicate orders table
 create table staging.orders (
     order_id 						serial						primary 				key,
-    customer_id 				uuid						references 			staging.users 						on delete cascade not null,
+    customer_id 				uuid						references 			staging.profiles 						on delete cascade not null,
     store_id 						serial						references 			staging.stores 						on delete cascade not null,
     shipping_info_id 		serial						references 			staging.shipping_info 		on delete set null,
     order_date 					timestamptz				default 				now(),
@@ -177,7 +177,7 @@ create table staging.order_items (
     order_id            serial          not         null    references  staging.orders          on  delete  cascade,
     product_id          int             not         null    references  staging.products        on  delete  cascade,
     quantity            int             not         null    check       (quantity > 0),
-    price_at_purcha(e   numeric(19,4)   not         null,
+    price_at_purchase   numeric(19,4)   not         null,
     created_at          timestamptz     not 				null 		default     now(),
     updated_at          timestamptz     not 				null 		default     now()
 );
@@ -243,7 +243,7 @@ for each row execute function staging.product_media_display_landing_trigger();
 -- Replicate shopping_cart table
 create table if not exists staging.shopping_cart (
   cart_id       serial        primary   key,
-  customer_id   uuid           not       null   references   staging.users   on   delete   cascade,
+  customer_id   uuid           not       null   references   staging.profiles   on   delete   cascade,
   created_at    timestamptz   not       null   default      now(),
   updated_at    timestamptz   not       null   default      now()
 );
@@ -276,7 +276,7 @@ create table if not exists staging.product_reviews (
   product_id        int            not       null    references   staging.products              on   delete   cascade,
   transaction_id    int            not       null    references   staging.transactions				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
-  customer_id       uuid            not       null    references   staging.users             on   delete   cascade,
+  customer_id       uuid            not       null    references   staging.profiles             on   delete   cascade,
   customer_remark   varchar,
   created_at    timestamptz   not       null   default      now(),
   updated_at    timestamptz   not       null   default      now()
@@ -291,8 +291,8 @@ execute procedure staging.trigger_set_timestamp();
 -- Replicate vendor_reviews table
 create table if not exists staging.vendor_reviews (
   review_id         serial         primary key,
-  vendor_id         uuid            not       null    references   staging.users               on   delete   cascade,
-  customer_id       uuid            not       null    references   staging.users             on   delete   cascade,
+  vendor_id         uuid            not       null    references   staging.profiles               on   delete   cascade,
+  customer_id       uuid            not       null    references   staging.profiles             on   delete   cascade,
   order_id    int            not       null    references   staging.orders				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
   customer_remark   varchar,
@@ -309,8 +309,8 @@ execute procedure staging.trigger_set_timestamp();
 -- Replicate customer_reviews table
 create table if not exists staging.customer_reviews (
   review_id        serial         primary key,
-  customer_id      uuid            not       null    references   staging.users             on   delete   cascade,
-  vendor_id        uuid            not       null    references   staging.users               on   delete   cascade,
+  customer_id      uuid            not       null    references   staging.profiles             on   delete   cascade,
+  vendor_id        uuid            not       null    references   staging.profiles               on   delete   cascade,
   order_id   int            not       null    references   staging.orders   on   delete   cascade,
   rating           numeric(3,2)   not       null,
   vendor_remark    varchar,
@@ -328,7 +328,7 @@ execute procedure staging.trigger_set_timestamp();
 create or replace function staging.handle_new_user()
 returns trigger as $$
 begin
-  insert into staging.users (user_id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor)
+  insert into staging.profiles (id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor)
   values (
     new.id,
     new.raw_user_meta_data->>'first_name',
@@ -353,7 +353,7 @@ create trigger on_auth_user_created_staging
 create or replace function staging.handle_update_user()
 returns trigger as $$
 begin
-  update staging.users
+  update staging.profiles
   set
     first_name = new.raw_user_meta_data->>'first_name',
     last_name = new.raw_user_meta_data->>'last_name',
@@ -363,7 +363,7 @@ begin
     country = coalesce(new.raw_user_meta_data->>'country', 'Nigeria'),
     is_customer = coalesce((new.raw_user_meta_data->>'is_customer')::boolean, true),
     is_vendor = coalesce((new.raw_user_meta_data->>'is_vendor')::boolean, false)
-  where user_id = new.id;
+  where id = new.id;
   return new;
 end;
 $$ language plpgsql security definer;
@@ -377,9 +377,9 @@ create trigger on_auth_user_updated_staging
 create or replace function staging.handle_delete_user()
 returns trigger as $$
 begin
-  update staging.users
+  update staging.profiles
   set deleted_at = now()
-  where user_id = old.id;
+  where id = old.id;
   return old;
 end;
 $$ language plpgsql security definer;
