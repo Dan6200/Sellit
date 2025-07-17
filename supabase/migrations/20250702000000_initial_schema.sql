@@ -10,7 +10,7 @@ begin
 end;
 $$ language plpgsql;
 
-create table if not exists users (
+create table if not exists profiles (
   user_id 		 uuid                    primary    key, -- Get from Firebase
   first_name   varchar(30)               not        null,
 	check				 (first_name ~* '^[a-zA-Z]+$'),
@@ -35,9 +35,9 @@ create table if not exists users (
   updated_at   timestamptz               not 				null 			default      now()
 );
 
--- create a trigger to update the updated_at column for users
+-- create a trigger to update the updated_at column for profiles
 create trigger set_timestamp
-before update on users
+before update on profiles
 for each row
 execute procedure trigger_set_timestamp();
 
@@ -45,7 +45,7 @@ execute procedure trigger_set_timestamp();
 
 create table if not exists shipping_info (
   shipping_info_id        serial        primary   key,
-  customer_id             uuid           not      null    references   users   on   delete   cascade,
+  customer_id             uuid           not      null    references   profiles   on   delete   cascade,
   recipient_full_name    	varchar(30)   not       null,
   address_line_1          varchar       not       null,
   address_line_2          varchar       not       null,
@@ -83,7 +83,7 @@ create table if not exists stores (
   store_id                 serial      primary   key,   
   store_name               varchar     not       null,
 	custom_domain            varchar     null,
-  vendor_id                uuid        not       null    references   users        on   delete   cascade,
+  vendor_id                uuid        not       null    references   profiles        on   delete   cascade,
   favicon                  varchar,
   default_page_styling     jsonb,
   store_pages              jsonb,
@@ -130,7 +130,7 @@ create table if not exists products (
   description          text[],
   list_price           numeric(19,4),
   net_price            numeric(19,4),
-  vendor_id            uuid             not       null    references			users         on   delete   cascade,
+  vendor_id            uuid             not       null    references			profiles         on   delete   cascade,
 	store_id 						 int 							not 			null 		references 			stores 					on 	 delete 	cascade,
   category_id          int           		not    		null    references   		categories      on   delete   cascade,
   subcategory_id       int           		not    		null    references   		subcategories   on   delete   cascade,
@@ -148,7 +148,7 @@ execute procedure trigger_set_timestamp();
 -- create orders table
 create table if not exists orders (
     order_id 						serial						primary 				key,
-    customer_id 				uuid						references 			users 						on delete cascade not null,
+    customer_id 				uuid						references 			profiles 						on delete cascade not null,
     store_id 						serial						references 			stores 						on delete cascade not null,
     shipping_info_id 		serial						references 			shipping_info 		on delete set null,
     order_date 					timestamptz				default 				now(),
@@ -233,7 +233,7 @@ for each row execute function product_media_display_landing_trigger();
 
 create table if not exists shopping_cart (
   cart_id       serial        primary   key,
-  customer_id   uuid           not       null   references   users   on   delete   cascade,
+  customer_id   uuid           not       null   references   profiles   on   delete   cascade,
   created_at    timestamptz   not       null   default      now(),
   updated_at    timestamptz   not       null   default      now()
 );
@@ -262,7 +262,7 @@ execute procedure trigger_set_timestamp();
 create table if not exists product_reviews (
 	order_item_id 			serial 						primary key 	 references order_items 				on 			delete 	 cascade,
   rating            numeric(3,2)   not       null    check (rating >= 0.00 and rating <= 5.00),
-  customer_id       uuid            not       null    references   users             on   delete   cascade,
+  customer_id       uuid            not       null    references   profiles             on   delete   cascade,
   customer_remark   varchar,
   created_at    timestamptz   not       null   default      now(),
   updated_at    timestamptz   not       null   default      now()
@@ -275,8 +275,8 @@ for each row
 execute procedure trigger_set_timestamp();
 
 create table if not exists vendor_reviews (
-  vendor_id         uuid            not       null    references   users               on   delete   cascade,
-  customer_id       uuid            not       null    references   users             on   delete   cascade,
+  vendor_id         uuid            not       null    references   profiles               on   delete   cascade,
+  customer_id       uuid            not       null    references   profiles             on   delete   cascade,
   order_id    int            not       null    references   orders				  on   delete   cascade,
   rating            numeric(3,2)   not       null    check (rating >= 0.00 and rating <= 5.00),
   customer_remark   varchar,
@@ -292,8 +292,8 @@ for each row
 execute procedure trigger_set_timestamp();
 
 create table if not exists customer_reviews (
-  customer_id      uuid            not       null    references   users             on   delete   cascade,
-  vendor_id        uuid            not       null    references   users               on   delete   cascade,
+  customer_id      uuid            not       null    references   profiles             on   delete   cascade,
+  vendor_id        uuid            not       null    references   profiles               on   delete   cascade,
   order_id   int            not       null    references   orders   on   delete   cascade,
   rating           numeric(3,2)   not       null    check (rating >= 0.00 and rating <= 5.00),
   vendor_remark    varchar,
@@ -307,11 +307,11 @@ create trigger set_timestamp
 before update on customer_reviews
 for each row
 execute procedure trigger_set_timestamp();
--- Function to handle new user creation in auth.users
+-- Function to handle new user creation in auth.profiles
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.users (user_id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor)
+  insert into public.profiles (user_id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor)
   values (
     new.id,
     new.raw_user_meta_data->>'first_name',
@@ -327,16 +327,16 @@ begin
 end;
 $$ language plpgsql security definer;
 
--- Trigger to call handle_new_user on auth.users insert
+-- Trigger to call handle_new_user on auth.profiles insert
 create trigger on_auth_user_created
-  after insert on auth.users
+  after insert on auth.profiles
   for each row execute procedure public.handle_new_user();
 
--- Function to handle user updates from auth.users
+-- Function to handle user updates from auth.profiles
 create or replace function public.handle_update_user()
 returns trigger as $$
 begin
-  update public.users
+  update public.profiles
   set
     first_name = new.raw_user_meta_data->>'first_name',
     last_name = new.raw_user_meta_data->>'last_name',
@@ -351,30 +351,30 @@ begin
 end;
 $$ language plpgsql security definer;
 
--- Trigger to call handle_update_user on auth.users update
+-- Trigger to call handle_update_user on auth.profiles update
 create trigger on_auth_user_updated
-  after update on auth.users
+  after update on auth.profiles
   for each row execute procedure public.handle_update_user();
 
--- Function to handle user deletion from auth.users
+-- Function to handle user deletion from auth.profiles
 create or replace function public.handle_delete_user()
 returns trigger as $$
 begin
-  update public.users
+  update public.profiles
   set deleted_at = now() -- <- Soft Delete. Set cronjob to delete after 30 days
   where user_id = old.id;
   return old;
 end;
 $$ language plpgsql security definer;
 
--- Trigger to call handle_delete_user on auth.users delete
+-- Trigger to call handle_delete_user on auth.profiles delete
 create trigger on_auth_user_deleted
-  after delete on auth.users
+  after delete on auth.profiles
   for each row execute procedure public.handle_delete_user();
 
 -- Enable RLS for tables and create basic select policies
-alter table users enable row level security;
-create policy "Public users are viewable by everyone." on users for select using (true);
+alter table profiles enable row level security;
+create policy "Public profiles are viewable by everyone." on profiles for select using (true);
 
 alter table shipping_info enable row level security;
 create policy "Public shipping_info are viewable by everyone." on shipping_info for select using (true);
