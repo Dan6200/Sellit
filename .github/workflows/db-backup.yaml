@@ -28,6 +28,11 @@ jobs:
             exit 0
           fi
 
+      - name: Link Supabase project
+        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
       - name: Checkout repository
         if: env.BACKUP_ENABLED == 'true'
         uses: actions/checkout@v3
@@ -53,8 +58,6 @@ jobs:
       - name: Backup data
         if: env.BACKUP_ENABLED == 'true'
         run: supabase db dump --db-url "$SUPABASE_DB_URL" -f db/backups/data.sql --data-only --use-copy
-      - name: Link Supabase project (important for CLI commands)
-        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
 
       - name: Upload backups to Supabase Storage
         if: env.BACKUP_ENABLED == 'true'
