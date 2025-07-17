@@ -454,8 +454,8 @@ insert into staging.products (title, description, list_price, net_price, vendor_
 ('Body Lotion Hydrating', '{"Shea Butter", "Vanilla Scent"}', 15.00, 12.00, '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', (select store_id from staging.stores where store_name = 'Fashion Forward'), (select category_id from categories where category_name = 'Beauty Products'), (select subcategory_id from subcategories where subcategory_name = 'Skincare'), 220),
 ('Fashion Scarf Silk Blend', '{"Large Square", "Versatile"}', 20.00, 18.00, '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', (select store_id from staging.stores where store_name = 'Fashion Forward'), (select category_id from categories where category_name = 'Clothing'), (select subcategory_id from subcategories where subcategory_name = 'Women''s Fashion'), 140);
 
--- Fake data for transactions
-insert into public.transactions (customer_id, vendor_id, total_amount) values
+-- Fake data for orders
+insert into public.orders (customer_id, vendor_id, total_amount) values
 ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 1100.00),
 ('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', 220.00),
 ('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', 80.00),
@@ -467,7 +467,7 @@ insert into public.transactions (customer_id, vendor_id, total_amount) values
 ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77', 1650.00),
 ('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', 50.00);
 
-insert into staging.transactions (customer_id, vendor_id, total_amount) values
+insert into staging.orders (customer_id, vendor_id, total_amount) values
 ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 1100.00),
 ('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', 220.00),
 ('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', 80.00),

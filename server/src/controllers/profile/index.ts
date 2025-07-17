@@ -3,7 +3,7 @@ import {
   ProcessRouteWithoutBody,
   QueryParams,
 } from '../../types/process-routes.js'
-import createRouteProcessor from '../routes/process.js'
+import createRouteProcessor from '../process-routes.js'
 import { QueryResult, QueryResultRow } from 'pg'
 import { validateResData } from '../utils/response-validation.js'
 import { ProfileResponseSchema } from '../../app-schema/users.js'

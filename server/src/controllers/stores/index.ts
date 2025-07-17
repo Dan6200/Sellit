@@ -16,7 +16,7 @@ import StoreData, {
   DBFriendlyStoreData,
   isValidStoreDataRequest,
 } from '../../types/store-data.js'
-import processRoute from '../routes/process.js'
+import processRoute from '../process-routes.js'
 import { validateReqData } from '../utils/request-validation.js'
 import { validateResData } from '../utils/response-validation.js'
 import { Knex } from 'knex'

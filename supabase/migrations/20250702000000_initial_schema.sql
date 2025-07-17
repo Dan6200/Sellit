@@ -149,8 +149,8 @@ execute procedure trigger_set_timestamp();
 create table if not exists orders (
     order_id 						serial						primary 				key,
     customer_id 				uuid						references 			profiles 						on delete cascade not null,
-    store_id 						serial						references 			stores 						on delete cascade not null,
-    shipping_info_id 		serial						references 			shipping_info 		on delete set null,
+    store_id 						int 						references 			stores 						on delete cascade not null,
+    shipping_info_id 		int 						references 			shipping_info 		on delete set null,
     order_date 					timestamptz				default 				now(),
     total_amount 				numeric(10, 2)		not null,
     status 							text							default 				'pending' 				not null,
@@ -260,7 +260,7 @@ for each row
 execute procedure trigger_set_timestamp();
 
 create table if not exists product_reviews (
-	order_item_id 			serial 						primary key 	 references order_items 				on 			delete 	 cascade,
+	order_item_id 			int 						primary key 	 references order_items 				on 			delete 	 cascade,
   rating            numeric(3,2)   not       null    check (rating >= 0.00 and rating <= 5.00),
   customer_id       uuid            not       null    references   profiles             on   delete   cascade,
   customer_remark   varchar,

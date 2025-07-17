@@ -156,8 +156,8 @@ execute procedure staging.trigger_set_timestamp();
 create table staging.orders (
     order_id 						serial						primary 				key,
     customer_id 				uuid						references 			staging.profiles 						on delete cascade not null,
-    store_id 						serial						references 			staging.stores 						on delete cascade not null,
-    shipping_info_id 		serial						references 			staging.shipping_info 		on delete set null,
+    store_id 						int 						references 			staging.stores 						on delete cascade not null,
+    shipping_info_id 		int 						references 			staging.shipping_info 		on delete set null,
     order_date 					timestamptz				default 				now(),
     total_amount 				numeric(10, 2)		not null,
     status 							text							default 				'pending' 				not null,
@@ -272,10 +272,8 @@ execute procedure staging.trigger_set_timestamp();
 
 -- Replicate product_reviews table
 create table if not exists staging.product_reviews (
-  review_id         serial         primary key,
-  product_id        int            not       null    references   staging.products              on   delete   cascade,
-  transaction_id    int            not       null    references   staging.transactions				  on   delete   cascade,
-  rating            numeric(3,2)   not       null,
+	order_item_id 			int 						primary key 	 references staging.order_items 				on 			delete 	 cascade,
+  rating            numeric(3,2)   not       null    check (rating >= 0.00 and rating <= 5.00),
   customer_id       uuid            not       null    references   staging.profiles             on   delete   cascade,
   customer_remark   varchar,
   created_at    timestamptz   not       null   default      now(),
