@@ -1,6 +1,6 @@
-// import { UserIDSchema } from '../../app-schema/users.js'
+// import { ProfileIDSchema } from '../../app-schema/users.js'
 
-export interface UserData {
+export interface ProfileData {
   first_name: string
   last_name: string
   email?: string
@@ -15,15 +15,16 @@ export interface UserData {
   deleted_at?: Date
 }
 
-export type UserRequestData = UserData & ({ email: string } | { phone: string })
+export type ProfileRequestData = ProfileData &
+  ({ email: string } | { phone: string })
 
-export interface UserID {
+export interface ProfileID {
   userId: string
 }
 
 // orphaned...
-// export const isValidUserID = (data: unknown): data is UserID => {
-//   const { error } = UserIDSchema.validate(data)
+// export const isValidProfileID = (data: unknown): data is ProfileID => {
+//   const { error } = ProfileIDSchema.validate(data)
 //   error && console.error(error)
 //   return !error
 // }

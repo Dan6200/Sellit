@@ -1,37 +1,38 @@
-import { UserResponseSchema } from '#src/app-schema/users.js'
-import { UserData } from '#src/types/users/index.js'
+import { ProfileResponseSchema } from '#src/app-schema/users.js'
+import { ProfileData } from '#src/types/users/index.js'
 
-export type UserRequestData = UserData & ({ email: string } | { phone: string })
+export type ProfileRequestData = ProfileData &
+  ({ email: string } | { phone: string })
 
 // orphaned...
-// export const isValidUserUpdateRequestData = (
+// export const isValidProfileUpdateRequestData = (
 //   data: unknown,
-// ): data is UserRequestData => {
-//   const { error } = UserUpdateRequestSchema.validate(data)
+// ): data is ProfileRequestData => {
+//   const { error } = ProfileUpdateRequestSchema.validate(data)
 //   error && console.error(error)
 //   return !error
 // }
 
 // orphaned...
-// export const isValidUserRequestData = (
+// export const isValidProfileRequestData = (
 //   data: unknown,
-// ): data is UserRequestData => {
-//   const { error } = UserRequestSchema.validate(data)
+// ): data is ProfileRequestData => {
+//   const { error } = ProfileRequestSchema.validate(data)
 //   error && console.error(error)
 //   return !error
 // }
 
-interface UserResponse extends UserData {
+interface ProfileResponse extends ProfileData {
   is_customer: boolean
   is_vendor: boolean
 }
 
-export type UserResponseData = UserResponse & UserRequestData
+export type ProfileResponseData = ProfileResponse & ProfileRequestData
 
-export const isValidUserResponseData = (
+export const isValidProfileResponseData = (
   data: unknown,
-): data is UserResponseData => {
-  const { error } = UserResponseSchema.validate(data)
+): data is ProfileResponseData => {
+  const { error } = ProfileResponseSchema.validate(data)
   error && console.error(error)
   return !error
 }

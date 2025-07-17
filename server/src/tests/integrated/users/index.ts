@@ -1,16 +1,16 @@
 //cspell:ignore userIds
 import chai from 'chai'
 import chaiHttp from 'chai-http'
-import { testGetUserProfile } from './definitions.js'
-import { UserRequestData } from '#src/types/users/index.js'
+import { testGetProfileProfile } from './definitions.js'
+import { ProfileRequestData } from '#src/types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 import { signInForTesting } from '../helpers/signin-user.js'
 
 chai.use(chaiHttp).should()
 
-export default function ({ userInfo }: { userInfo: UserRequestData }) {
-  describe('User profile management', () => {
+export default function ({ userInfo }: { userInfo: ProfileRequestData }) {
+  describe('Profile profile management', () => {
     // Set server url
     const server = process.env.SERVER!
     const path = '/v1/me'
@@ -25,7 +25,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
     })
 
     it("should get the user's profile", () =>
-      testGetUserProfile({
+      testGetProfileProfile({
         server,
         path,
         token,

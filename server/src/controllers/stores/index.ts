@@ -38,8 +38,8 @@ const createQuery = async ({
 }: QueryParams): Promise<Knex.QueryBuilder<string>> => {
   if (!userId) throw new UnauthorizedError('Sign-in to create store')
   // check if vendor account is enabled
-  const result = await knex('users')
-    .where('user_id', userId)
+  const result = await knex('profiles')
+    .where('id', userId)
     .select('is_vendor')
     .limit(1)
   if (!result[0]?.is_vendor)
@@ -158,8 +158,8 @@ const updateQuery = async ({
     throw new BadRequestError('Invalid request data')
   const storeData = body
   // check if vendor account is enabled
-  const result = await knex('users')
-    .where('user_id', userId)
+  const result = await knex('profiles')
+    .where('id', userId)
     .select('is_vendor')
     .limit(1)
   if (!result[0]?.is_vendor)
@@ -202,8 +202,8 @@ const deleteQuery = async ({
   const { storeId } = params
   if (!storeId) throw new BadRequestError('Need store ID param to delete store')
   // check if vendor account is enabled
-  const result = await knex('users')
-    .where('user_id', userId)
+  const result = await knex('profiles')
+    .where('id', userId)
     .select('is_vendor')
     .limit(1)
   if (!result[0]?.is_vendor)

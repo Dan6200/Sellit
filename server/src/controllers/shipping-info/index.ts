@@ -38,13 +38,13 @@ const createQuery = async ({
   if (!userId)
     throw new UnauthorizedError('Sign-in to access shipping information.')
   // check if customer account is enabled
-  const result = await knex('users')
-    .where('user_id', userId)
+  const result = await knex('profiles')
+    .where('id', userId)
     .select('is_customer')
     .limit(1)
   if (!result[0]?.is_customer)
     throw new ForbiddenError(
-      'User is not a customer. Only customers can create shipping addresses.',
+      'Profile is not a customer. Only customers can create shipping addresses.',
     )
   // Limit the amount of shipping addresses a user can have:
   const LIMIT = 5
@@ -83,13 +83,13 @@ const getAllQuery = async ({
   if (!userId)
     throw new UnauthorizedError('Sign-in to access shipping information.')
   // check if customer account is enabled
-  const result = await knex('users')
-    .where('user_id', userId)
+  const result = await knex('profiles')
+    .where('id', userId)
     .select('is_customer')
     .limit(1)
   if (!result[0]?.is_customer)
     throw new ForbiddenError(
-      'User is not a customer. Only customers can create shipping addresses.',
+      'Profile is not a customer. Only customers can create shipping addresses.',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('customer_id', userId)
@@ -112,13 +112,13 @@ const getQuery = async ({
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { shippingInfoId } = params
   // check if customer account is enabled
-  const result = await knex('users')
-    .where('user_id', userId)
+  const result = await knex('profiles')
+    .where('id', userId)
     .select('is_customer')
     .limit(1)
   if (!result[0]?.is_customer)
     throw new ForbiddenError(
-      'User is not a customer. Only customers can view shipping addresses.',
+      'Profile is not a customer. Only customers can view shipping addresses.',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('shipping_info_id', shippingInfoId)
@@ -150,13 +150,13 @@ const updateQuery = async ({
   if (!shippingInfoId)
     throw new BadRequestError('Need shipping-info ID to update resource')
   // check if customer account is enabled
-  const result = await knex('users')
-    .where('user_id', userId)
+  const result = await knex('profiles')
+    .where('id', userId)
     .select('is_customer')
     .limit(1)
   if (!result[0]?.is_customer)
     throw new ForbiddenError(
-      'User is not a customer. Only customers can view shipping addresses.',
+      'Profile is not a customer. Only customers can view shipping addresses.',
     )
   const DBFriendlyData = {
     ...shippingData,
@@ -189,13 +189,13 @@ const deleteQuery = async ({
   if (!shippingInfoId)
     throw new BadRequestError('Need Id param to delete resource')
   // check if customer account is enabled
-  const result = await knex('users')
-    .where('user_id', userId)
+  const result = await knex('profiles')
+    .where('id', userId)
     .select('is_customer')
     .limit(1)
   if (!result[0]?.is_customer)
     throw new ForbiddenError(
-      'User is not a customer. Only customers can delete shipping addresses.',
+      'Profile is not a customer. Only customers can delete shipping addresses.',
     )
   return knex<ShippingInfo>('shipping_info')
     .where('shipping_info_id', shippingInfoId)

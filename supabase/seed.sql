@@ -149,7 +149,7 @@ insert into staging.subcategories(category_id, subcategory_name) values ((select
 ((select category_id from staging.categories where category_name = 'Handmade'), 'Handmade Home Decor');
 
 -- Fake data for users
-insert into public.users (user_id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor) values
+insert into public.profiles (id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor) values
 ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'John', 'Doe', 'john.doe@example.com', '+2348012345678', '1990-01-15', 'Nigeria', true, true),
 ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'Jane', 'Smith', 'jane.smith@example.com', '+2348023456789', '1985-05-20', 'Nigeria', true, false),
 ('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', 'Peter', 'Jones', 'peter.jones@example.com', '+2348034567890', '1992-11-01', 'Nigeria', false, true),
@@ -162,7 +162,7 @@ insert into public.users (user_id, first_name, last_name, email, phone, dob, cou
 ('45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', 'Emily', 'Clark', 'emily.clark@example.com', '+447123456789', '1998-06-05', 'United Kingdom', true, true);
 
 -- Fake data for users
-insert into staging.users (user_id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor) values
+insert into staging.profiles (id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor) values
 ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'John', 'Doe', 'john.doe@example.com', '+2348012345678', '1990-01-15', 'Nigeria', true, true),
 ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'Jane', 'Smith', 'jane.smith@example.com', '+2348023456789', '1985-05-20', 'Nigeria', true, false),
 ('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', 'Peter', 'Jones', 'peter.jones@example.com', '+2348034567890', '1992-11-01', 'Nigeria', false, true),

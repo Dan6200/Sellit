@@ -31,7 +31,7 @@ export default async ({
     .first('is_vendor')
   if (!response?.is_vendor)
     throw new ForbiddenError(
-      'User is not a vendor. Need to enable your vendor account for this operation.',
+      'Profile is not a vendor. Need to enable your vendor account for this operation.',
     )
   if (!storeId)
     throw new BadRequestError('Need to provide Store ID as query param')

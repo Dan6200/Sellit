@@ -1,12 +1,7 @@
 //cspell:ignore cloudinary
-import { knex } from '../../../db/index.js'
-import { UserRequestData } from '#src/types/users/index.js'
+import { ProfileRequestData } from '#src/types/users/index.js'
 import { ProductRequestData, ProductMedia } from '#src/types/products.js'
-import {
-  testPostProduct,
-  testUploadProductMedia,
-} from '../products/definitions/index.js'
-import { supabase } from '#supabase-config'
+import { testUploadProductMedia } from '../products/definitions/index.js'
 import { bulkDeleteImages } from '../utils/bulk-delete.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
@@ -16,18 +11,13 @@ import { createProductsForTesting } from '../helpers/create-product.js'
 
 // globals
 const mediaRoute = '/v1/media'
-const vendorsRoute = '/v1/users/vendors/'
-const productsRoute = '/v1/products'
-let token: string
 const server: string = process.env.SERVER!
-let userIdToDelete: string
-const productIds: number[] = []
 
 export default function ({
   userInfo,
   productMedia,
 }: {
-  userInfo: UserRequestData
+  userInfo: ProfileRequestData
   products: ProductRequestData[]
   productMedia: ProductMedia[][]
 }) {

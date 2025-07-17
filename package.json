@@ -15,9 +15,9 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node built/server/src/server.js",
-    "start-testing": "NODE_ENV=testing node built/server/src/server.js",
-    "start-testing:watch": "NODE_ENV=testing tsx watch server/src/server.ts",
-    "start-testing:watch:debug": "DEBUG=1 NODE_ENV=testing tsx watch server/src/server.ts",
+    "test-server": "NODE_ENV=testing node built/server/src/server.js",
+    "test-server:watch": "NODE_ENV=testing tsx watch server/src/server.ts",
+    "test-server:watch:debug": "DEBUG=1 NODE_ENV=testing tsx watch server/src/server.ts",
     "tests": "NODE_ENV=testing mocha server/src/tests --config server/src/tests/.mocharc.json",
     "tests:staging": "NODE_ENV=staging mocha server/src/tests --config server/src/tests/.mocharc.json",
     "tests:debug": "NODE_ENV=testing DEBUG=1 mocha server/src/tests --config server/src/tests/.mocharc.json",

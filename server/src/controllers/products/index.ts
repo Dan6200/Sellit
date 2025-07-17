@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes'
-import createRouteProcessor from '../routes/process.js'
+import createRouteProcessor from '../process-routes.js'
 import {
   ProductResponseSchema,
   ProductRequestSchema,

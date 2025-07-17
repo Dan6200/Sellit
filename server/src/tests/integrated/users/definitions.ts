@@ -2,7 +2,7 @@ import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { StatusCodes } from 'http-status-codes'
 import { TestRequest, TestRequestWithQParams } from '../test-request/types.js'
-import { isValidUserResponseData } from './types.js'
+import { isValidProfileResponseData } from './types.js'
 import testRequest from '../test-request/index.js'
 
 chai.use(chaiHttp).should()
@@ -10,38 +10,38 @@ chai.use(chaiHttp).should()
 const { OK, UNAUTHORIZED } = StatusCodes
 
 const hasNoCustomerAccount = (data: unknown) => {
-  const isValidData = isValidUserResponseData(data)
-  if (!isValidData) throw new Error('Invalid User Data Response')
+  const isValidData = isValidProfileResponseData(data)
+  if (!isValidData) throw new Error('Invalid Profile Data Response')
   data.is_customer.should.be.false
   return true
 }
 
 const hasCustomerAccount = (data: unknown) => {
-  const isValidData = isValidUserResponseData(data)
-  if (!isValidData) throw new Error('Invalid User Data Response')
+  const isValidData = isValidProfileResponseData(data)
+  if (!isValidData) throw new Error('Invalid Profile Data Response')
   data.is_customer.should.be.true
   return true
 }
 
 const hasVendorAccount = (data: unknown) => {
-  const isValidData = isValidUserResponseData(data)
-  if (!isValidData) throw new Error('Invalid User Data Response')
+  const isValidData = isValidProfileResponseData(data)
+  if (!isValidData) throw new Error('Invalid Profile Data Response')
   data.is_vendor.should.be.true
   return true
 }
 
 const hasNoVendorAccount = (data: unknown) => {
-  const isValidData = isValidUserResponseData(data)
-  if (!isValidData) throw new Error('Invalid User Data Response')
+  const isValidData = isValidProfileResponseData(data)
+  if (!isValidData) throw new Error('Invalid Profile Data Response')
   data.is_vendor.should.be.false
   return true
 }
 
 const testRequestBase = <TestRequest>testRequest
-export const testGetUserProfile = testRequestBase({
+export const testGetProfileProfile = testRequestBase({
   verb: 'get',
   statusCode: OK,
-  validateTestResData: isValidUserResponseData,
+  validateTestResData: isValidProfileResponseData,
 })
 
 export const testHasCustomerAccount = testRequestBase({
@@ -69,7 +69,7 @@ export const testHasNoVendorAccount = testRequestBase({
 })
 
 const testRequestWithoutSignIn = <TestRequestWithQParams>testRequest
-export const testGetUserWithoutSignIn = testRequestWithoutSignIn({
+export const testGetProfileWithoutSignIn = testRequestWithoutSignIn({
   verb: 'get',
   statusCode: UNAUTHORIZED,
 })
@@ -81,9 +81,9 @@ export const testHasCustomerAccountWithoutSignIn = testRequestWithoutSignIn({
 })
 
 /* Can only work for Admin accounts */
-// export const testGetNonExistentUser = testRequests({
+// export const testGetNonExistentProfile = testRequests({
 //   verb: 'get',
 //   statusCode: UNAUTHORIZED,
 //   validateTestResData: null,
-//   validateTestReqData: isValidUserRequestData,
+//   validateTestReqData: isValidProfileRequestData,
 // })

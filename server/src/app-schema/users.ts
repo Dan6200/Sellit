@@ -2,7 +2,7 @@
 // cspell:ignore alphanum
 import joi from 'joi'
 
-export const UserRequestSchema = joi
+export const ProfileRequestSchema = joi
   .object()
   .keys({
     first_name: joi.string().alphanum().min(3).max(30).required(),
@@ -34,7 +34,7 @@ export const UserRequestSchema = joi
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*+\-~^:;`._=\/\\{}\[\]\(\)])[A-Za-z\s\d!@#$%^&*+\-~^_:;`.=\/\\{}\[\]\(\)]{8,}$/
       ),*/
 
-export const UserResponseSchema = joi
+export const ProfileResponseSchema = joi
   .object()
   .keys({
     user_id: joi.string().guid({ version: 'uuidv4' }),
@@ -63,7 +63,7 @@ export const UserResponseSchema = joi
   .or('email', 'phone')
   .required()
 
-export const UserUpdateRequestSchema = joi
+export const ProfileUpdateRequestSchema = joi
   .object({
     first_name: joi.string().alphanum().min(3).max(30),
     last_name: joi.string().alphanum().min(3).max(30),
@@ -86,7 +86,7 @@ export const UserUpdateRequestSchema = joi
   })
   .required()
 
-export const UserIDSchema = joi
+export const ProfileIDSchema = joi
   .object({
     user_id: joi.string().guid({ version: 'uuidv4' }),
   })

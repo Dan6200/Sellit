@@ -1,9 +1,9 @@
 import { Response } from 'express'
-import { RequestWithPayload } from '../../types/request.js'
-import { isTypeQueryResultRow, Status } from '../../types/response.js'
-import { QueryDB } from '../../types/process-routes.js'
+import { RequestWithPayload } from '../types/request.js'
+import { isTypeQueryResultRow, Status } from '../types/response.js'
+import { QueryDB } from '../types/process-routes.js'
 import { QueryResult, QueryResultRow } from 'pg'
-import NotFoundError from '../../errors/not-found.js'
+import NotFoundError from '../errors/not-found.js'
 import InternalServerError from '#src/errors/internal-server.js'
 
 export default ({

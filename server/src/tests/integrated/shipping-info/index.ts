@@ -7,7 +7,7 @@ import {
   testGetNonExistentShipping,
 } from '../shipping-info/definitions/index.js'
 import assert from 'assert'
-import { UserRequestData } from '../../../types/users/index.js'
+import { ProfileRequestData } from '../../../types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 import { signInForTesting } from '../helpers/signin-user.js'
@@ -18,7 +18,7 @@ export default function ({
   listOfShippingInfo,
   listOfUpdatedShippingInfo,
 }: {
-  userInfo: UserRequestData
+  userInfo: ProfileRequestData
   listOfShippingInfo: ShippingInfo[]
   listOfUpdatedShippingInfo: ShippingInfo[]
 }) {

@@ -1,11 +1,11 @@
 // cspell: disable
-import { UserRequestData } from '#src/types/users/index.js'
+import { ProfileRequestData } from '#src/types/users/index.js'
 import {
   listOfShippingInfo,
   listOfUpdatedShippingInfo,
 } from './shipping-info.js'
 
-const userInfo: UserRequestData = {
+const userInfo: ProfileRequestData = {
   first_name: 'Ebuka',
   last_name: 'Eze',
   email: 'ebukachibueze5489@gmail.com',
@@ -17,15 +17,15 @@ const userInfo: UserRequestData = {
   is_vendor: false,
 }
 
-const updatedUserInfo: UserRequestData = {
+const updatedProfileInfo: ProfileRequestData = {
   country: 'Ghana',
   first_name: 'John',
   dob: new Date('2003-06-08'),
-} as UserRequestData
+} as ProfileRequestData
 
 export {
   userInfo,
-  updatedUserInfo,
+  updatedProfileInfo,
   listOfShippingInfo,
   listOfUpdatedShippingInfo,
 }

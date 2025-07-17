@@ -1,15 +1,15 @@
 // cspell:ignore userIds
 import chai from 'chai'
 import chaiHttp from 'chai-http'
-import { testGetUserWithoutSignIn } from './definitions.js'
-import { UserRequestData } from '#src/types/users/index.js'
+import { testGetProfileWithoutSignIn } from './definitions.js'
+import { ProfileRequestData } from '#src/types/users/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 
 chai.use(chaiHttp).should()
 
-export default function ({ userInfo }: { userInfo: UserRequestData }) {
-  describe('User profile management without sign-in', () => {
+export default function ({ userInfo }: { userInfo: ProfileRequestData }) {
+  describe('Profile profile management without sign-in', () => {
     // Set server url
     const server = process.env.SERVER!
     const path = '/v1/me'
@@ -23,7 +23,7 @@ export default function ({ userInfo }: { userInfo: UserRequestData }) {
     })
 
     it('should fail to get the user profile without sign-in', () =>
-      testGetUserWithoutSignIn({
+      testGetProfileWithoutSignIn({
         server,
         path,
         token,

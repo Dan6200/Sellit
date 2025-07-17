@@ -14,7 +14,7 @@ import {
   TestRequestWithQParamsAndBody,
 } from '../../test-request/types.js'
 import testRoutes from '../../test-request/index.js'
-import { UserRequestData } from '#src/types/users/index.js'
+import { ProfileRequestData } from '#src/types/users/index.js'
 import { signInForTesting } from '../../helpers/signin-user.js'
 
 chai.use(chaiHttp).should()
@@ -94,7 +94,7 @@ export const testUploadProductMedia = async function (
   server: string,
   urlPath: string,
   media: ProductMedia[],
-  userInfo: UserRequestData,
+  userInfo: ProfileRequestData,
   queryParams: { [k: string]: any },
 ): Promise<any> {
   const token = await signInForTesting(userInfo)

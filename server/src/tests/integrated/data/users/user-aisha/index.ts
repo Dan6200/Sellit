@@ -1,11 +1,11 @@
-import { UserRequestData } from '#src/types/users/index.js'
+import { ProfileRequestData } from '#src/types/users/index.js'
 import {
   listOfShippingInfo,
   listOfUpdatedShippingInfo,
 } from './shipping-info.js'
 
 // Make sure test data is correct especially dates
-const userInfo: UserRequestData = {
+const userInfo: ProfileRequestData = {
   first_name: 'Aisha',
   last_name: 'Mohammed',
   email: 'aisha.mohammed@school.edu',
@@ -17,13 +17,13 @@ const userInfo: UserRequestData = {
   is_vendor: false,
 }
 
-const updatedUserInfo = {
+const updatedProfileInfo = {
   dob: new Date('2000-10-23'),
-} as UserRequestData
+} as ProfileRequestData
 
 export {
   userInfo,
-  updatedUserInfo,
+  updatedProfileInfo,
   listOfShippingInfo,
   listOfUpdatedShippingInfo,
 }
