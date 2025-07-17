@@ -1,4 +1,5 @@
 -- insert into public.product_reviews (product_id, transaction_id, rating, customer_id, customer_remark) values
+-- insert into public.product_reviews (purchase_id, rating, customer_id, customer_remark) values
 -- ((select product_id from products where title = 'Laptop Pro X'), (select transaction_id from transactions where customer_id = 'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22' and vendor_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'), 4.50, 'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'Great laptop, very fast!'),
 -- ((select product_id from products where title = 'Classic Leather Jacket'), (select transaction_id from transactions where customer_id = 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44' and vendor_id = 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33'), 5.00, 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', 'High quality leather, perfect fit.'),
 -- ((select product_id from products where title = 'Organic Skincare Kit'), (select transaction_id from transactions where customer_id = 'f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66' and vendor_id = 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55'), 4.00, 'f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', 'Good product, but a bit pricey.'),

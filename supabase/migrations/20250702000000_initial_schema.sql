@@ -146,7 +146,7 @@ for each row
 execute procedure trigger_set_timestamp();
 
 -- create orders table
-create table orders (
+create table if not exists orders (
     order_id 						serial						primary 				key,
     customer_id 				uuid						references 			users 						on delete cascade not null,
     store_id 						serial						references 			stores 						on delete cascade not null,
@@ -165,12 +165,12 @@ for each row
 execute procedure trigger_set_timestamp();
 
 -- create order_items table
-create table order_items (
+create table if not exists order_items (
     order_item_id       serial          primary     key,
     order_id            serial          not         null    references  orders          on  delete  cascade,
     product_id          int             not         null    references  products        on  delete  cascade,
     quantity            int             not         null    check       (quantity > 0),
-    price_at_purchase   numeric(19,4)   not         null,
+    price_at_order_item   numeric(19,4)   not         null,
     created_at          timestamptz     not 				null 		default     now(),
     updated_at          timestamptz     not 				null 		default     now()
 );
@@ -259,39 +259,8 @@ before update on shopping_cart_item
 for each row
 execute procedure trigger_set_timestamp();
 
-create table if not exists transactions(
-  transaction_id   serial           primary      key,
-  customer_id      uuid              not          null,
-  vendor_id        uuid              not          null,
-  total_amount     numeric(19,4)    not          null,
-  created_at       timestamptz      not          null    default   now(),
-  updated_at       timestamptz      not          null    default   now(),
-  check            (customer_id <>  vendor_id)
-);
-
--- create a trigger to update the updated_at column for transactions
-create trigger set_timestamp
-before update on transactions
-for each row
-execute procedure trigger_set_timestamp();
-
-create table if not exists purchases (
-  purchase_id          serial        primary   key,
-  product_id       int           not       null   references   products              on        delete   cascade,
-  transaction_id   int           not       null   references   transactions				   on        delete   cascade,
-  created_at       timestamptz   not       null   default      now(),
-  updated_at       timestamptz   not       null   default      now(),
-  quantity         int           not       null   check        (quantity > 0)
-);
-
--- create a trigger to update the updated_at column for purchases
-create trigger set_timestamp
-before update on purchases
-for each row
-execute procedure trigger_set_timestamp();
-
 create table if not exists product_reviews (
-	purchase_id 			serial 						primary key 	 references purchases 				on 			delete 	 cascade,
+	order_item_id 			serial 						primary key 	 references order_items 				on 			delete 	 cascade,
   rating            numeric(3,2)   not       null    check (rating >= 0.00 and rating <= 5.00),
   customer_id       uuid            not       null    references   users             on   delete   cascade,
   customer_remark   varchar,
@@ -308,12 +277,12 @@ execute procedure trigger_set_timestamp();
 create table if not exists vendor_reviews (
   vendor_id         uuid            not       null    references   users               on   delete   cascade,
   customer_id       uuid            not       null    references   users             on   delete   cascade,
-  transaction_id    int            not       null    references   transactions				  on   delete   cascade,
+  order_id    int            not       null    references   orders				  on   delete   cascade,
   rating            numeric(3,2)   not       null    check (rating >= 0.00 and rating <= 5.00),
   customer_remark   varchar,
   created_at    timestamptz   not       null   default      now(),
   updated_at    timestamptz   not       null   default      now(),
-  primary key (vendor_id, transaction_id)
+  primary key (vendor_id, order_id)
 );
 
 -- create a trigger to update the updated_at column for vendor_reviews
@@ -325,12 +294,12 @@ execute procedure trigger_set_timestamp();
 create table if not exists customer_reviews (
   customer_id      uuid            not       null    references   users             on   delete   cascade,
   vendor_id        uuid            not       null    references   users               on   delete   cascade,
-  transaction_id   int            not       null    references   transactions   on   delete   cascade,
+  order_id   int            not       null    references   orders   on   delete   cascade,
   rating           numeric(3,2)   not       null    check (rating >= 0.00 and rating <= 5.00),
   vendor_remark    varchar,
   created_at    timestamptz   not       null   default      now(),
   updated_at    timestamptz   not       null   default      now(),
-  primary key (customer_id, transaction_id)
+  primary key (customer_id, order_id)
 );
 
 -- create a trigger to update the updated_at column for customer_reviews
@@ -402,4 +371,50 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_deleted
   after delete on auth.users
   for each row execute procedure public.handle_delete_user();
+
+-- Enable RLS for tables and create basic select policies
+alter table users enable row level security;
+create policy "Public users are viewable by everyone." on users for select using (true);
+
+alter table shipping_info enable row level security;
+create policy "Public shipping_info are viewable by everyone." on shipping_info for select using (true);
+
+alter table payment_info enable row level security;
+create policy "Public payment_info are viewable by everyone." on payment_info for select using (true);
+
+alter table stores enable row level security;
+create policy "Public stores are viewable by everyone." on stores for select using (true);
+
+alter table categories enable row level security;
+create policy "Public categories are viewable by everyone." on categories for select using (true);
+
+alter table subcategories enable row level security;
+create policy "Public subcategories are viewable by everyone." on subcategories for select using (true);
+
+alter table products enable row level security;
+create policy "Public products are viewable by everyone." on products for select using (true);
+
+alter table orders enable row level security;
+create policy "Public orders are viewable by everyone." on orders for select using (true);
+
+alter table order_items enable row level security;
+create policy "Public order_items are viewable by everyone." on order_items for select using (true);
+
+alter table product_media enable row level security;
+create policy "Public product_media are viewable by everyone." on product_media for select using (true);
+
+alter table shopping_cart enable row level security;
+create policy "Public shopping_cart are viewable by everyone." on shopping_cart for select using (true);
+
+alter table shopping_cart_item enable row level security;
+create policy "Public shopping_cart_item are viewable by everyone." on shopping_cart_item for select using (true);
+
+alter table product_reviews enable row level security;
+create policy "Public product_reviews are viewable by everyone." on product_reviews for select using (true);
+
+alter table vendor_reviews enable row level security;
+create policy "Public vendor_reviews are viewable by everyone." on vendor_reviews for select using (true);
+
+alter table customer_reviews enable row level security;
+create policy "Public customer_reviews are viewable by everyone." on customer_reviews for select using (true);
 

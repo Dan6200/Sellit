@@ -177,7 +177,7 @@ create table staging.order_items (
     order_id            serial          not         null    references  staging.orders          on  delete  cascade,
     product_id          int             not         null    references  staging.products        on  delete  cascade,
     quantity            int             not         null    check       (quantity > 0),
-    price_at_purchase   numeric(19,4)   not         null,
+    price_at_purcha(e   numeric(19,4)   not         null,
     created_at          timestamptz     not 				null 		default     now(),
     updated_at          timestamptz     not 				null 		default     now()
 );
@@ -270,39 +270,6 @@ before update on staging.shopping_cart_item
 for each row
 execute procedure staging.trigger_set_timestamp();
 
--- Replicate transactions table
-create table if not exists staging.transactions(
-  transaction_id   serial           primary      key,
-  customer_id      uuid              not          null    references   staging.users,
-  vendor_id        uuid              not          null    references   staging.users,
-  total_amount     numeric(19,4)    not          null,
-  created_at       timestamptz      not          null    default   now(),
-  updated_at       timestamptz      not          null    default   now(),
-  check            (customer_id <>  vendor_id)
-);
-
--- create a trigger to update the updated_at column for staging.transactions
-create trigger set_timestamp
-before update on staging.transactions
-for each row
-execute procedure staging.trigger_set_timestamp();
-
--- Replicate purchases table
-create table if not exists staging.purchases (
-  item_id          serial        primary   key,
-  product_id       int           not       null   references   staging.products              on        delete   cascade,
-  transaction_id   int           not       null   references   staging.transactions				   on        delete   cascade,
-  created_at       timestamptz   not       null   default      now(),
-  updated_at       timestamptz   not       null   default      now(),
-  quantity         int           not       null   check        (quantity > 0)
-);
-
--- create a trigger to update the updated_at column for staging.purchases
-create trigger set_timestamp
-before update on staging.purchases
-for each row
-execute procedure staging.trigger_set_timestamp();
-
 -- Replicate product_reviews table
 create table if not exists staging.product_reviews (
   review_id         serial         primary key,
@@ -326,7 +293,7 @@ create table if not exists staging.vendor_reviews (
   review_id         serial         primary key,
   vendor_id         uuid            not       null    references   staging.users               on   delete   cascade,
   customer_id       uuid            not       null    references   staging.users             on   delete   cascade,
-  transaction_id    int            not       null    references   staging.transactions				  on   delete   cascade,
+  order_id    int            not       null    references   staging.orders				  on   delete   cascade,
   rating            numeric(3,2)   not       null,
   customer_remark   varchar,
   created_at    timestamptz   not       null   default      now(),
@@ -344,7 +311,7 @@ create table if not exists staging.customer_reviews (
   review_id        serial         primary key,
   customer_id      uuid            not       null    references   staging.users             on   delete   cascade,
   vendor_id        uuid            not       null    references   staging.users               on   delete   cascade,
-  transaction_id   int            not       null    references   staging.transactions   on   delete   cascade,
+  order_id   int            not       null    references   staging.orders   on   delete   cascade,
   rating           numeric(3,2)   not       null,
   vendor_remark    varchar,
   created_at    timestamptz   not       null   default      now(),
