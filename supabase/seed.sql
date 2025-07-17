@@ -455,29 +455,29 @@ insert into staging.products (title, description, list_price, net_price, vendor_
 ('Fashion Scarf Silk Blend', '{"Large Square", "Versatile"}', 20.00, 18.00, '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', (select store_id from staging.stores where store_name = 'Fashion Forward'), (select category_id from categories where category_name = 'Clothing'), (select subcategory_id from subcategories where subcategory_name = 'Women''s Fashion'), 140);
 
 -- Fake data for orders
-insert into public.orders (customer_id, vendor_id, total_amount) values
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 1100.00),
-('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', 220.00),
-('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', 80.00),
-('14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77', 280.00),
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a88', 270.00),
-('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', 60.00),
-('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', '14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', 70.00),
-('14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', 20.00),
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77', 1650.00),
-('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', 50.00);
+insert into public.orders (customer_id, store_id, total_amount) values
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', (select store_id from stores where vendor_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' limit 1), 1100.00),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', (select store_id from stores where vendor_id = 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33' limit 1), 220.00),
+('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', (select store_id from stores where vendor_id = 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55' limit 1), 80.00),
+('14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', (select store_id from stores where vendor_id = 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77' limit 1), 280.00),
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', (select store_id from stores where vendor_id = 'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a88' limit 1), 270.00),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', (select store_id from stores where vendor_id = '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00' limit 1), 60.00),
+('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', (select store_id from stores where vendor_id = '14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99' limit 1), 70.00),
+('14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', (select store_id from stores where vendor_id = 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44' limit 1), 20.00),
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', (select store_id from stores where vendor_id = 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77' limit 1), 1650.00),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', (select store_id from stores where vendor_id = '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00' limit 1), 50.00);
 
-insert into staging.orders (customer_id, vendor_id, total_amount) values
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 1100.00),
-('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', 220.00),
-('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', 80.00),
-('14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77', 280.00),
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a88', 270.00),
-('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', 60.00),
-('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', '14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', 70.00),
-('14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', 20.00),
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77', 1650.00),
-('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', 50.00);
+insert into staging.orders (customer_id, store_id, total_amount) values
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', (select store_id from staging.stores where vendor_id = 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' limit 1), 1100.00),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', (select store_id from staging.stores where vendor_id = 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33' limit 1), 220.00),
+('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', (select store_id from staging.stores where vendor_id = 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55' limit 1), 80.00),
+('14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', (select store_id from staging.stores where vendor_id = 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77' limit 1), 280.00),
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', (select store_id from staging.stores where vendor_id = 'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a88' limit 1), 270.00),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', (select store_id from staging.stores where vendor_id = '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00' limit 1), 60.00),
+('f1eebc99-9c0b-4ef8-bb6d-6bb9bd380a66', (select store_id from staging.stores where vendor_id = '14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99' limit 1), 70.00),
+('14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', (select store_id from staging.stores where vendor_id = 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44' limit 1), 20.00),
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22', (select store_id from staging.stores where vendor_id = 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77' limit 1), 1650.00),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', (select store_id from staging.stores where vendor_id = '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00' limit 1), 50.00);
 
 -- Fake data for product_media
 insert into public.product_media (product_id, filename, filepath, description, is_display_image, is_landing_image, filetype) values
