@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # Required for Supabase CLI to authenticate with Supabase Storage
     env:
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
       BACKUP_ENABLED: ${{ vars.BACKUP_ENABLED }} # Repository variable (true or false)
@@ -54,11 +53,13 @@ jobs:
       - name: Backup data
         if: env.BACKUP_ENABLED == 'true'
         run: supabase db dump --db-url "$SUPABASE_DB_URL" -f db/backups/data.sql --data-only --use-copy
+      - name: Link Supabase project (important for CLI commands)
+        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
 
       - name: Upload backups to Supabase Storage
         if: env.BACKUP_ENABLED == 'true'
         run: |
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          supabase storage cp db/backups/roles.sql ss://backups/$TIMESTAMP/roles.sql
-          supabase storage cp db/backups/schema.sql ss://backups/$TIMESTAMP/schema.sql
-          supabase storage cp db/backups/data.sql ss://backups/$TIMESTAMP/data.sql
+          supabase storage cp db/backups/roles.sql backups/$TIMESTAMP/roles.sql --linked --experimental
+          supabase storage cp db/backups/schema.sql backups/$TIMESTAMP/schema.sql --linked --experimental
+          supabase storage cp db/backups/data.sql backups/$TIMESTAMP/data.sql --linked --experimental
