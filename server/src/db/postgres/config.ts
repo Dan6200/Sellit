@@ -9,4 +9,4 @@ if (process.env.NODE_ENV === 'testing') {
 
 dotenv.config({ path })
 
-export const connectionString = process.env.PG_URL
+export const connectionString = process.env.SUPABASE_DB_URL
