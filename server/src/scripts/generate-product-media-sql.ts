@@ -14,7 +14,7 @@ async function generateProductMediaSql(filePath: string) {
 
   try {
     for await (const record of parser) {
-      const productTitle = record.product_title.replace(/'/g, "''")
+      const productTitle = record.title.replace(/'/g, "''")
       const filename = record.filename.replace(/'/g, "''")
       const filepath = record.filepath.replace(/'/g, "''")
       const description = record.description
@@ -30,7 +30,7 @@ async function generateProductMediaSql(filePath: string) {
           : 'FALSE'
       const filetype = record.filetype
 
-      const insertStatement = `INSERT INTO product_media (product_id, filename, filepath, description, is_display_image, is_landing_image, is_video) VALUES ((SELECT product_id FROM products WHERE title = '${productTitle}'), '${filename}', '${filepath}', '${description}', ${isDisplayImage}, ${isLandingImage}, ${filetype});\n`
+      const insertStatement = `INSERT INTO product_media (product_id, filename, filepath, description, is_display_image, is_landing_image, filetype) VALUES ((SELECT product_id FROM products WHERE title = '${productTitle}'), '${filename}', '${filepath}', '${description}', ${isDisplayImage}, ${isLandingImage}, '${filetype}');\n`
       writableStream.write(insertStatement)
     }
 
