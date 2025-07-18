@@ -47,7 +47,7 @@ export type ProductMedia = {
   description: string
   is_display_image: boolean
   is_landing_image: boolean
-  is_video: boolean
+  filetype: 'image' | 'video'
 }
 
 export function isValidProductRequestData(

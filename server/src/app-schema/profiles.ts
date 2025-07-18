@@ -37,7 +37,7 @@ export const ProfileRequestSchema = joi
 export const ProfileResponseSchema = joi
   .object()
   .keys({
-    user_id: joi.string().guid({ version: 'uuidv4' }),
+    id: joi.string().guid({ version: 'uuidv4' }),
     first_name: joi.string().alphanum().min(3).max(30).required(),
     last_name: joi.string().alphanum().min(3).max(30).required(),
     email: joi
@@ -88,6 +88,6 @@ export const ProfileUpdateRequestSchema = joi
 
 export const ProfileIDSchema = joi
   .object({
-    user_id: joi.string().guid({ version: 'uuidv4' }),
+    id: joi.string().guid({ version: 'uuidv4' }),
   })
   .required()

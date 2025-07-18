@@ -1,6 +1,6 @@
 // cspell:disable
 
-import { ProfileRequestData } from '#src/types/users/index.js'
+import { ProfileRequestData } from '#src/types/profile/index.js'
 
 export { stores, updatedStores } from './stores/index.js'
 export {

@@ -1,5 +1,5 @@
 //cspell:ignore cloudinary
-import { ProfileRequestData } from '#src/types/users/index.js'
+import { ProfileRequestData } from '#src/types/profile/index.js'
 import { ProductRequestData, ProductMedia } from '#src/types/products.js'
 import { testUploadProductMedia } from '../products/definitions/index.js'
 import { bulkDeleteImages } from '../utils/bulk-delete.js'

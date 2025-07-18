@@ -9,7 +9,7 @@ import {
   testDeleteProduct,
   testGetNonExistentProduct,
 } from './definitions/index.js'
-import { ProfileRequestData } from '../../../types/users/index.js'
+import { ProfileRequestData } from '../../../types/profile/index.js'
 import assert from 'assert'
 import { createUserForTesting } from '../helpers/create-user.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'

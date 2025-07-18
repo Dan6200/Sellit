@@ -13,8 +13,8 @@ export const deleteAllUsersForTesting = async () => {
   if (data && data.users.length > 0) {
     for (const user of data.users) {
       // Hard delete from public.users table using Knex
-      await knex('users')
-        .where('user_id', user.id)
+      await knex('profiles')
+        .where('id', user.id)
         .del()
         .catch((deleteError: Error) =>
           console.error(

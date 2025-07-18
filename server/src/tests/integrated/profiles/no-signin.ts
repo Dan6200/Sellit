@@ -2,7 +2,7 @@
 import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { testGetProfileWithoutSignIn } from './definitions.js'
-import { ProfileRequestData } from '#src/types/users/index.js'
+import { ProfileRequestData } from '#src/types/profile/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 
@@ -15,10 +15,8 @@ export default function ({ userInfo }: { userInfo: ProfileRequestData }) {
     const path = '/v1/me'
     let token = null
 
-    beforeEach(async function () {
-      // Delete all users from Supabase auth
+    before(async function () {
       await deleteAllUsersForTesting()
-      // Create user but do not sign in
       await createUserForTesting(userInfo)
     })
 
@@ -29,5 +27,7 @@ export default function ({ userInfo }: { userInfo: ProfileRequestData }) {
         token,
         query: { public: true },
       }))
+
+    after(async () => await deleteAllUsersForTesting())
   })
 }

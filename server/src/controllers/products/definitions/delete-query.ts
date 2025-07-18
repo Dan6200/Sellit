@@ -23,9 +23,7 @@ export default async ({
   const { productId } = params
   const { store_id: storeId } = query
   // check if vendor account is enabled
-  const response = await knex('users')
-    .where('user_id', userId)
-    .first('is_vendor')
+  const response = await knex('profiles').where('id', userId).first('is_vendor')
   if (!response?.is_vendor)
     throw new ForbiddenError(
       'Profile is not a vendor. Need to enable your vendor account for this operation.',

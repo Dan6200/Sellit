@@ -1,5 +1,5 @@
-import { ProfileResponseSchema } from '#src/app-schema/users.js'
-import { ProfileData } from '#src/types/users/index.js'
+import { ProfileResponseSchema } from '#src/app-schema/profiles.js'
+import { ProfileData } from '#src/types/profile/index.js'
 
 export type ProfileRequestData = ProfileData &
   ({ email: string } | { phone: string })

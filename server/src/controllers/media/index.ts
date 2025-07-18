@@ -5,12 +5,12 @@ import { knex } from '../../db/index.js'
 
 const uploadProductMedia = async (req: any, res: any) => {
   const { product_id } = req.query
-  let { descriptions, is_display_image, is_landing_image, is_video } = req.body
+  let { descriptions, is_display_image, is_landing_image, filetype } = req.body
 
   if (descriptions) descriptions = JSON.parse(descriptions)
   if (is_display_image) is_display_image = JSON.parse(is_display_image)
   if (is_landing_image) is_landing_image = JSON.parse(is_landing_image)
-  if (is_video) is_video = JSON.parse(is_video)
+  if (filetype) filetype = JSON.parse(filetype)
   else throw new BadRequestError('No descriptions provided')
 
   let files = <any>await Promise.all(
@@ -25,7 +25,7 @@ const uploadProductMedia = async (req: any, res: any) => {
           description: descriptions[originalname],
           is_display_image: is_display_image[originalname],
           is_landing_image: is_landing_image[originalname],
-          is_video: is_video[originalname],
+          filetype: filetype[originalname],
         })
         .returning('filename')
     }),

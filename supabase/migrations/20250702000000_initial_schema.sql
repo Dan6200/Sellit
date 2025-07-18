@@ -170,7 +170,7 @@ create table if not exists order_items (
     order_id            serial          not         null    references  orders          on  delete  cascade,
     product_id          int             not         null    references  products        on  delete  cascade,
     quantity            int             not         null    check       (quantity > 0),
-    price_at_order_item   numeric(19,4)   not         null,
+    price_at_purchase   numeric(19,4)   not         null,
     created_at          timestamptz     not 				null 		default     now(),
     updated_at          timestamptz     not 				null 		default     now()
 );
@@ -307,6 +307,7 @@ create trigger set_timestamp
 before update on customer_reviews
 for each row
 execute procedure trigger_set_timestamp();
+
 -- Function to handle new user creation in auth.users
 create or replace function public.handle_new_user()
 returns trigger as $$

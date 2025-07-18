@@ -14,7 +14,7 @@ import {
   TestRequestWithQParamsAndBody,
 } from '../../test-request/types.js'
 import testRoutes from '../../test-request/index.js'
-import { ProfileRequestData } from '#src/types/users/index.js'
+import { ProfileRequestData } from '#src/types/profile/index.js'
 import { signInForTesting } from '../../helpers/signin-user.js'
 
 chai.use(chaiHttp).should()
@@ -51,7 +51,7 @@ const { CREATED, OK, NOT_FOUND, NO_CONTENT } = StatusCodes
 //     yield response.body
 //   }
 // }
-//
+
 export const testPostProduct = (<TestRequestWithQParamsAndBody>testRoutes)({
   statusCode: CREATED,
   verb: 'post',
@@ -127,15 +127,15 @@ export const testUploadProductMedia = async function (
     return acc
   }, {})
 
-  const isVideo = media.reduce((acc: { [k: string]: any }, file) => {
-    acc[file.name] = file.is_video
+  const filetype = media.reduce((acc: { [k: string]: any }, file) => {
+    acc[file.name] = file.filetype
     return acc
   }, {})
 
   request.field('descriptions', JSON.stringify(descriptions))
   request.field('is_display_image', JSON.stringify(isDisplayImage))
   request.field('is_landing_image', JSON.stringify(isLandingImage))
-  request.field('is_video', JSON.stringify(isVideo))
+  request.field('filetype', JSON.stringify(filetype))
 
   const response = await request
   response.should.have.status(CREATED)
@@ -151,5 +151,5 @@ async function checkMedia(body: any) {
   body[0].should.have.property('filepath')
   body[0].should.have.property('is_display_image')
   body[0].should.have.property('is_landing_image')
-  body[0].should.have.property('is_video')
+  body[0].should.have.property('filetype')
 }

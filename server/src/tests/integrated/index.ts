@@ -1,6 +1,6 @@
 //cspell:disable
-import testUserAccount from './users/index.js'
-import testUserAccountWithoutSignIn from './users/no-signin.js'
+import testProfile from './profiles/index.js'
+import testProfileWithoutSignIn from './profiles/no-signin.js'
 import testStoresWithNoVendor from './stores/no-vendor-account.js'
 import testStores from './stores/index.js'
 import testShipping from './shipping-info/index.js'
@@ -25,9 +25,9 @@ export default function (): void {
     const { userInfo } = user
     const { first_name: name } = userInfo
     describe(`Testing retrieving user profile for ${name}`, () =>
-      testUserAccount(user))
+      testProfile(user))
     describe(`Testing retrieving user profile without Signing In`, () =>
-      testUserAccountWithoutSignIn(user))
+      testProfileWithoutSignIn(user))
   }
 
   /** Shipping Info related tests **/

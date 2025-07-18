@@ -1,5 +1,5 @@
 //cspell:ignore birthdate
-import { ProfileRequestData } from '../../types/users/index.js'
+import { ProfileRequestData } from '../../types/profile/index.js'
 import { faker } from './faker.js'
 
 export default function (): ProfileRequestData & { password: string } {

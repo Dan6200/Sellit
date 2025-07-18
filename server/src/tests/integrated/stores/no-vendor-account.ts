@@ -5,7 +5,7 @@ import {
   testDeleteStoreWithoutVendorAccount,
 } from '../stores/definitions/index.js'
 import assert from 'assert'
-import { ProfileRequestData } from '../../../types/users/index.js'
+import { ProfileRequestData } from '../../../types/profile/index.js'
 import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 import { signInForTesting } from '../helpers/signin-user.js'
@@ -23,9 +23,7 @@ export default function ({
   const server = process.env.SERVER!
   let token: string
   before(async () => {
-    // Delete all users from Supabase auth
     await deleteAllUsersForTesting()
-    // Create user after...
     await createUserForTesting(userInfo)
     token = await signInForTesting(userInfo)
   })
@@ -33,7 +31,7 @@ export default function ({
 
   beforeEach(async () => {
     // important to move to before each because the supabase create user is interfering and causing race conditions
-    await knex('users')
+    await knex('profiles')
       .update('is_vendor', false)
       .where({ email: userInfo.email })
       .returning('*')

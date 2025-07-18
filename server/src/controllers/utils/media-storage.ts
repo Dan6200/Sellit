@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'testing') {
     cloudinary,
     params: {
       use_filename: true,
-      folder: 'thrift-app-media-testing',
+      folder: 'sellit-media-testing',
       unique_filename: true,
       overwrite: true,
       public_id: (_req, file) =>
@@ -39,7 +39,7 @@ if (process.env.NODE_ENV === 'testing') {
     cloudinary,
     params: {
       use_filename: true,
-      folder: 'thrift-app-media',
+      folder: 'sellit-media',
       unique_filename: true,
       overwrite: true,
       public_id: (_req, file) =>

@@ -6,7 +6,7 @@ import {
 import createRouteProcessor from '../process-routes.js'
 import { QueryResult, QueryResultRow } from 'pg'
 import { validateResData } from '../utils/response-validation.js'
-import { ProfileResponseSchema } from '../../app-schema/users.js'
+import { ProfileResponseSchema } from '../../app-schema/profiles.js'
 import { pg } from '#src/db/index.js'
 import UnauthorizedError from '#src/errors/unauthorized.js'
 

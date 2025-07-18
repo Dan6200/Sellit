@@ -10,11 +10,11 @@ PKG_MANAGER = pnpm
 all: build 
 
 install:
-	@echo "Installing Nextjs application"
+	@echo "Installing application"
 	$(PKG_MANAGER) install
 
 build:
-	@echo "Building Nextjs application"
+	@echo "Building application"
 	$(PKG_MANAGER) run build
 
 start:
