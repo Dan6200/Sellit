@@ -14,6 +14,7 @@ async function importProducts(filePath: string) {
 
   try {
     for await (const record of parser) {
+      const product_id = record.product_id
       const title = record.title.replace(/'/g, "''")
       const description = record.description.replace(/'/g, "''") // Assuming description is a single string
       const listPrice = parseFloat(record.list_price)
@@ -24,7 +25,7 @@ async function importProducts(filePath: string) {
       const subcategoryId = record.subcategory_id
       const quantityAvailable = parseInt(record.quantity_available, 10)
 
-      const insertStatement = `INSERT INTO products (title, description, list_price, net_price, vendor_id, store_id, category_id, subcategory_id, quantity_available) VALUES ('${title}', ARRAY['${description}']::text[], ${listPrice}, ${netPrice}, '${vendorId}', ${storeId}, ${categoryId}, ${subcategoryId}, ${quantityAvailable});\n`
+      const insertStatement = `INSERT INTO products (product_id, title, description, list_price, net_price, vendor_id, store_id, category_id, subcategory_id, quantity_available) VALUES (${product_id}, '${title}', ARRAY['${description}']::text[], ${listPrice}, ${netPrice}, '${vendorId}', ${storeId}, ${categoryId}, ${subcategoryId}, ${quantityAvailable});\n`
       writableStream.write(insertStatement)
     }
 
