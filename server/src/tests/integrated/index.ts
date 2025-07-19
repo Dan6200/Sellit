@@ -16,9 +16,6 @@ const customers = [Ebuka, Aisha, Mustapha] // is_customer is true
 const vendors = [Aliyu] // is_vendor is true
 
 export default function (): void {
-  // describe(`Testing Public Products`, () => testProducts(null))
-  // describe(`Testing Public Stores`, () => testStores(null))
-
   /** User Account actions **/
 
   for (let user of users) {

@@ -9,7 +9,7 @@ import {
 } from '../stores/definitions/index.js'
 import assert from 'assert'
 import { ProfileRequestData } from '../../../types/profile/index.js'
-import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
+import { deleteUserForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 import { signInForTesting } from '../helpers/signin-user.js'
 import { testHasVendorAccount } from '../profiles/definitions.js'
@@ -25,11 +25,11 @@ export default function ({
 }) {
   const server = process.env.SERVER!
   let token: string
+  let userId: string
   before(async () => {
     // Delete all users from Supabase auth
-    await deleteAllUsersForTesting()
     // Create user after...
-    await createUserForTesting(userInfo)
+    userId = await createUserForTesting(userInfo)
     token = await signInForTesting(userInfo)
   })
   const path = '/v1/stores'
@@ -98,5 +98,5 @@ export default function ({
     }
   })
 
-  after(async () => deleteAllUsersForTesting())
+  after(async () => deleteUserForTesting(userId))
 }

@@ -11,7 +11,7 @@ export const createUserForTesting = async ({
       `\nDEBUG: Create User -> ` +
         JSON.stringify({ email, password, phone, user_metadata }), // Log phone as well
     )
-  const { error } = await supabase.auth.admin.createUser({
+  const { data, error } = await supabase.auth.admin.createUser({
     email,
     password,
     phone, // Pass phone as a top-level argument
@@ -22,4 +22,5 @@ export const createUserForTesting = async ({
     throw new Error(
       'Unable to create user: ' + email + '\n\t' + JSON.stringify(error),
     )
+  return data.user?.id
 }

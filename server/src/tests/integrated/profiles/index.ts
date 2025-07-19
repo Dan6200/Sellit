@@ -3,7 +3,7 @@ import chai from 'chai'
 import chaiHttp from 'chai-http'
 import { testGetProfile } from './definitions.js'
 import { ProfileRequestData } from '#src/types/profile/index.js'
-import { deleteAllUsersForTesting } from '../helpers/delete-user.js'
+import { deleteUserForTesting } from '../helpers/delete-user.js'
 import { createUserForTesting } from '../helpers/create-user.js'
 import { signInForTesting } from '../helpers/signin-user.js'
 
@@ -15,10 +15,10 @@ export default function ({ userInfo }: { userInfo: ProfileRequestData }) {
     const server = process.env.SERVER!
     const path = '/v1/me'
     let token: string
+    let userId: string
 
     before(async function () {
-      await deleteAllUsersForTesting()
-      await createUserForTesting(userInfo)
+      userId = await createUserForTesting(userInfo)
       token = await signInForTesting(userInfo)
     })
 
@@ -29,6 +29,6 @@ export default function ({ userInfo }: { userInfo: ProfileRequestData }) {
         token,
       }))
 
-    after(async () => await deleteAllUsersForTesting())
+    after(async () => await deleteUserForTesting(userId))
   })
 }
