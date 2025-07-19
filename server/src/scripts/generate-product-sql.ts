@@ -17,6 +17,7 @@ async function importProducts(filePath: string) {
       const product_id = record.product_id
       const title = record.title.replace(/'/g, "''")
       const description = JSON.stringify(JSON.parse(record.description))
+        // Crucial to clean data
         .replace(/\\/g, '\\')
         .replace(/'/g, "''")
         .replace(/^\[/, '{')
