@@ -43,8 +43,8 @@ export default async ({
 			FROM products p
 			JOIN categories c USING (category_id)
 			JOIN subcategories s USING (subcategory_id)
-			JOIN order_items oi ON p.product_id = oi.product_id
-			JOIN product_reviews pr ON oi.order_item_id = pr.order_item_id
+			LEFT JOIN order_items oi ON p.product_id = oi.product_id
+			LEFT JOIN product_reviews pr ON oi.order_item_id = pr.order_item_id
 			GROUP BY
 				p.product_id, p.title, p.description, p.list_price, p.net_price, p.quantity_available, p.created_at, p.updated_at, p.store_id, p.category_id, p.subcategory_id,
 				c.category_name, s.subcategory_name
