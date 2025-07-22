@@ -1,6 +1,7 @@
 import DeliveryInfo from '#src/types/delivery-info.js'
 import {
   testCreateDelivery,
+  testGetAllDelivery,
   testGetDelivery,
   testUpdateDelivery,
   testDeleteDelivery,
@@ -53,6 +54,14 @@ export default function ({
       })
       deliveryIds.push(delivery_info_id)
     }
+  })
+
+  it('it should retrieve all delivery information at once', async () => {
+    await testGetAllDelivery({
+      server,
+      path: deliveryPath,
+      token,
+    })
   })
 
   it('it should retrieve all delivery information through a loop', async () => {

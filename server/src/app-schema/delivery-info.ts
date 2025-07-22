@@ -23,6 +23,9 @@ export const DeliveryInfoRequestSchema = joi
 export const DeliveryInfoSchemaID = joi
   .object({
     delivery_info_id: joi.number().required(),
+    created_at: joi.date().required(),
+    updated_at: joi.date().required(),
+    deleted_at: joi.date().optional(),
   })
   .required()
 

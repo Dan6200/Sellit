@@ -32,7 +32,7 @@ import InternalServerError from '#src/errors/internal-server.js'
  * 2. If the customer already has 5 delivery addresses
  */
 
-const createQuery = async ({ body, userId }: QueryParams): Promise<any> => {
+const createQuery = async ({ body, userId }: QueryParams): Promise<any[]> => {
   if (!userId)
     throw new UnauthorizedError('Sign-in to access delivery information.')
 
@@ -49,7 +49,7 @@ const createQuery = async ({ body, userId }: QueryParams): Promise<any> => {
   }
 
   // Limit the amount of addresses a user can have
-  const LIMIT = 5
+  const LIMIT = 3
   const countResult = await knex('delivery_info')
     .where('customer_id', userId)
     .count('delivery_info_id as count')
@@ -70,28 +70,41 @@ const createQuery = async ({ body, userId }: QueryParams): Promise<any> => {
     delivery_instructions,
     recipient_full_name,
     phone_number,
-    ...addressInfo
+    address_line_1,
+    address_line_2,
+    city,
+    state,
+    zip_postal_code,
+    country,
   } = body as DeliveryInfo
 
   // Use a transaction to ensure both inserts are successful
   const trx = await knex.transaction()
   try {
     const [address] = await trx('address')
-      .insert(addressInfo)
+      .insert({
+        address_line_1,
+        address_line_2,
+        city,
+        state,
+        zip_postal_code,
+        country,
+      })
       .returning('address_id')
 
-    const [deliveryInfo] = await trx('delivery_info')
-      .insert({
-        customer_id: userId,
-        address_id: address.address_id,
-        recipient_full_name,
-        phone_number,
-        delivery_instructions,
-      })
+    const deliveryInfoToInsert = {
+      customer_id: userId,
+      address_id: address.address_id,
+      recipient_full_name,
+      phone_number,
+      delivery_instructions,
+    }
+    const result = await trx('delivery_info')
+      .insert(deliveryInfoToInsert)
       .returning(['delivery_info_id', 'created_at', 'updated_at'])
 
     await trx.commit()
-    return deliveryInfo
+    return result
   } catch (error) {
     await trx.rollback()
     throw new InternalServerError(error.toString())
@@ -125,10 +138,10 @@ const getAllQuery = async ({
     .where('delivery_info.customer_id', userId)
     .select(
       'delivery_info.delivery_info_id',
-      'delivery_info.customer_id',
       'delivery_info.recipient_full_name',
       'delivery_info.phone_number',
       'delivery_info.delivery_instructions',
+      'address.address_id',
       'address.address_line_1',
       'address.address_line_2',
       'address.city',
@@ -170,10 +183,10 @@ const getQuery = async ({
     .where('delivery_info.customer_id', userId)
     .select(
       'delivery_info.delivery_info_id',
-      'delivery_info.customer_id',
       'delivery_info.recipient_full_name',
       'delivery_info.phone_number',
       'delivery_info.delivery_instructions',
+      'address.address_id',
       'address.address_line_1',
       'address.address_line_2',
       'address.city',
@@ -198,7 +211,7 @@ const updateQuery = async ({
   params,
   body,
   userId,
-}: QueryParams): Promise<Knex.QueryBuilder<number>> => {
+}: QueryParams): Promise<Knex.QueryBuilder<DeliveryInfo> | any[]> => {
   if (!userId)
     throw new UnauthorizedError('Signin to access delivery information.')
   if (params == null) throw new BadRequestError('No route parameters provided')
@@ -258,9 +271,7 @@ const updateQuery = async ({
       .select('address_id')
 
     if (!currentDeliveryInfo) {
-      throw new BadRequestError(
-        'Delivery info not found or does not belong to customer',
-      )
+      throw new BadRequestError('Delivery info for customer not found')
     }
 
     const { address_id } = currentDeliveryInfo
@@ -313,11 +324,13 @@ const updateQuery = async ({
           )
         : undefined
 
-    return {
-      delivery_info_id: deliveryInfoId,
-      created_at: earliestCreatedAt,
-      updated_at: latestUpdatedAt,
-    } as any // Cast to any because Knex.QueryBuilder<number> is expected, but we are returning an object
+    return [
+      {
+        delivery_info_id: deliveryInfoId,
+        created_at: earliestCreatedAt,
+        updated_at: latestUpdatedAt,
+      },
+    ]
   } catch (error) {
     await trx.rollback()
     throw new InternalServerError(error.toString())
@@ -356,7 +369,12 @@ const deleteQuery = async ({
     .where('delivery_info_id', deliveryInfoId)
     .where('customer_id', userId)
     .del()
-    .returning('delivery_info_id')
+    .returning([
+      'delivery_info_id',
+      'created_at',
+      'updated_at',
+      knex.raw('NOW() as deleted_at'),
+    ])
 }
 
 const { CREATED, OK } = StatusCodes
