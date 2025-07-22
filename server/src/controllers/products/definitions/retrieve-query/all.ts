@@ -39,7 +39,8 @@ export default async ({
 				c.category_name,
 				s.subcategory_name,
 				AVG(pr.rating) AS average_rating,
-				COUNT(pr.rating) AS review_count
+				COUNT(pr.rating) AS review_count,
+				COUNT(oi.order_item_id) AS products_sold
 			FROM products p
 			JOIN categories c USING (category_id)
 			JOIN subcategories s USING (subcategory_id)

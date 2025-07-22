@@ -73,6 +73,19 @@ insert into public.subcategories(category_id, subcategory_name) values ((select 
 ((select category_id from categories where category_name = 'Handmade'), 'Handmade Jewelry'),
 ((select category_id from categories where category_name = 'Handmade'), 'Handmade Home Decor');
 
+-- Fake data for address
+insert into public.address (address_line_1, address_line_2, city, state, zip_postal_code, country) values
+('123 Main St', 'Apt 4B', 'Anytown', 'CA', '90210', 'USA'),
+('456 Oak Ave', 'Suite 100', 'Otherville', 'NY', '10001', 'USA'),
+('789 Pine Ln', '', 'Somewhere', 'TX', '73301', 'USA'),
+('101 Elm St', 'Unit 2', 'Villageton', 'FL', '33101', 'USA'),
+('222 Maple Dr', 'Bldg 5', 'Hamlet', 'GA', '30303', 'USA'),
+('333 Birch Rd', '', 'Metropolis', 'IL', '60601', 'USA'),
+('444 Cedar Ct', 'Floor 3', 'Boomtown', 'WA', '98101', 'USA'),
+('555 Spruce Way', '', 'Riverside', 'AZ', '85001', 'USA'),
+('666 Willow Row', 'Apt 1A', 'Hillside', 'CO', '80001', 'USA'),
+('777 Poplar Blvd', 'Unit 12', 'Lakeview', 'MI', '48103', 'USA');
+
 -- Fake data for users
 insert into public.profiles (id, first_name, last_name, email, phone, dob, country, is_customer, is_vendor) values
 ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'John', 'Doe', 'john.doe@example.com', '+2348012345678', '1990-01-15', 'Nigeria', true, true),
@@ -87,17 +100,17 @@ insert into public.profiles (id, first_name, last_name, email, phone, dob, count
 ('45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', 'Emily', 'Clark', 'emily.clark@example.com', '+447123456789', '1998-06-05', 'United Kingdom', true, true);
 
 -- Fake data for stores
-insert into public.stores (store_name, custom_domain, vendor_id) values
-('John''s Gadgets', 'gadgets.example.com', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
-('Peter''s Picks', null, 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33'),
-('Bob''s Bargains', 'bargains.example.com', 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55'),
-('Kenji''s Tech', 'kenjitech.example.com', 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77'),
-('Sophie''s Boutique', null, 'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a88'),
-('Emily''s Emporium', 'emilysemp.example.com', '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00'),
-('Global Goods', 'globalgoods.example.com', '14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99'), -- Changed
-('Artisan Alley', null, 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44'), -- Changed
-('Tech Haven', 'techhaven.example.com', 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77'), -- Changed
-('Fashion Forward', null, '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00'); -- Changed
+insert into public.stores (store_name, custom_domain, vendor_id, address_id) values
+('John''s Gadgets', 'gadgets.example.com', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', (select address_id from address where address_line_1 = '123 Main St' limit 1)),
+('Peter''s Picks', null, 'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33', (select address_id from address where address_line_1 = '456 Oak Ave' limit 1)),
+('Bob''s Bargains', 'bargains.example.com', 'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a55', (select address_id from address where address_line_1 = '789 Pine Ln' limit 1)),
+('Kenji''s Tech', 'kenjitech.example.com', 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77', (select address_id from address where address_line_1 = '101 Elm St' limit 1)),
+('Sophie''s Boutique', null, 'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a88', (select address_id from address where address_line_1 = '222 Maple Dr' limit 1)),
+('Emily''s Emporium', 'emilysemp.example.com', '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', (select address_id from address where address_line_1 = '333 Birch Rd' limit 1)),
+('Global Goods', 'globalgoods.example.com', '14eebc99-9c0b-4ef8-bb6d-6bb9bd380a99', (select address_id from address where address_line_1 = '444 Cedar Ct' limit 1)),
+('Artisan Alley', null, 'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a44', (select address_id from address where address_line_1 = '555 Spruce Way' limit 1)),
+('Tech Haven', 'techhaven.example.com', 'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a77', (select address_id from address where address_line_1 = '666 Willow Row' limit 1)),
+('Fashion Forward', null, '45eebc99-9c0b-4ef8-bb6d-6bb9bd380b00', (select address_id from address where address_line_1 = '777 Poplar Blvd' limit 1));
 
 -- Fake data for products
 insert into public.products (title, description, list_price, net_price, vendor_id, store_id, category_id, subcategory_id, quantity_available) values

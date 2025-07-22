@@ -42,17 +42,30 @@ for each row
 execute procedure trigger_set_timestamp();
 
 
-
-create table if not exists shipping_info (
-  shipping_info_id        serial        primary   key,
-  customer_id             uuid           not      null    references   profiles   on   delete   cascade,
-  recipient_full_name    	varchar(30)   not       null,
+-- TODO: shipping_info, store_address reference address table;
+create table if not exists address (
+  address_id              serial        primary   key,
   address_line_1          varchar       not       null,
-  address_line_2          varchar       not       null,
+  address_line_2          varchar,
   city                    varchar       not       null,
   state                   varchar       not       null,
   zip_postal_code         varchar       not       null,
   country									varchar       not       null,
+  created_at        			timestamptz     		not 			null 		default     now(),
+  updated_at        			timestamptz     		not 			null 		default     now()
+);
+
+-- create a trigger to update the updated_at column for address
+create trigger set_timestamp
+before update on address
+for each row
+execute procedure trigger_set_timestamp();
+
+create table if not exists delivery_info (
+  delivery_info_id        serial        primary   key,
+  customer_id             uuid           not      null    references   profiles   on   delete   cascade,
+  recipient_full_name    	varchar(30)   not       null,
+  address_id              int           not       null    references   address    on   delete   cascade,
   phone_number 		        varchar       not       null,
   created_at        			timestamptz     		not 			null 		default     now(),
   updated_at        			timestamptz     		not 			null 		default     now(),
@@ -60,9 +73,9 @@ create table if not exists shipping_info (
 );
 
 
--- create a trigger to update the updated_at column for shipping_info
+-- create a trigger to update the updated_at column for delivery_info
 create trigger set_timestamp
-before update on shipping_info
+before update on delivery_info
 for each row
 execute procedure trigger_set_timestamp();
 
@@ -84,6 +97,7 @@ create table if not exists stores (
   store_name               varchar     not       null,
 	custom_domain            varchar     null,
   vendor_id                uuid        not       null    references   profiles        on   delete   cascade,
+  address_id               int         references   address    on   delete   cascade,
   favicon                  varchar,
   default_page_styling     jsonb,
   store_pages              jsonb,
@@ -150,7 +164,7 @@ create table if not exists orders (
     order_id 						serial						primary 				key,
     customer_id 				uuid						references 			profiles 						on delete cascade not null,
     store_id 						int 						references 			stores 						on delete cascade not null,
-    shipping_info_id 		int 						references 			shipping_info 		on delete set null,
+    delivery_info_id 		int 						references 			delivery_info 		on delete set null,
     order_date 					timestamptz				default 				now(),
     total_amount 				numeric(10, 2)		not null,
     status 							text							default 				'pending' 				not null,
@@ -377,8 +391,15 @@ create trigger on_auth_user_deleted
 alter table profiles enable row level security;
 create policy "Public profiles are viewable by everyone." on profiles for select using (true);
 
-alter table shipping_info enable row level security;
-create policy "Public shipping_info are viewable by everyone." on shipping_info for select using (true);
+alter table address enable row level security;
+create policy "Public address are viewable by everyone." on address for select using (true);
+
+alter table delivery_info enable row level security;
+create policy "Public delivery_info are viewable by everyone." on delivery_info for select using (true);
+
+create policy "Authenticated users can insert delivery_info." on delivery_info for insert with check (auth.uid() = customer_id);
+create policy "Authenticated users can update their own delivery_info." on delivery_info for update using (auth.uid() = customer_id);
+create policy "Authenticated users can delete their own delivery_info." on delivery_info for delete using (auth.uid() = customer_id);
 
 alter table payment_info enable row level security;
 create policy "Public payment_info are viewable by everyone." on payment_info for select using (true);

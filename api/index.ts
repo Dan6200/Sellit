@@ -8,7 +8,7 @@ import rateLimiter from 'express-rate-limit'
 import cookieParser from 'cookie-parser'
 // routers
 import profileRouter from '#src/routes/user/index.js'
-import shippingRouter from '#src/routes/shipping/index.js'
+import deliveryRouter from '#src/routes/delivery-info/index.js'
 import storesRouter from '#src/routes/stores/index.js'
 import mediaRouter from '#src/routes/media/index.js'
 import productsRouter from '#src/routes/products/index.js'
@@ -42,6 +42,16 @@ if (process.env.NODE_ENV === 'production')
       legacyHeaders: false,
     }),
   )
+else
+  app.use(
+    rateLimiter({
+      windowMs: 60 * 1000,
+      max: 100,
+      standardHeaders: true,
+      legacyHeaders: false,
+    }),
+  )
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/api', swaggerUi.serve, swaggerUi.setup(<JSON>swaggerDocument))
@@ -61,7 +71,7 @@ else app.use(morgan('dev'))
 // application routes
 const v1Router = Router()
 v1Router.use('/me', authenticateUser, profileRouter)
-v1Router.use('/shipping-info', authenticateUser, shippingRouter)
+v1Router.use('/delivery-info', authenticateUser, deliveryRouter)
 v1Router.use('/stores', authenticateUser, storesRouter)
 v1Router.use('/products', authenticateUser, productsRouter)
 v1Router.use('/media', authenticateUser, mediaRouter)

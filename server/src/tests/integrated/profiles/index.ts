@@ -10,7 +10,7 @@ import { signInForTesting } from '../helpers/signin-user.js'
 chai.use(chaiHttp).should()
 
 export default function ({ userInfo }: { userInfo: ProfileRequestData }) {
-  describe('Profile profile management', () => {
+  describe('Profile management', () => {
     // Set server url
     const server = process.env.SERVER!
     const path = '/v1/me'

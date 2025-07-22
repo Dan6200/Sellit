@@ -1,7 +1,7 @@
 // cspell: disable
-import ShippingInfo from '#src/types/shipping-info.js'
+import DeliveryInfo from '#src/types/delivery-info.js'
 
-const listOfShippingInfo: ShippingInfo[] = [
+const listOfDeliveryInfo: DeliveryInfo[] = [
   {
     recipient_full_name: 'Aisha Mohammed',
     address_line_1: '53, Thomas Salako Street, Ogba',
@@ -37,7 +37,7 @@ const listOfShippingInfo: ShippingInfo[] = [
   },
 ]
 
-const listOfUpdatedShippingInfo: ShippingInfo[] = [
+const listOfUpdatedDeliveryInfo: DeliveryInfo[] = [
   {
     recipient_full_name: 'Aisha Mohammed',
     address_line_1: '53, Thomas Salako Street, Ogba',
@@ -73,4 +73,4 @@ const listOfUpdatedShippingInfo: ShippingInfo[] = [
   },
 ]
 
-export { listOfShippingInfo, listOfUpdatedShippingInfo }
+export { listOfDeliveryInfo, listOfUpdatedDeliveryInfo }

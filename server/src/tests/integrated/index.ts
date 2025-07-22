@@ -3,7 +3,7 @@ import testProfile from './profiles/index.js'
 import testProfileWithoutSignIn from './profiles/no-signin.js'
 import testStoresWithNoVendor from './stores/no-vendor-account.js'
 import testStores from './stores/index.js'
-import testShipping from './shipping-info/index.js'
+import testDelivery from './delivery-info/index.js'
 import testProducts from './products/index.js'
 import testMedia from './media/index.js'
 import * as Ebuka from './data/users/user-ebuka/index.js'
@@ -27,13 +27,13 @@ export default function (): void {
       testProfileWithoutSignIn(user))
   }
 
-  /** Shipping Info related tests **/
+  /** Delivery Info related tests **/
 
   for (let customer of customers) {
     const { userInfo } = customer
     const { first_name: name } = userInfo
-    describe(`Testing the Shipping Information of ${name}'s account`, async () =>
-      testShipping(customer))
+    describe(`Testing the Delivery Information of ${name}'s account`, async () =>
+      testDelivery(customer))
   }
 
   /** Stores related tests **/

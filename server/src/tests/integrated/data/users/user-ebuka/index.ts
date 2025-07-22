@@ -1,9 +1,9 @@
 // cspell: disable
 import { ProfileRequestData } from '#src/types/profile/index.js'
 import {
-  listOfShippingInfo,
-  listOfUpdatedShippingInfo,
-} from './shipping-info.js'
+  listOfDeliveryInfo,
+  listOfUpdatedDeliveryInfo,
+} from './delivery-info.js'
 
 const userInfo: ProfileRequestData = {
   first_name: 'Ebuka',
@@ -26,6 +26,6 @@ const updatedProfileInfo: ProfileRequestData = {
 export {
   userInfo,
   updatedProfileInfo,
-  listOfShippingInfo,
-  listOfUpdatedShippingInfo,
+  listOfDeliveryInfo,
+  listOfUpdatedDeliveryInfo,
 }

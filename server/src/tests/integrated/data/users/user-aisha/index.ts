@@ -1,8 +1,8 @@
 import { ProfileRequestData } from '#src/types/profile/index.js'
 import {
-  listOfShippingInfo,
-  listOfUpdatedShippingInfo,
-} from './shipping-info.js'
+  listOfDeliveryInfo,
+  listOfUpdatedDeliveryInfo,
+} from './delivery-info.js'
 
 // Make sure test data is correct especially dates
 const userInfo: ProfileRequestData = {
@@ -24,6 +24,6 @@ const updatedProfileInfo = {
 export {
   userInfo,
   updatedProfileInfo,
-  listOfShippingInfo,
-  listOfUpdatedShippingInfo,
+  listOfDeliveryInfo,
+  listOfUpdatedDeliveryInfo,
 }

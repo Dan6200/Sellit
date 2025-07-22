@@ -1,8 +1,7 @@
 *~
 *.log
-sql-query.sql
-sql-data.html
 .env
+/.sql-query.sql
 .env.*
 *.sw*
 *node_modules

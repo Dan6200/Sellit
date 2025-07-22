@@ -9,7 +9,7 @@ export default function (): ProductMedia {
     path: randomMedia.url(),
     is_display_image: true,
     is_landing_image: true,
-    is_video: false,
+    filetype: 'image',
     description: faker.lorem.sentence(),
   }
 }
