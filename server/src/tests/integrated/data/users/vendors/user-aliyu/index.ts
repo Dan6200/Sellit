@@ -2,7 +2,7 @@
 
 import { ProfileRequestData } from '#src/types/profile/index.js'
 
-export { stores, updatedStores } from './stores/index.js'
+export { listOfStores, updatedStores } from './stores.js'
 export {
   products,
   productReplaced,

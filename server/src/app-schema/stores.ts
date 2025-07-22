@@ -128,6 +128,16 @@ export const StoreDataRequestSchema = joi
     store_name: joi.string().min(3).max(50).required(),
     favicon: joi.string().uri().optional(),
     custom_domain: joi.string().hostname().allow(null).required(),
+    store_address: joi
+      .object({
+        address_line_1: joi.string().required(),
+        address_line_2: joi.string().optional(),
+        city: joi.string().required(),
+        state: joi.string().required(),
+        zip_postal_code: joi.string().required(),
+        country: joi.string().required(),
+      })
+      .required(),
     default_page_styling: PageStylingSchema.optional(),
     store_pages: joi.array().items(PageSchema).optional(),
   })
@@ -137,6 +147,16 @@ export const StoreDataRequestPartialSchema = joi.object({
   store_name: joi.string().min(3).max(50).optional(),
   favicon: joi.string().uri().optional(),
   custom_domain: joi.string().hostname().optional(),
+  store_address: joi
+    .object({
+      address_line_1: joi.string().optional(),
+      address_line_2: joi.string().optional(),
+      city: joi.string().optional(),
+      state: joi.string().optional(),
+      zip_postal_code: joi.string().optional(),
+      country: joi.string().optional(),
+    })
+    .optional(),
   default_page_styling: PageStylingSchema.optional(),
   store_pages: joi.array().items(PageSchema).optional(),
 })
@@ -155,6 +175,16 @@ export const StoreDataResponseListSchema = joi
         custom_domain: joi.string().hostname().allow(null).required(),
         vendor_id: joi.string().guid({ version: 'uuidv4' }).required(),
         favicon: joi.string().uri().allow(null).required(),
+        store_address: joi
+          .object({
+            address_line_1: joi.string().required(),
+            address_line_2: joi.string().allow(null).optional(),
+            city: joi.string().required(),
+            state: joi.string().required(),
+            zip_postal_code: joi.string().required(),
+            country: joi.string().required(),
+          })
+          .required(),
         default_page_styling: PageStylingSchema.optional(),
         store_pages: joi.array().items(PageSchema).optional(),
         created_at: joi.date().required(),
@@ -171,6 +201,16 @@ export const StoreDataResponseSchema = joi
     custom_domain: joi.string().hostname().allow(null).required(),
     vendor_id: joi.string().guid({ version: 'uuidv4' }).required(),
     favicon: joi.string().uri().allow(null).required(),
+    store_address: joi
+      .object({
+        address_line_1: joi.string().required(),
+        address_line_2: joi.string().allow(null).optional(),
+        city: joi.string().required(),
+        state: joi.string().required(),
+        zip_postal_code: joi.string().required(),
+        country: joi.string().required(),
+      })
+      .required(),
     default_page_styling: PageStylingSchema.optional(),
     store_pages: joi.array().items(PageSchema).optional(),
     created_at: joi.date().required(),

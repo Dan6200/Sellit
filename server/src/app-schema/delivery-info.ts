@@ -33,7 +33,6 @@ export const DeliveryInfoResponseSchema = joi
   .object({
     delivery_info_id: joi.number().required(),
     recipient_full_name: joi.string().min(3).max(60).required(),
-    address_id: joi.number().required(),
     address_line_1: joi.string().required(),
     address_line_2: joi.string().allow('').required(),
     city: joi.string().required(),
@@ -57,7 +56,6 @@ export const DeliveryInfoResponseListSchema = joi.array().items(
     .object({
       delivery_info_id: joi.number().required(),
       recipient_full_name: joi.string().min(3).max(60).required(),
-      address_id: joi.number().required(),
       address_line_1: joi.string().required(),
       address_line_2: joi.string().allow('').required(),
       city: joi.string().required(),

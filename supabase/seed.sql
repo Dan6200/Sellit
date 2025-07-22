@@ -77,12 +77,12 @@ insert into public.subcategories(category_id, subcategory_name) values ((select 
 insert into public.address (address_line_1, address_line_2, city, state, zip_postal_code, country) values
 ('123 Main St', 'Apt 4B', 'Anytown', 'CA', '90210', 'USA'),
 ('456 Oak Ave', 'Suite 100', 'Otherville', 'NY', '10001', 'USA'),
-('789 Pine Ln', '', 'Somewhere', 'TX', '73301', 'USA'),
+('789 Pine Ln', null, 'Somewhere', 'TX', '73301', 'USA'),
 ('101 Elm St', 'Unit 2', 'Villageton', 'FL', '33101', 'USA'),
 ('222 Maple Dr', 'Bldg 5', 'Hamlet', 'GA', '30303', 'USA'),
-('333 Birch Rd', '', 'Metropolis', 'IL', '60601', 'USA'),
+('333 Birch Rd', null, 'Metropolis', 'IL', '60601', 'USA'),
 ('444 Cedar Ct', 'Floor 3', 'Boomtown', 'WA', '98101', 'USA'),
-('555 Spruce Way', '', 'Riverside', 'AZ', '85001', 'USA'),
+('555 Spruce Way', null, 'Riverside', 'AZ', '85001', 'USA'),
 ('666 Willow Row', 'Apt 1A', 'Hillside', 'CO', '80001', 'USA'),
 ('777 Poplar Blvd', 'Unit 12', 'Lakeview', 'MI', '48103', 'USA');
 

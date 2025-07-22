@@ -43,8 +43,37 @@
 
 - DB schema: `supabase/migrations/20250702000000_initial_schema.sql`
 - All API routes: `api/index.ts`
+- Direcotries of Routes And their controllers:
+  - `server/src/routes/delivery-info`, `server/src/controllers/delivery-info`
+  - `server/src/routes/stores`, `server/src/controllers/stores`
+  - `server/src/routes/profile`, `server/src/controllers/profile`
+  - `server/src/routes/products`, `server/src/controllers/products`
+  - `server/src/routes/media`, `server/src/controllers/media`
+- Types:
+
+  - `server/src/types/delivery-info.ts`
+  - `server/src/types/products.ts`
+  - `server/src/types/process-routes.ts`
+  - `server/src/types/request.ts`
+  - `server/src/types/profile/index.ts`
+  - `server/src/types/store-data.ts`
+  - `server/src/types/response.ts`
+
 - Central Function To process all routes: `server/src/controllers/process-routes.ts`
 - Central Response Validator: `server/src/controllers/utils/response-validation.ts`
 - Central Request Validator: `server/src/controllers/utils/request-validation.ts`
 - Package.json: `package.json`
-- Integrated Tests: `server/src/tests/integrated/index.ts`
+- Integrated Tests:
+
+  - Main file: `server/src/tests/integrated/index.ts`
+  - Test `/profiles`: `pnpm tests --grep "Profile"`
+  - Test `/delivery-info`: `pnpm tests --grep "Delivery"`
+  - Test `/stores`: `pnpm tests --grep "Store"`
+  - Test `/product`: `pnpm tests --grep "Product"`
+  - Test `/media`: `pnpm tests --grep "Media"`
+
+- Test Data:
+  - `server/src/tests/integrated/data/users/customers/user-aisha`
+  - `server/src/tests/integrated/data/users/vendors/user-aliyu`
+  - `server/src/tests/integrated/data/users/customers/user-ebuka`
+  - `server/src/tests/integrated/data/users/customers/user-mustapha`

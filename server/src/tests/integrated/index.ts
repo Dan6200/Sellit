@@ -6,10 +6,10 @@ import testStores from './stores/index.js'
 import testDelivery from './delivery-info/index.js'
 import testProducts from './products/index.js'
 import testMedia from './media/index.js'
-import * as Ebuka from './data/users/user-ebuka/index.js'
-import * as Aisha from './data/users/user-aisha/index.js'
-import * as Mustapha from './data/users/user-mustapha/index.js'
-import * as Aliyu from './data/users/user-aliyu/index.js'
+import * as Ebuka from './data/users/customers/user-ebuka/index.js'
+import * as Aisha from './data/users/customers/user-aisha/index.js'
+import * as Mustapha from './data/users/customers/user-mustapha/index.js'
+import * as Aliyu from './data/users/vendors/user-aliyu/index.js'
 
 const users = [Ebuka, Aliyu, Aisha, Mustapha]
 const customers = [Ebuka, Aisha, Mustapha] // is_customer is true
@@ -21,9 +21,9 @@ export default function (): void {
   for (let user of users) {
     const { userInfo } = user
     const { first_name: name } = userInfo
-    describe(`Testing retrieving user profile for ${name}`, () =>
+    describe(`Testing retrieving user Profile for ${name}`, () =>
       testProfile(user))
-    describe(`Testing retrieving user profile without Signing In`, () =>
+    describe(`Testing retrieving user Profile without Signing In`, () =>
       testProfileWithoutSignIn(user))
   }
 
@@ -40,13 +40,22 @@ export default function (): void {
 
   for (let vendor of vendors) {
     describe(`Testing Store access without a vendor account`, () =>
-      testStoresWithNoVendor(vendor))
+      testStoresWithNoVendor({
+        userInfo: vendor.userInfo,
+        stores: vendor.listOfStores,
+        updatedStores: vendor.updatedStores,
+      }))
   }
 
   for (let vendor of vendors) {
     const { userInfo } = vendor
     const { first_name: name } = userInfo
-    describe(`Testing Stores owned by ${name}`, () => testStores(vendor))
+    describe(`Testing Stores owned by ${name}`, () =>
+      testStores({
+        userInfo: vendor.userInfo,
+        stores: vendor.listOfStores,
+        updatedStores: vendor.updatedStores,
+      }))
   }
 
   /** Product related tests **/

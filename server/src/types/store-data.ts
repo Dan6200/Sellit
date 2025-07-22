@@ -110,6 +110,14 @@ export default interface StoreData {
   store_name: string
   vendor_id?: string
   custom_domain: string | null
+  store_address: {
+    address_line_1: string
+    address_line_2: string
+    city: string
+    state: string
+    zip_postal_code: string
+    country: string
+  }
   favicon: string
   default_page_styling?: PageStyling // Store-wide default styling for pages
   store_pages?: Page[]
@@ -119,10 +127,11 @@ export default interface StoreData {
 
 export type DBFriendlyStoreData = Omit<
   StoreData,
-  'store_pages' | 'default_page_styling'
+  'store_pages' | 'default_page_styling' | 'store_address'
 > & {
   store_pages?: string
   default_page_styling?: string
+  store_address?: string
 }
 
 // export const isValidStoreData = (

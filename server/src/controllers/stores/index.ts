@@ -59,18 +59,40 @@ const createQuery = async ({
     throw new BadRequestError('Invalid store data')
   const storeData: StoreData = body
 
-  const dBFriendlyStoreData: DBFriendlyStoreData = {
-    ...storeData,
-    store_pages: storeData.store_pages
-      ? JSON.stringify(storeData.store_pages)
-      : undefined,
-    default_page_styling: storeData.default_page_styling
-      ? JSON.stringify(storeData.default_page_styling)
-      : undefined,
+  const { store_address, ...restOfStoreData } = storeData
+
+  const trx = await knex.transaction()
+  try {
+    const [address] = await trx('address')
+      .insert(store_address)
+      .returning('address_id')
+
+    const dBFriendlyStoreData: DBFriendlyStoreData = {
+      ...restOfStoreData,
+      store_pages: storeData.store_pages
+        ? JSON.stringify(storeData.store_pages)
+        : undefined,
+      default_page_styling: storeData.default_page_styling
+        ? JSON.stringify(storeData.default_page_styling)
+        : undefined,
+    }
+
+    const store = await trx<DBFriendlyStoreData & { address_id: string }>(
+      'stores',
+    )
+      .insert({
+        vendor_id: userId,
+        ...dBFriendlyStoreData,
+        address_id: address.address_id,
+      })
+      .returning('store_id')
+
+    await trx.commit()
+    return store
+  } catch (error) {
+    await trx.rollback()
+    throw error
   }
-  return knex<DBFriendlyStoreData>('stores')
-    .insert({ vendor_id: userId, ...dBFriendlyStoreData })
-    .returning('store_id')
 }
 
 /*
@@ -84,22 +106,60 @@ const createQuery = async ({
 const getAllQuery = async ({
   query: { vendor_id },
 }: QueryParams): Promise<Knex.QueryBuilder<StoreData[]>> => {
-  // if (!userId) throw new UnauthorizedError('Cannot access resource') -- Must be public, anyone can access a store
-  // For reads of private nature such as GET /products?unlisted=true, then Uathentication makes sense
-  // check if vendor account is enabled
-  const query = knex<StoreData>('stores').select('*')
-  if (vendor_id) query.where('vendor_id', vendor_id) // Get all products from a specific vendor
+  const query = knex<StoreData>('stores')
+    .join('address', 'stores.address_id', 'address.address_id')
+    .select(
+      'stores.store_id',
+      'stores.store_name',
+      'stores.custom_domain',
+      'stores.vendor_id',
+      'stores.favicon',
+      'stores.default_page_styling',
+      'stores.store_pages',
+      'stores.created_at',
+      'stores.updated_at',
+      'address.address_line_1',
+      'address.address_line_2',
+      'address.city',
+      'address.state',
+      'address.zip_postal_code',
+      'address.country',
+    )
+
+  if (vendor_id) {
+    query.where('stores.vendor_id', vendor_id)
+  }
+
   const stores = await query
 
-  return stores.map((store) => ({
-    ...store,
-    store_pages: store.store_pages
-      ? JSON.parse(JSON.stringify(store.store_pages))
-      : undefined,
-    default_page_styling: store.default_page_styling
-      ? JSON.parse(JSON.stringify(store.default_page_styling))
-      : undefined,
-  }))
+  return stores.map((store: any) => {
+    const {
+      address_line_1,
+      address_line_2,
+      city,
+      state,
+      zip_postal_code,
+      country,
+      ...coreStoreData
+    } = store
+    return {
+      ...coreStoreData,
+      store_address: {
+        address_line_1,
+        address_line_2,
+        city,
+        state,
+        zip_postal_code,
+        country,
+      },
+      store_pages: store.store_pages
+        ? JSON.parse(store.store_pages)
+        : undefined,
+      default_page_styling: store.default_page_styling
+        ? JSON.parse(store.default_page_styling)
+        : undefined,
+    }
+  })
 }
 
 /* @param {QueryParams} qp
@@ -110,26 +170,67 @@ const getAllQuery = async ({
  */
 
 const getQuery = async ({
+  query: { vendor_id: vendorId },
   params,
 }: QueryParams): Promise<Knex.QueryBuilder<StoreData[]>> => {
   if (params == null) throw new BadRequestError('No route parameters provided')
   const { storeId } = params
   if (!storeId) throw new BadRequestError('Need Store ID to retrieve store')
-  const store = await knex<StoreData>('stores')
-    .where('store_id', storeId)
-    .select('*')
+
+  const query = knex<StoreData>('stores')
+    .join('address', 'stores.address_id', 'address.address_id')
+    .where('stores.store_id', storeId)
+    .select(
+      'stores.store_id',
+      'stores.store_name',
+      'stores.custom_domain',
+      'stores.vendor_id',
+      'stores.favicon',
+      'stores.default_page_styling',
+      'stores.store_pages',
+      'stores.created_at',
+      'stores.updated_at',
+      'address.address_line_1',
+      'address.address_line_2',
+      'address.city',
+      'address.state',
+      'address.zip_postal_code',
+      'address.country',
+    )
     .first()
 
-  if (!store) return [] // return an empty list
+  if (vendorId) query.where('stores.vendor_id', vendorId)
+
+  const store = await query
+
+  if (!store) return []
+
+  const {
+    address_line_1,
+    address_line_2,
+    city,
+    state,
+    zip_postal_code,
+    country,
+    ...coreStoreData
+  } = store
 
   return [
     {
-      ...store,
-      store_pages: store.store_pages
-        ? JSON.parse(JSON.stringify(store.store_pages))
+      ...coreStoreData,
+      store_address: {
+        address_line_1,
+        address_line_2,
+        city,
+        state,
+        zip_postal_code,
+        country,
+      },
+      store_pages: coreStoreData.store_pages
+        ? JSON.parse(coreStoreData.store_pages)
         : undefined,
-      default_page_styling: store.default_page_styling
-        ? JSON.parse(JSON.stringify(store.default_page_styling))
+      default_page_styling: coreStoreData.default_page_styling
+        ? JSON.parse(coreStoreData.default_page_styling)
         : undefined,
     },
   ]
@@ -166,21 +267,49 @@ const updateQuery = async ({
     throw new ForbiddenError(
       'Vendor account disabled. Need to enable it to create a store',
     )
-  const dBFriendlyStoreData: DBFriendlyStoreData = {
-    ...storeData,
-    store_pages: storeData.store_pages
-      ? JSON.stringify(storeData.store_pages)
-      : undefined,
-    default_page_styling: storeData.default_page_styling
-      ? JSON.stringify(storeData.default_page_styling)
-      : undefined,
-  }
 
-  return knex<DBFriendlyStoreData>('stores')
-    .where('store_id', storeId)
-    .where('vendor_id', userId) // <-- HUGE Flaw if not added
-    .update(dBFriendlyStoreData)
-    .returning('store_id')
+  const { store_address, ...restOfStoreData } = storeData
+
+  const trx = await knex.transaction()
+  try {
+    const store = await trx('stores')
+      .where('store_id', storeId)
+      .where('vendor_id', userId)
+      .select('address_id')
+      .first()
+
+    if (!store) {
+      throw new BadRequestError('Store not found')
+    }
+
+    if (store_address) {
+      await trx('address')
+        .where('address_id', store.address_id)
+        .update(store_address)
+    }
+
+    const dBFriendlyStoreData: DBFriendlyStoreData = {
+      ...restOfStoreData,
+      store_pages: storeData.store_pages
+        ? JSON.stringify(storeData.store_pages)
+        : undefined,
+      default_page_styling: storeData.default_page_styling
+        ? JSON.stringify(storeData.default_page_styling)
+        : undefined,
+    }
+
+    const updatedStore = await trx<DBFriendlyStoreData>('stores')
+      .where('store_id', storeId)
+      .where('vendor_id', userId) // <-- HUGE Flaw if not added
+      .update(dBFriendlyStoreData)
+      .returning('store_id')
+
+    await trx.commit()
+    return updatedStore
+  } catch (error) {
+    await trx.rollback()
+    throw error
+  }
 }
 
 /* @param {QueryParams} qp
