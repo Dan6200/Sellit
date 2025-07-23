@@ -142,6 +142,7 @@ const getAllQuery = async ({
       country,
       ...coreStoreData
     } = store
+    console.log(store.store_pages)
     return {
       ...coreStoreData,
       store_address: {
@@ -152,11 +153,9 @@ const getAllQuery = async ({
         zip_postal_code,
         country,
       },
-      store_pages: store.store_pages
-        ? JSON.parse(store.store_pages)
-        : undefined,
+      store_pages: store.store_pages ? store.store_pages : undefined,
       default_page_styling: store.default_page_styling
-        ? JSON.parse(store.default_page_styling)
+        ? store.default_page_styling
         : undefined,
     }
   })
@@ -227,10 +226,10 @@ const getQuery = async ({
         country,
       },
       store_pages: coreStoreData.store_pages
-        ? JSON.parse(coreStoreData.store_pages)
+        ? coreStoreData.store_pages
         : undefined,
       default_page_styling: coreStoreData.default_page_styling
-        ? JSON.parse(coreStoreData.default_page_styling)
+        ? coreStoreData.default_page_styling
         : undefined,
     },
   ]

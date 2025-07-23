@@ -5,6 +5,7 @@
       "#src/*": ["server/src/*"],
       "#supabase-config": ["supabase/supabase.ts"]
     },
+    "rootDir": ".",
     "resolveJsonModule": true,
     "strict": true,
     "outDir": "built",

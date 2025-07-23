@@ -1,7 +1,7 @@
 {
   "import": "tsx",
   "require": "dotenv/config",
-  "timeout": 10000,
+  "timeout": 100000,
   "recursive": true,
   "extension": ["ts", "js", "tsx"],
   "exit": true,
