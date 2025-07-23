@@ -33,6 +33,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      ACTIONS_STEP_DEBUG: true
+      CI: true
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+      CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
 
     steps:
       - uses: actions/checkout@v2
@@ -40,7 +48,6 @@ jobs:
           node-version: 22
 
       - name: Setup Supabase CLI
-        if: env.BACKUP_ENABLED == 'true'
         uses: supabase/setup-cli@v1
         with:
           version: latest
@@ -60,11 +67,6 @@ jobs:
           pnpm start-test &> results.log &
           sleep 5
         env:
-          ACTIONS_STEP_DEBUG: true
-          CI: true
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
           SUPABASE_URL: http://localhost:54321
           SUPABASE_DB_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres'
       - name: Run tests
