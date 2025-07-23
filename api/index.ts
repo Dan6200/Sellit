@@ -45,7 +45,7 @@ if (process.env.NODE_ENV === 'production')
 else
   app.use(
     rateLimiter({
-      windowMs: 6 * 1000,
+      windowMs: 6 * 10 * 1000,
       max: 100,
       standardHeaders: true,
       legacyHeaders: false,
