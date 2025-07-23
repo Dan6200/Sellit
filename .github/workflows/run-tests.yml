@@ -34,8 +34,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres'
+      SUPABASE_ACCESS_TOKEN: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU'
+      SERVER: http://localhost:1024
+      SUPABASE_URL: http://localhost:54321
       ACTIONS_STEP_DEBUG: true
       CI: true
       CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
@@ -59,45 +61,21 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 22
+
       - run: npm install -g pnpm
+
       - run: pnpm install
+
       - run: pnpm build
+
       - name: Start server
         run: |
           pnpm start-test &> results.log &
           sleep 5
-        env:
-          SUPABASE_URL: http://localhost:54321
-          SUPABASE_DB_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres'
+
       - name: Run tests
         run: pnpm tests
-        env:
-          ACTIONS_STEP_DEBUG: true
-          CI: true
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          SERVER: localhost:1024
-          SUPABASE_URL: http://localhost:54321
-          SUPABASE_DB_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres'
+
       - name: View results
         if: failure()
         run: cat results.log
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-      - name: Pull Vercel Project
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_DEPLOY_ENABLED: true
