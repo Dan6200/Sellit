@@ -36,7 +36,6 @@ jobs:
     env:
       SUPABASE_DB_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres'
       SUPABASE_SERVICE_ROLE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU'
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SERVER: http://localhost:1024
       SUPABASE_URL: http://localhost:54321
       ACTIONS_STEP_DEBUG: true
@@ -54,6 +53,8 @@ jobs:
         uses: supabase/setup-cli@v1
         with:
           version: latest
+        # env:
+        #   SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Start Supabase
         run: supabase start
@@ -71,7 +72,7 @@ jobs:
 
       - name: Start server
         run: |
-          pnpm start-test &> results.log &
+          pnpm test-server &> results.log &
           sleep 5
 
       - name: Run tests
