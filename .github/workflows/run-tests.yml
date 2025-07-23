@@ -34,41 +34,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
-
     steps:
       - uses: actions/checkout@v2
         with:
-          node-version: 20
-      - name: Run SQL script
-        run: |
-          docker run -e PGPASSWORD=postgres -v ${{ github.workspace }}:/scripts/ --network host postgres psql -h localhost -U postgres -d test -f /scripts/server/src/db/sql-scripts/create-table.sql
+          node-version: 22
 
-      - name: Use Node.js 20
+      - name: Setup Supabase CLI
+        if: env.BACKUP_ENABLED == 'true'
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        run: supabase start
+
+      - name: Use Node.js 22
         uses: actions/setup-node@v2
         with:
-          node-version: 20
+          node-version: 22
       - run: npm install -g pnpm
       - run: pnpm install
-      - run: pnpm add tsconfig-paths --save-dev
       - run: pnpm build
       - name: Start server
         run: |
