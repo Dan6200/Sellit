@@ -22,76 +22,95 @@
 # [Rerun a workflow run]:
 # gh run rerun <run_id>
 
-# Don't run on main
-# name: Thrift-app Testing
-#
-# on:
-#   push:
-#     branches: [main, dev]
-#   pull_request:
-#     branches: [main, dev]
-#
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#
-#     services:
-#       postgres:
-#         image: postgres:15
-#         env:
-#           POSTGRES_USER: postgres
-#           POSTGRES_PASSWORD: postgres
-#           POSTGRES_DB: test
-#         ports:
-#           - 5432:5432
-#         options: >-
-#           --health-cmd pg_isready
-#           --health-interval 10s
-#           --health-timeout 5s
-#           --health-retries 5
-#
-#       redis:
-#         image: redis
-#         ports:
-#           - 6379:6379
-#
-#     steps:
-#       - uses: actions/checkout@v2
-#         with:
-#           node-version: 20
-#       - name: Run SQL script
-#         run: |
-#           docker run -e PGPASSWORD=postgres -v ${{ github.workspace }}:/scripts/ --network host postgres psql -h localhost -U postgres -d test -f /scripts/server/src/db/sql-scripts/create-table.sql
-#
-#       - name: Use Node.js 20
-#         uses: actions/setup-node@v2
-#         with:
-#           node-version: 20
-#       - run: npm install -g pnpm
-#       - run: pnpm install
-#       - run: pnpm add tsconfig-paths --save-dev
-#       - run: pnpm build
-#       - name: Start server
-#         run: |
-#           pnpm start-test &> results.log &
-#           sleep 5
-#         env:
-#           ACTIONS_STEP_DEBUG: true
-#           CI: true
-#           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-#           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-#           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-#           PG_URL: 'postgres://postgres:postgres@localhost:5432/test'
-#       - name: Run tests
-#         run: pnpm tests
-#         env:
-#           ACTIONS_STEP_DEBUG: true
-#           CI: true
-#           CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-#           CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-#           CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-#           PG_URL: 'postgres://postgres:postgres@localhost:5432/test'
-#           SERVER: localhost:1024
-#       - name: View results
-#         if: failure()
-#         run: cat results.log
+name: Thrift-app Testing
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          node-version: 20
+      - name: Run SQL script
+        run: |
+          docker run -e PGPASSWORD=postgres -v ${{ github.workspace }}:/scripts/ --network host postgres psql -h localhost -U postgres -d test -f /scripts/server/src/db/sql-scripts/create-table.sql
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+      - run: npm install -g pnpm
+      - run: pnpm install
+      - run: pnpm add tsconfig-paths --save-dev
+      - run: pnpm build
+      - name: Start server
+        run: |
+          pnpm start-test &> results.log &
+          sleep 5
+        env:
+          ACTIONS_STEP_DEBUG: true
+          CI: true
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          SUPABASE_URL: http://localhost:54321
+          SUPABASE_DB_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres'
+      - name: Run tests
+        run: pnpm tests
+        env:
+          ACTIONS_STEP_DEBUG: true
+          CI: true
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          SERVER: localhost:1024
+          SUPABASE_URL: http://localhost:54321
+          SUPABASE_DB_URL: 'postgresql://postgres:postgres@127.0.0.1:54322/postgres'
+      - name: View results
+        if: failure()
+        run: cat results.log
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      - name: Pull Vercel Project
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_DEPLOY_ENABLED: true

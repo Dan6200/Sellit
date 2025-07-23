@@ -1,16 +1,15 @@
-#cspell:ignore buildx
 name: Build and Push Docker image
 
-# on:
-#   workflow_run:
-#     workflows: ['Thrift-app Testing']
-#     types: [completed]
-
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_run:
+    workflows: ['Thrift-app Testing']
+    types: [completed]
+
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
 
 jobs:
   build:
