@@ -31,6 +31,9 @@ jobs:
         with:
           node-version: '22' # Or your preferred Node.js version
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
