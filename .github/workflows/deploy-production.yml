@@ -9,16 +9,39 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      VERCEL_DEPLOY_ENABLED: true
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-      - name: Pull Vercel Project
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Cache Node.js modules for faster builds
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store # or ~/.yarn for Yarn, ~/.pnpm-store for pnpm
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22' # Or your preferred Node.js version
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Pull Vercel Project Metadata
+        # Fetches vercel.json overrides, root directory, etc.
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Pull Vercel Environment Variables
+        # Crucial for build-time env vars. Writes to .env.production, adjust as needed.
+        run: vercel env pull .env.production --yes --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Vercel Project
+        # Uses the .env.production file for build-time environment variables
+        run: vercel build
+
       - name: Deploy to Vercel
+        # Deploys the pre-built output from vercel build
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
