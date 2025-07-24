@@ -53,6 +53,6 @@ thrift-app-*.json
 # Ignore
 /supabase/.temp
 /supabase/volumes
-.vercel
+.vercel/
 !.vercel/project.json
 /server/src/tests/integrated/data/addresses/
