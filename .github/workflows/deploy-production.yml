@@ -5,6 +5,10 @@ on:
     workflows: ['Thrift-app Testing']
     types:
       - completed
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   deploy:
