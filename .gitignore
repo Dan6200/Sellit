@@ -54,4 +54,5 @@ thrift-app-*.json
 /supabase/.temp
 /supabase/volumes
 .vercel
+!.vercel/project.json
 /server/src/tests/integrated/data/addresses/
