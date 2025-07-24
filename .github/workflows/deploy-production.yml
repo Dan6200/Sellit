@@ -37,6 +37,9 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install vercel
+        run: npm install -g vercel
+
       - name: Pull Vercel Project Metadata
         # Fetches vercel.json overrides, root directory, etc.
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
