@@ -50,7 +50,7 @@ jobs:
 
       - name: Build Vercel Project
         # Uses the .env.production file for build-time environment variables
-        run: vercel build
+        run: vercel build --prod
 
       - name: Deploy to Vercel
         # Deploys the pre-built output from vercel build
